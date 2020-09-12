@@ -263,7 +263,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/" class="post-title-link" itemprop="url">How-to-enable-MTE-in-ArmStudio</a>
+            <a href="/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/" class="post-title-link" itemprop="url">How to enable MTE in ArmStudio</a>
         </h2>
 
         <div class="post-meta-container">
@@ -275,7 +275,16 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2020-09-12 18:47:16 / Modified: 18:47:39" itemprop="dateCreated datePublished" datetime="2020-09-12T18:47:16+08:00">2020-09-12</time>
+      <time title="Created: 2020-09-12 18:47:16 / Modified: 18:51:36" itemprop="dateCreated datePublished" datetime="2020-09-12T18:47:16+08:00">2020-09-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/ARM/" itemprop="url" rel="index"><span itemprop="name">ARM</span></a>
+        </span>
     </span>
 
   
@@ -288,90 +297,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><strong>How to configure Memory Tagging Extension in Arm Studio</strong></p>
-<p><strong>Prerequisites:</strong></p>
-<ol>
-<li>Download and install Arm Development Studio for either<br><a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Linux?lang=en">Linux</a><br>or<br><a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Windows?lang=en">Windows</a>.<br>Obtain a 30-day evaluation license so that the project can be built<br>successfully.</li>
-</ol>
-<p><img src="media/7de10325239d464db1c921c249e86dd1.png"></p>
-<p>Download and install Armv8-A Base RevC AEM FVP (Fixed Virtual Platform) that<br>supports Memory Tagging Extension for<br><a target="_blank" rel="noopener" href="https://silver.arm.com/download/download.tm?pv=4799001&p=3042387">Linux</a> (No<br>windows version online, need to be compiled by ourselves).</p>
-<p>The Arm Development Studio Perspective</p>
-<p><img src="media/c1d0315de9e1d5568061f47c0a0598ec.png"></p>
-<p><strong>Procedure</strong></p>
-<ol>
-<li><p>Create a new C project, select: File &gt; New &gt; Project.</p>
-</li>
-<li><p>Expand C/C++ menu, and select C project, then click Next.</p>
-</li>
-<li><p>Give the project a name, select project type as Executable &gt; Empty Project,<br>then select Arm Compiler 6 Toolchains.</p>
-</li>
-<li><p>Add asm and src directory, create main.c file under src directory. The asm<br>directory is organized as follows.</p>
-<p><img src="media/a7cbd619348293193e8aaae9215b699e.png"></p>
-<p>The FVP is a bare metal so startup.S is the startup code used to setup<br>cache, MMU, stak and enable hardware floating point, etc. Without the<br>startup code, even the simplest printf function cannot be executed.</p>
-<p><img src="media/2a68c89a00ca60d6c54176c3a9a6b05f.png"></p>
-<p>The startup code setups environment, then jumps to C library init code<br>__main to execute the real function. We need to specify the entry point as<br>start64 to run startup code at first.</p>
-</li>
-<li><p><strong>Right-click the project and select Properties to configure the project for<br>further build.</strong></p>
-</li>
-</ol>
-<p><img src="media/b64a3db4f4eae2efa3fc56e0d856652a.png"></p>
-<p>In the Tool Settings tab, select All Tools Settings &gt; Target to specify the<br>Target CPU. Here I select Cortex-A76 AArch64 (The target CPU may be not 100%<br>consistent to the real FVP, but it should be OK.)</p>
-<p><img src="media/29e38cfa95fb20d5ae899b38b5239ffb.png"></p>
-<p>Select Arm C Compiler 6 &gt; Target, enable tool specific settings. We need to add<br>**+memtag** feature in -mcpu option to provide hardware support for memory<br>tagging, for more detailed information, please refer to<br><a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_chr1392632801932.htm">armclang_ref</a>.</p>
-<ol>
-<li>Select Arm C Compiler 6 &gt; Miscellaneous, add flag <strong>-fsanitize=memtag</strong> so<br>that the compiler will use memory tagging instructions (IRG, ADDG, SUBG…)<br>during code generation to protect the memory allocations on the stack. For<br>more detailed information, please refer to<br><a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_lnk1549304794624.htm">armclang_ref</a>.</li>
-</ol>
-<p><img src="media/0a74cc18166066e123b4be865eed22a7.png"></p>
-<p><img src="media/331236858b52df80f03ed964c2b3a267.png"></p>
-<p>Select Arm Linker 6 &gt; Image Layout, specify the <strong>entry point as start64</strong>,<br>then browse the scatter file.</p>
-<p><img src="media/79509c2a1c1a21b2b428339b2c0170ca.png"></p>
-<p>Scatter file set up the RO base address (run the code from memory 0x80000000),<br>etc.</p>
-<p><img src="media/7da965c388eafd2fd9eb3b7fdfaadb48.png"></p>
-<p>Select Arm Linker 6 &gt; Miscellaneous, add flag <strong>–library_security=v8.5a</strong>. This<br>flag lets the armlink link the code with the library that compiled with memory<br>tagging extension to provide full memory tagging stack protection. For more<br>detailed information, please refer to<br><a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_snk1537815692994.htm">armclang_ref</a>.</p>
-<p>v8.5 not only provides memory tagging protection of the stack used by the<br>library code, but also branch protection using Branch Target Identification<br>(BTI) and Pointer Authentication Code (PAC).</p>
-<p>To enable heap protection with memory tagging (malloc, realloc, free..), we need<br>to add code __asm(“.global __use_memtag_heap\n\t”) in C file.</p>
-<ol>
-<li><p>Build the project, the Debug directory will be generated. When the project<br>has built, in the Project Explorer view, under Debug, locate the<br>HelloWorld.axf file. The .axf file contains the object code and debug<br>symbols that enable Arm Debugger to perform source-level debugging.</p>
-</li>
-<li><p><strong>Configure a debugging session to launch the FVP and connect to it.</strong></p>
-</li>
-</ol>
-<p><img src="media/177d2f25ba7c7d0a294e6056b1ee9a4c.png"></p>
-<p>Create a use_model_semihostting.ds script to disable semihosting by Arm<br>Debugger.</p>
-<p><img src="media/60281dcfc931741cefa5e1b633b5cc3a.png"></p>
-<p>Select File &gt; New &gt; Model Connection, give the connection a name and associate<br>debug connection with an existing project.</p>
-<p><img src="media/c69ac9d706f83effadf6ea1665055a3c.png"></p>
-<p><img src="media/324240e63aa56579db922ac6c04b6b6e.png"></p>
-<p>The FVP Armv8-A Base RevC AEM is not involved by default so we need to add it.<br>Select the model from file system, the path is where you install Armv8-A Base<br>RevC AEM.</p>
-<ol>
-<li><p>Once added, we need to edit the debug configuration. In the Connection tab,<br>select Bare Metal Debug/ARMAEMv8-A_MPx4 SMP Cluster 0. Add the model<br>parameters as follows to enable MTE support.</p>
-<p>-C cluster0.has_arm_v8-5=1 -C cluster0.memory_tagging_support_level=2 -C<br>bp.dram_metadata.is_enabled=1 -C bp.secure_memory=false</p>
-<p>a. The first parameter cluster0.has_arm_v8-5=1 implements the Armv8.5<br>extension.</p>
-<p>b. The second parameter cluster0.memory_tagging_support_level=2 specifies<br>the memory tagging extension support level, 2 means supported at EL0 only.</p>
-<p>c. The third parameter bp.dram_metadata.is_enabled=1 lets the memory system<br>to support storing MTE tags.</p>
-<p><img src="media/e6fdb84d2be6bd196534a9bad3f4291e.png"></p>
-<p>d. The last parameter bp.secure_memory=false disables the TZC-400 TrustZone<br>memory controller included in the Base_A53x1 FVP. By default, the memory<br>controller refuses all accesses to DRAM memory.</p>
-</li>
-</ol>
-<p><img src="media/24431cfc161d6db6d4dc56cb12ff2d19.png"></p>
-<p>In the Files tab, select .axf file under Debug directory from workspace.</p>
-<p><img src="media/1b450d3ec6480ca41b8dd2f88f86783c.png"></p>
-<p>In the Debuger tab, select Debug from entry point start64, enable run target<br>initialization debugger script and select .ds script from workspace.</p>
-<ol>
-<li>Click Debug to load the application on the target, and load the debug<br>information into the debugger. The application stops at the entry point<br>start64.</li>
-</ol>
-<p><img src="media/ce7c662e80e2bca7045ba61d23a3229f.png"></p>
-<p><img src="media/ca039d2b63910d79417de10adc191eba.png"></p>
-<p><img src="media/5e595eb82b13ebca8c9b7af857c1ca00.png"></p>
-<p>In the disassembly view, we search main to get the assembly instructions of<br>main. The presence of IRG, ADDG shows the code is generated using memory tagging<br>instructions. We set a breakpoint at ADDG instruction, let the program stop at<br>this breakpoint.</p>
-<p><img src="media/c302940176e1c1cc6b206c4116ab0c11.png"></p>
-<p>Let the program continue to execute and finally we can see “Hello world!” from<br>target console.</p>
-<p><strong>Use-after-free</strong></p>
-<p><strong>Reference:</strong></p>
-<ol>
-<li>White Paper:</li>
-</ol>
-
+          <p>Configure memory tagging extension (MTE) using Qemu</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -392,7 +326,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/12/experiment/">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/12/CGroup-Experiment/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -409,7 +343,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/blog/2020/09/12/experiment/" class="post-title-link" itemprop="url">Cgroup Experiments</a>
+            <a href="/blog/2020/09/12/CGroup-Experiment/" class="post-title-link" itemprop="url">Cgroup Experiments</a>
         </h2>
 
         <div class="post-meta-container">
@@ -421,7 +355,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2020-09-12 16:51:41 / Modified: 16:53:43" itemprop="dateCreated datePublished" datetime="2020-09-12T16:51:41+08:00">2020-09-12</time>
+      <time title="Created: 2020-09-12 16:51:41 / Modified: 18:48:03" itemprop="dateCreated datePublished" datetime="2020-09-12T16:51:41+08:00">2020-09-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -446,7 +380,7 @@
           <p>CGroups Experiments</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/2020/09/12/experiment/">
+              <a class="btn" href="/blog/2020/09/12/CGroup-Experiment/">
                 Read more &raquo;
               </a>
             </div>
