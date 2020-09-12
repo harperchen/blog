@@ -182,7 +182,7 @@ body {
   background: var(--body-bg-color);
   color: var(--text-color);
   font-family: Lato, "PingFang SC", "Microsoft YaHei", sans-serif;
-  font-size: 1em;
+  font-size: 0.8em;
   line-height: 2;
   min-height: 100%;
   position: relative;
@@ -1169,7 +1169,7 @@ pre code {
 }
 @media (min-width: 1200px) {
   .header-inner {
-    width: 1100px;
+    width: 1000px;
   }
 }
 @media (min-width: 1600px) {
@@ -1606,7 +1606,7 @@ pre code {
 }
 @media (min-width: 1200px) {
   .footer-inner {
-    width: 1100px;
+    width: 1000px;
   }
 }
 @media (min-width: 1600px) {
@@ -1928,7 +1928,7 @@ pre code {
   width: 4px;
 }
 .post-body {
-  font-family: Lato, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: Verdana, Lato, "PingFang SC", "Microsoft YaHei", sans-serif;
   overflow-wrap: break-word;
 }
 @media (min-width: 1200px) {
@@ -2121,7 +2121,7 @@ pre code {
 }
 .posts-expand .post-meta-container {
   color: #999;
-  font-family: Lato, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: Verdana, Lato, "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 0.75em;
   margin-top: 3px;
 }
@@ -2540,7 +2540,7 @@ ul.breadcrumb li:last-child {
 }
 @media (min-width: 1200px) {
   .main {
-    width: 1100px;
+    width: 1000px;
   }
 }
 @media (min-width: 1600px) {
