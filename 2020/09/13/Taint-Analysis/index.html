@@ -32,7 +32,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
 <meta property="article:published_time" content="2020-09-13T11:15:57.000Z">
-<meta property="article:modified_time" content="2020-09-13T15:24:10.096Z">
+<meta property="article:modified_time" content="2020-09-13T16:23:02.134Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -279,10 +279,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2020-09-13 19:15:57 / Modified: 23:24:10" itemprop="dateCreated datePublished" datetime="2020-09-13T19:15:57+08:00">2020-09-13</time>
+      <time title="Created: 2020-09-13 19:15:57" itemprop="dateCreated datePublished" datetime="2020-09-13T19:15:57+08:00">2020-09-13</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-09-14 00:23:02" itemprop="dateModified" datetime="2020-09-14T00:23:02+08:00">2020-09-14</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -321,12 +327,16 @@
 <p><code>Capstone</code> is a disassembly framework with the target of becoming the ultimate disasm engine for binary analysis and reversing in the security community. Like many taint analysis tools, <code>capstone</code> is also needed by Taintgrind.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/aquynh/capstone/archive/3.0.4.tar.gz -O capstone.tar.gz</span><br><span class="line">tar xf capstone.tar.gz</span><br><span class="line">sh configure_capstone.sh `<span class="built_in">pwd</span>`/../build</span><br><span class="line"><span class="built_in">cd</span> capstone-3.0.4</span><br><span class="line">sh make_capstone.sh</span><br></pre></td></tr></table></figure>
 
+<p>For the simple example test/sign32.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;taintgrind.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_sign</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (x &lt; <span class="number">0</span>)  <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">1000</span>;</span><br><span class="line">    <span class="comment">// Defines int a as tainted</span></span><br><span class="line">    TNT_TAINT(&amp;a,<span class="keyword">sizeof</span>(a));</span><br><span class="line">    <span class="keyword">int</span> s = get_sign(a);</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>Run tool Taintgrind with Valgrind</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">../build/bin/valgrind --tool=taintgrind tests/sign32</span><br><span class="line"></span><br><span class="line"><span class="comment"># or simply</span></span><br><span class="line">../build/bin/taintgrind tests/sign32</span><br></pre></td></tr></table></figure>
 
+<p>The output is of the form</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Address/Location | Assembly instruction | Instruction <span class="built_in">type</span> | Runtime value(s) | Information flow</span><br><span class="line">0x108982: main (sign32.c:12) | mov eax, dword ptr [rbp - 0x50] | Load:4 | 0x3e8 | t15_9412 &lt;- a:1ffeffff10</span><br></pre></td></tr></table></figure>
 
-
-
-
+<p>Taintgrind borrows the bit-precise shadow memory from MemCheck and only propagates explicit data flow. This means that Taintgrind will not propagate taint in control structures such as if-else, for-loops and while-loops. Taintgrind will also not propagate taint in dereferenced tainted pointers. </p>
 </li>
 </ol>
 <p><code>Pin</code> is </p>
