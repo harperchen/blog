@@ -32,7 +32,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
 <meta property="article:published_time" content="2020-09-13T11:15:57.000Z">
-<meta property="article:modified_time" content="2020-09-13T16:23:02.134Z">
+<meta property="article:modified_time" content="2020-09-14T07:57:30.627Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -287,7 +287,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-14 00:23:02" itemprop="dateModified" datetime="2020-09-14T00:23:02+08:00">2020-09-14</time>
+        <time title="Modified: 2020-09-14 15:57:30" itemprop="dateModified" datetime="2020-09-14T15:57:30+08:00">2020-09-14</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -320,7 +320,8 @@
 <h4 id="Taint-Analysis-Tools"><a href="#Taint-Analysis-Tools" class="headerlink" title="Taint Analysis Tools"></a>Taint Analysis Tools</h4><img src="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
 
 <ol>
-<li><p><strong>Taintgrind</strong> <a target="_blank" rel="noopener" href="https://github.com/wmkhoo/taintgrind">github</a> <a href="">paper</a></p>
+<li><strong>Taintgrind</strong> <a target="_blank" rel="noopener" href="https://github.com/wmkhoo/taintgrind">github</a></li>
+</ol>
 <p><code>Valgrind</code> is a dynamic instrumentation framework for building dynamic analysis tools, just like Pin. Taintgrind is built on the top of Valgrind, we need first to build and install Valgrind. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># build, install valgrind</span></span><br><span class="line">wget -O https://sourceware.org/pub/valgrind/valgrind-3.16.0.tar.bz2</span><br><span class="line">tar jxf valgrind-3.16.0.tar.bz2</span><br><span class="line">mv valgrind-3.16.0 valgrind</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> valgrind</span><br><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=`<span class="built_in">pwd</span>`/build</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 
@@ -337,11 +338,31 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Address/Location | Assembly instruction | Instruction <span class="built_in">type</span> | Runtime value(s) | Information flow</span><br><span class="line">0x108982: main (sign32.c:12) | mov eax, dword ptr [rbp - 0x50] | Load:4 | 0x3e8 | t15_9412 &lt;- a:1ffeffff10</span><br></pre></td></tr></table></figure>
 
 <p>Taintgrind borrows the bit-precise shadow memory from MemCheck and only propagates explicit data flow. This means that Taintgrind will not propagate taint in control structures such as if-else, for-loops and while-loops. Taintgrind will also not propagate taint in dereferenced tainted pointers. </p>
+<ol start="2">
+<li><strong>Triton</strong> <a target="_blank" rel="noopener" href="https://github.com/JonathanSalwan/Triton">github</a> <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/documentation/doxygen/">documentation</a></li>
+</ol>
+<p>Triton is a dynamic binary analysis framework which is set up to use Pin 2.14 for tracing. </p>
+<p><code>Pin</code> is a dynamic binary instrumentation framework for the IA-32, x86-64 and MIC instruction-set architectures that enables the creation of dynamic program analysis tools, there is a tutorial of Pin for us <a target="_blank" rel="noopener" href="http://shell-storm.org/blog/Taint-analysis-and-pattern-matching-with-Pin/">tutorial</a> to refer to.</p>
+<p>This project is also shipped with a <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/documentation/doxygen/Tracer_page.html">Pintool tracer</a> and may be compiled with these following commands:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get and install the latest z3 relesae   </span></span><br><span class="line">    git <span class="built_in">clone</span> https://github.com/Z3Prover/z3.git &amp;&amp; <span class="built_in">cd</span> z3 </span><br><span class="line">    CC=clang CXX=clang++ python scripts/mk_make.py</span><br><span class="line">    <span class="built_in">cd</span> build &amp;&amp; make &amp;&amp; sudo make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install capstone     </span></span><br><span class="line">    curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/3.0.4.tar.gz</span><br><span class="line">    tar xvf cap.tgz &amp;&amp; <span class="built_in">cd</span> capstone-3.0.4/ &amp;&amp; sudo ./make.sh install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install pintool</span></span><br><span class="line">    curl -o pin.tgz -L http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz</span><br><span class="line">    tar zxf pin.tgz</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install Triton (Python Binding)</span></span><br><span class="line">    <span class="built_in">cd</span> pin-2.14-71313-gcc.4.4.7-linux/<span class="built_in">source</span>/tools/</span><br><span class="line">    git <span class="built_in">clone</span> https://github.com/JonathanSalwan/Triton.git</span><br><span class="line">    <span class="built_in">cd</span> Triton &amp;&amp; mkdir build &amp;&amp; <span class="built_in">cd</span> build </span><br><span class="line">    cmake -G <span class="string">&quot;Unix Makefiles&quot;</span> -DPINTOOL=on -DKERNEL4=on -DPYTHON36=off .. </span><br><span class="line">    make -j2</span><br><span class="line">    sudo make install</span><br><span class="line">    </span><br><span class="line"><span class="comment"># test Triton</span></span><br><span class="line">    <span class="built_in">cd</span> ..</span><br><span class="line">    ./build/triton ./src/examples/pin/ir.py /usr/bin/id</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><p><strong>Dytan</strong> </p>
+</li>
+<li><p><strong>PolyTracker</strong> <a target="_blank" rel="noopener" href="https://github.com/trailofbits/polytracker.git">github</a></p>
+</li>
+<li><p><strong>LibDFT</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.cs.columbia.edu/~vpk/research/libdft/">source</a>  (x86)</p>
 </li>
 </ol>
-<p><code>Pin</code> is </p>
-<p><a target="_blank" rel="noopener" href="http://shell-storm.org/blog/Taint-analysis-and-pattern-matching-with-Pin/">tutorial</a> </p>
-<ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.cs.columbia.edu/~vpk/research/libdft/libdft-3.1415alpha.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PIN_HOME=..../pin-2.14</span><br><span class="line"><span class="built_in">cd</span> ..../libdft/libdft_linux-i386/src &amp;&amp; make</span><br><span class="line"><span class="built_in">cd</span> ..../libdft/libdft_linux-i386/tools &amp;&amp; make tools</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/AngoraFuzzer/libdft64">source</a> (x86_64)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/AngoraFuzzer/libdft64.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> libdft64</span><br><span class="line">mkdir build</span><br><span class="line">PREFIX=`<span class="built_in">pwd</span>`/build ./install_pin.sh</span><br><span class="line"><span class="comment"># change wget to curl like below</span></span><br><span class="line"><span class="comment"># curl -o $&#123;TAR_NAME&#125;.tar.gz -L https://software.intel.com/sites/landingpage/pintool/downloads/$&#123;TAR_NAME&#125;.tar.gz</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PIN_ROOT=..../libdft64/build/pin-3.7-97619-g0d0c92f4f-gcc-linux</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="6">
 <li><strong>Neuzz</strong> <a target="_blank" rel="noopener" href="https://github.com/Dongdongshe/neuzz">github</a> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.05620">paper</a></li>
 </ol>
 
