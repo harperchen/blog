@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/15/KbfkLZHJRtndPg4.png">
 <meta property="article:published_time" content="2020-09-13T11:15:57.000Z">
-<meta property="article:modified_time" content="2020-09-15T14:22:07.158Z">
+<meta property="article:modified_time" content="2020-09-15T14:39:10.186Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -288,7 +288,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-15 22:22:07" itemprop="dateModified" datetime="2020-09-15T22:22:07+08:00">2020-09-15</time>
+        <time title="Modified: 2020-09-15 22:39:10" itemprop="dateModified" datetime="2020-09-15T22:39:10+08:00">2020-09-15</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -350,7 +350,7 @@
 <p>This project is also shipped with a <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/documentation/doxygen/Tracer_page.html">Pintool tracer</a> and may be compiled with these following commands:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get and install the latest z3 relesae   </span></span><br><span class="line">    git <span class="built_in">clone</span> https://github.com/Z3Prover/z3.git &amp;&amp; <span class="built_in">cd</span> z3 </span><br><span class="line">    CC=clang CXX=clang++ python scripts/mk_make.py</span><br><span class="line">    <span class="built_in">cd</span> build &amp;&amp; make &amp;&amp; sudo make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install capstone     </span></span><br><span class="line">    curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/3.0.4.tar.gz</span><br><span class="line">    tar xvf cap.tgz &amp;&amp; <span class="built_in">cd</span> capstone-3.0.4/ &amp;&amp; sudo ./make.sh install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install pintool</span></span><br><span class="line">    curl -o pin.tgz -L http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz</span><br><span class="line">    tar zxf pin.tgz</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install Triton (Python Binding)</span></span><br><span class="line">    <span class="built_in">cd</span> pin-2.14-71313-gcc.4.4.7-linux/<span class="built_in">source</span>/tools/</span><br><span class="line">    git <span class="built_in">clone</span> https://github.com/JonathanSalwan/Triton.git</span><br><span class="line">    <span class="built_in">cd</span> Triton &amp;&amp; mkdir build &amp;&amp; <span class="built_in">cd</span> build </span><br><span class="line">    cmake -G <span class="string">&quot;Unix Makefiles&quot;</span> -DPINTOOL=on -DKERNEL4=on -DPYTHON36=off .. </span><br><span class="line">    make -j2</span><br><span class="line">    sudo make install</span><br><span class="line">    </span><br><span class="line"><span class="comment"># test Triton PinTool</span></span><br><span class="line">    <span class="built_in">cd</span> ..</span><br><span class="line">    ./build/triton ./src/examples/pin/ir.py /usr/bin/id</span><br></pre></td></tr></table></figure>
 
-<p>There are several tutorials about the usage of python bindings.  <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/blog/first-approach-with-the-framework/">tutorial1</a> (The interface in this tutorial is quite old, the high-level thoughts is ok, but please refer to the src/examples to get the correct usage.)  <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/5100">tutorial2</a> <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/documentation/doxygen/Tracer_page.html">toturial3</a></p>
+<p>There are several tutorials about the usage of python bindings.  The interface in this <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/blog/first-approach-with-the-framework/">tutorial1</a> is quite old, the high-level ideas should be ok, but please refer to the <code>src/examples</code> and <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/documentation/doxygen/Tracer_page.html">toturial2</a> for the correct usage. Also attach <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/5100">tutorial3</a> here for reference.</p>
 <img src="https://i.loli.net/2020/09/15/KbfkLZHJRtndPg4.png" style="zoom:45%;">
 
 <p>Here is an example to count the number of executed instructions using PinTool.</p>
@@ -384,10 +384,10 @@
 </ol>
 <p>BinCAT is a <em>static</em> Binary Code Analysis Toolkit, designed to help reverse engineers, directly from IDA or using Python for automation.</p>
 <ol start="7">
-<li><strong>Psalm</strong></li>
+<li><strong>Psalm</strong> <a target="_blank" rel="noopener" href="https://github.com/vimeo/psalm">github</a></li>
 </ol>
-<p><strong>Pyre</strong></p>
-<p><strong>Tigress</strong></p>
+<p><strong>Pyre</strong> <a target="_blank" rel="noopener" href="https://github.com/facebook/pyre-check">github</a></p>
+<p><strong>Tigress</strong> <a target="_blank" rel="noopener" href="https://github.com/JonathanSalwan/Tigress_protection">github</a></p>
 <p><strong>Neuzz</strong> <a target="_blank" rel="noopener" href="https://github.com/Dongdongshe/neuzz">github</a> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.05620">paper</a></p>
 
     </div>
