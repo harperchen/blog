@@ -23,17 +23,17 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="Taint Analysis Categories Explicit AnalysisHow taint propagates based on the data dependencies between variables.  Implicit AnalysisHow taint propogates through condition instructions based on the con">
+  <meta name="description" content="Taint Analysis Categories  Explicit AnalysisHow taint propagates based on the data dependencies between variables.  Implicit AnalysisHow taint propogates through condition instructions based on the co">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Taint Analysis">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/09/13/Taint-Analysis/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Taint Analysis Categories Explicit AnalysisHow taint propagates based on the data dependencies between variables.  Implicit AnalysisHow taint propogates through condition instructions based on the con">
+<meta property="og:description" content="Taint Analysis Categories  Explicit AnalysisHow taint propagates based on the data dependencies between variables.  Implicit AnalysisHow taint propogates through condition instructions based on the co">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/15/KbfkLZHJRtndPg4.png">
 <meta property="article:published_time" content="2020-09-13T11:15:57.000Z">
-<meta property="article:modified_time" content="2020-09-15T15:00:11.263Z">
+<meta property="article:modified_time" content="2020-09-15T15:01:49.283Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -180,7 +180,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Taint-Analysis-Categories"><span class="nav-text">Taint Analysis Categories</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Taint-Analysis-Tools"><span class="nav-text">Taint Analysis Tools</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Taintgrind"><span class="nav-text">1. Taintgrind</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Triton"><span class="nav-text">2. Triton</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-PolyTracker"><span class="nav-text">3. PolyTracker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-DECAF"><span class="nav-text">4. DECAF</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-LibDFT"><span class="nav-text">5. LibDFT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-bincat"><span class="nav-text">6. bincat</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Taintgrind"><span class="nav-text">1. Taintgrind</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Triton"><span class="nav-text">2. Triton</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-PolyTracker"><span class="nav-text">3. PolyTracker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-DECAF"><span class="nav-text">4. DECAF</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-LibDFT"><span class="nav-text">5. LibDFT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-bincat"><span class="nav-text">6. bincat</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -288,7 +288,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-15 23:00:11" itemprop="dateModified" datetime="2020-09-15T23:00:11+08:00">2020-09-15</time>
+        <time title="Modified: 2020-09-15 23:01:49" itemprop="dateModified" datetime="2020-09-15T23:01:49+08:00">2020-09-15</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -310,7 +310,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h4 id="Taint-Analysis-Categories"><a href="#Taint-Analysis-Categories" class="headerlink" title="Taint Analysis Categories"></a>Taint Analysis Categories</h4><ol>
+        <p><strong>Taint Analysis Categories</strong></p>
+<ol>
 <li><p>Explicit Analysis<br>How taint propagates based on the data dependencies between variables.</p>
 </li>
 <li><p>Implicit Analysis<br>How taint propogates through condition instructions based on the control dependencies between variables.</p>
@@ -318,10 +319,10 @@
 </ol>
 <a id="more"></a>
 
-<h4 id="Taint-Analysis-Tools"><a href="#Taint-Analysis-Tools" class="headerlink" title="Taint Analysis Tools"></a>Taint Analysis Tools</h4><img src="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
+<p><strong>Taint Analysis Tools</strong></p>
+<img src="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
 
-<h4 id="1-Taintgrind"><a href="#1-Taintgrind" class="headerlink" title="1. Taintgrind"></a>1. Taintgrind</h4><hr>
-<p><a target="_blank" rel="noopener" href="https://github.com/wmkhoo/taintgrind">github</a> 动态分析工具</p>
+<h4 id="1-Taintgrind"><a href="#1-Taintgrind" class="headerlink" title="1. Taintgrind"></a>1. Taintgrind</h4><p><a target="_blank" rel="noopener" href="https://github.com/wmkhoo/taintgrind">github</a> 动态分析工具</p>
 <p><code>Valgrind</code> is a dynamic instrumentation framework for building dynamic analysis tools, just like Pin. Taintgrind is built on the top of Valgrind, we need first to build and install Valgrind. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># build, install valgrind</span></span><br><span class="line">wget -O https://sourceware.org/pub/valgrind/valgrind-3.16.0.tar.bz2</span><br><span class="line">tar jxf valgrind-3.16.0.tar.bz2</span><br><span class="line">mv valgrind-3.16.0 valgrind</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> valgrind</span><br><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=`<span class="built_in">pwd</span>`/build</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 
