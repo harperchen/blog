@@ -23,17 +23,17 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="To record the usage of several taint analysis tools.">
+  <meta name="description" content="Existing taint analysis tools can be divided into three categories.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Usages and problems of Taint Tools">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/09/15/Taint-Benchmark/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="To record the usage of several taint analysis tools.">
+<meta property="og:description" content="Existing taint analysis tools can be divided into three categories.">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/09/16/Y9oqw1cV3UAasPS.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/16/oH6Yqmh8RkAfgd2.png">
 <meta property="article:published_time" content="2020-09-15T15:18:16.000Z">
-<meta property="article:modified_time" content="2020-09-21T08:39:33.432Z">
+<meta property="article:modified_time" content="2020-09-21T10:20:41.490Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -288,7 +288,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-21 16:39:33" itemprop="dateModified" datetime="2020-09-21T16:39:33+08:00">2020-09-21</time>
+        <time title="Modified: 2020-09-21 18:20:41" itemprop="dateModified" datetime="2020-09-21T18:20:41+08:00">2020-09-21</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -310,10 +310,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>To record the usage of several taint analysis tools.</p>
+        <p>Existing taint analysis tools can be divided into three categories. </p>
 <a id="more"></a>
 
-<p>Existing taint analysis tools can be divided into three categories. </p>
 <ul>
 <li><p>Dynamic Taint Analysis: The first category of tools track the information flow from taint source to taint sink following the runtime execution trace, given a specific input. Most of these dynamic analysis tools are built on the top of dynamic binary instrumentation (DBI) framework such as Pin and Valgrind. Some other tools like PolyTracker works as a LLVM Pass that instruments taint tracking logic into the programs during compilation to perform taint analysis with lower overhead.  </p>
 <table>
@@ -361,17 +360,17 @@
 </tr>
 </tbody></table>
 </li>
-<li><p>The second category of tools work as cpu emulators, which means these tools not really execute the target program, but emulating the functionalities and collect </p>
+<li><p>The second category of tools work as interpreter or cpu emulators, which means these tools not really execute the target program, but emulating the functionalities and collect the essential information for analysis. Usually we need to setup the virual stack, heap, memory, and virtual input before performing analysis. These tools process machine code one by one and transform the assembly to their intermediate language for memory and register manipulation.</p>
 <table>
 <thead>
 <tr>
 <th>Tools</th>
 <th></th>
-<th></th>
+<th>Data Dependency</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Bincat</td>
+<td>Bincat (Plugin for IDA)</td>
 <td></td>
 <td></td>
 </tr>
@@ -387,21 +386,24 @@
 </tr>
 </tbody></table>
 </li>
-<li><p>Static Taint Analysis:</p>
+<li><p>Static Taint Analysis: The third category of tools analyzes the target program statically and wholly. We need ti specify the taint source and sink </p>
 <table>
 <thead>
 <tr>
 <th>Tools</th>
 <th></th>
+<th>Data Dependency</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>Pyre-check</td>
 <td>static analysis tool reasons about data flows in Python applications</td>
+<td></td>
 </tr>
 <tr>
 <td>Psalm</td>
 <td>static analysis tool for finding errors in PHP applications</td>
+<td></td>
 </tr>
 </tbody></table>
 </li>
