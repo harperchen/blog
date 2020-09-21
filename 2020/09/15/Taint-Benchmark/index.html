@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/16/Y9oqw1cV3UAasPS.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/16/oH6Yqmh8RkAfgd2.png">
 <meta property="article:published_time" content="2020-09-15T15:18:16.000Z">
-<meta property="article:modified_time" content="2020-09-21T11:09:49.936Z">
+<meta property="article:modified_time" content="2020-09-21T11:42:37.299Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -288,7 +288,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-21 19:09:49" itemprop="dateModified" datetime="2020-09-21T19:09:49+08:00">2020-09-21</time>
+        <time title="Modified: 2020-09-21 19:42:37" itemprop="dateModified" datetime="2020-09-21T19:42:37+08:00">2020-09-21</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -379,14 +379,9 @@
 <td></td>
 <td></td>
 </tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-</tr>
 </tbody></table>
 </li>
-<li><p>Static Taint Analysis: The third category of tools analyzes the target program statically and wholly. We need ti specify the taint source and sink </p>
+<li><p>Static Taint Analysis: The third category of tools analyzes the target program statically and wholly. The taint source and sink are specified using annotations. Generally speaking, the sources are the return value of user-controllable functions, like <code>input()</code>,  and the sinks are the parameters of functions that should be treated carefully,  like <code>os.command()</code>, otherwise it may lead to potential security issues. The tracking granularity of tools in this category is quite larger compared with the two before mentioned. Except for the taint source and sink, Pyre and Psalm also support for sanitizing functions. Especially, Psalm that mainly aiming for security analysis of web applications, will automatically remove the taint from data when executing functions like <code>stripslashes</code>, which removes backslashes to prevent cross-site-scripting attacks. Such feature is not consistent with our taint testing idea.</p>
 <table>
 <thead>
 <tr>
@@ -398,18 +393,17 @@
 <tbody><tr>
 <td>Pyre-check</td>
 <td>static analysis tool reasons about data flows in Python applications</td>
-<td></td>
+<td>Explicit</td>
 </tr>
 <tr>
 <td>Psalm</td>
 <td>static analysis tool for finding errors in PHP applications</td>
-<td></td>
+<td>Explicit</td>
 </tr>
 </tbody></table>
 </li>
 </ul>
-<h3 id="1-Taintgrind"><a href="#1-Taintgrind" class="headerlink" title="1. Taintgrind"></a>1. Taintgrind</h3><p>这个工具支持explicit information flow, 但不支持implicit information flow.</p>
-<p>This tool fails to analyze implicit information flow.</p>
+<h3 id="1-Taintgrind"><a href="#1-Taintgrind" class="headerlink" title="1. Taintgrind"></a>1. Taintgrind</h3><p>This tool fails to analyze implicit information flow.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;taintgrind.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_sign</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (x == <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (x &lt; <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> t;</span><br><span class="line">	<span class="keyword">int</span> a = atoi(argv[<span class="number">1</span>]);</span><br><span class="line">	<span class="comment">//Defines int as tainted</span></span><br><span class="line">	TNT_TAINT(&amp;a,<span class="keyword">sizeof</span>(a));</span><br><span class="line">	<span class="keyword">int</span> s = get_sign(a);</span><br><span class="line">	TNT_IS_TAINTED(t, &amp;s, <span class="keyword">sizeof</span>(s));</span><br><span class="line">  <span class="keyword">if</span> (t)</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;s is_tainted: %08x\n&quot;</span>, t);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;s is not tainted\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>Compile the above file and run it.</p>
