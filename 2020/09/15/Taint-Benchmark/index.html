@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/16/Y9oqw1cV3UAasPS.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/16/oH6Yqmh8RkAfgd2.png">
 <meta property="article:published_time" content="2020-09-15T15:18:16.000Z">
-<meta property="article:modified_time" content="2020-09-21T10:20:41.490Z">
+<meta property="article:modified_time" content="2020-09-21T11:09:49.936Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -288,7 +288,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-21 18:20:41" itemprop="dateModified" datetime="2020-09-21T18:20:41+08:00">2020-09-21</time>
+        <time title="Modified: 2020-09-21 19:09:49" itemprop="dateModified" datetime="2020-09-21T19:09:49+08:00">2020-09-21</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -314,7 +314,7 @@
 <a id="more"></a>
 
 <ul>
-<li><p>Dynamic Taint Analysis: The first category of tools track the information flow from taint source to taint sink following the runtime execution trace, given a specific input. Most of these dynamic analysis tools are built on the top of dynamic binary instrumentation (DBI) framework such as Pin and Valgrind. Some other tools like PolyTracker works as a LLVM Pass that instruments taint tracking logic into the programs during compilation to perform taint analysis with lower overhead.  </p>
+<li><p>Dynamic Taint Analysis: The first category of tools track the information flow from taint source to taint sink following the runtime execution trace, given a specific input. Most of these dynamic analysis tools are built on the top of dynamic binary instrumentation (DBI) framework such as Pin and Valgrind. Some other tools like PolyTracker works as a LLVM Pass that instruments taint tracking logic into the programs during compilation to perform taint analysis with lower overhead.</p>
 <table>
 <thead>
 <tr>
@@ -360,7 +360,7 @@
 </tr>
 </tbody></table>
 </li>
-<li><p>The second category of tools work as interpreter or cpu emulators, which means these tools not really execute the target program, but emulating the functionalities and collect the essential information for analysis. Usually we need to setup the virual stack, heap, memory, and virtual input before performing analysis. These tools process machine code one by one and transform the assembly to their intermediate language for memory and register manipulation.</p>
+<li><p>Static Taint Analysis but Emulate the Execution: The second category of tools work as an interpreter or a CPU emulator, which means these tools not really execute the target program, but emulating the functionalities and collect the essential information for analysis. Usually, we need to set up the environment such as stack, heap, the content of memory, and program input before performing analysis. During analysis, these tools process machine code one by one and transform the code to their pre-defined intermediate language so that the memory and register can be manipulated correspondingly. At any point in execution, the value of registers and memory cells can be monitored to check if they are tainted or not. As we can see, tools in this category also maintain an execution traces and only take care of the data and instructions along this execution trace, which is the same as dynamic taint analysis.</p>
 <table>
 <thead>
 <tr>
