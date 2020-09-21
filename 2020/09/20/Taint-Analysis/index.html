@@ -26,22 +26,21 @@
   <meta name="description" content="Taint Analysis Categories  Explicit AnalysisHow taint propagates based on the data dependencies between variables.  Implicit AnalysisHow taint propogates through condition instructions based on the co">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Taint Analysis">
-<meta property="og:url" content="https://harperchen.github.io/blog/2020/09/13/Taint-Analysis/index.html">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/09/20/Taint-Analysis/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
 <meta property="og:description" content="Taint Analysis Categories  Explicit AnalysisHow taint propagates based on the data dependencies between variables.  Implicit AnalysisHow taint propogates through condition instructions based on the co">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/15/KbfkLZHJRtndPg4.png">
-<meta property="og:image" content="https://i.loli.net/2020/09/20/l8GU5N7x3VDOsnP.png">
-<meta property="article:published_time" content="2020-09-13T11:15:57.000Z">
-<meta property="article:modified_time" content="2020-09-20T15:53:08.226Z">
+<meta property="article:published_time" content="2020-09-20T11:15:57.000Z">
+<meta property="article:modified_time" content="2020-09-21T03:36:20.414Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/2020/09/13/Taint-Analysis/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/09/20/Taint-Analysis/">
 
 
 <script data-pjax class="page-configurations">
@@ -255,7 +254,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/13/Taint-Analysis/">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/20/Taint-Analysis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -282,14 +281,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2020-09-13 19:15:57" itemprop="dateCreated datePublished" datetime="2020-09-13T19:15:57+08:00">2020-09-13</time>
+      <time title="Created: 2020-09-20 19:15:57" itemprop="dateCreated datePublished" datetime="2020-09-20T19:15:57+08:00">2020-09-20</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-20 23:53:08" itemprop="dateModified" datetime="2020-09-20T23:53:08+08:00">2020-09-20</time>
+        <time title="Modified: 2020-09-21 11:36:20" itemprop="dateModified" datetime="2020-09-21T11:36:20+08:00">2020-09-21</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -381,11 +380,9 @@
 <p><a target="_blank" rel="noopener" href="https://github.com/AngoraFuzzer/libdft64">source</a> for x86_64 used by <a target="_blank" rel="noopener" href="https://www.cs.ucdavis.edu/~hchen/paper/chen2018angora.pdf">Angora</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/AngoraFuzzer/libdft64.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> libdft64</span><br><span class="line">mkdir build</span><br><span class="line">PREFIX=`<span class="built_in">pwd</span>`/build ./install_pin.sh</span><br><span class="line"><span class="comment"># change wget to curl like below</span></span><br><span class="line"><span class="comment"># curl -o $&#123;TAR_NAME&#125;.tar.gz -L https://software.intel.com/sites/landingpage/pintool/downloads/$&#123;TAR_NAME&#125;.tar.gz</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PIN_ROOT=..../libdft64/build/pin-3.7-97619-g0d0c92f4f-gcc-linux</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
 
-<h4 id="6-Bincat-or-Ponce"><a href="#6-Bincat-or-Ponce" class="headerlink" title="6. Bincat or Ponce"></a>6. Bincat or Ponce</h4><p>静态分析工具</p>
+<h4 id="6-Bincat-or-Ponce"><a href="#6-Bincat-or-Ponce" class="headerlink" title="6. Bincat or Ponce"></a>6. Bincat or Ponce</h4><p>静态分析工具 <a target="_blank" rel="noopener" href="https://github.com/airbus-seclab/bincat">github</a></p>
 <p>BinCAT is a <em>static</em> Binary Code Analysis Toolkit, designed to help reverse engineers, directly from IDA or using Python for automation.</p>
 <p><a target="_blank" rel="noopener" href="https://airbus-seclab.github.io/bincat/RECON-MTL-2017-bincat-biondi_rigo_zennou_mehrenberger.pdf">https://airbus-seclab.github.io/bincat/RECON-MTL-2017-bincat-biondi_rigo_zennou_mehrenberger.pdf</a></p>
-<img src="https://i.loli.net/2020/09/20/l8GU5N7x3VDOsnP.png">
-
 <h4 id="7-Tigress"><a href="#7-Tigress" class="headerlink" title="7. Tigress"></a>7. Tigress</h4><h4 id="8-DECAF-DECAF"><a href="#8-DECAF-DECAF" class="headerlink" title="8. DECAF/DECAF++"></a>8. DECAF/DECAF++</h4><h4 id="9-PolyTracker"><a href="#9-PolyTracker" class="headerlink" title="9. PolyTracker"></a>9. PolyTracker</h4><p><a target="_blank" rel="noopener" href="https://github.com/trailofbits/polytracker">github</a> 动态分析</p>
 <p><strong>Phosphor</strong> <a target="_blank" rel="noopener" href="https://github.com/gmu-swe/phosphor">github</a> taint analysis for JVM</p>
 <p><strong>Neuzz/NeuTaint</strong> <a target="_blank" rel="noopener" href="https://github.com/Dongdongshe/neuzz">github</a> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.05620">paper</a></p>
@@ -412,14 +409,11 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/blog/2020/09/13/Ph.D.-Related/" rel="prev" title="Ph.D. Related">
-                  <i class="fa fa-chevron-left"></i> Ph.D. Related
+                <a href="/blog/2020/09/15/Taint-Benchmark/" rel="prev" title="Taint Benchmark">
+                  <i class="fa fa-chevron-left"></i> Taint Benchmark
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/blog/2020/09/13/Science-Writing/" rel="next" title="Science Writing">
-                  Science Writing <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
