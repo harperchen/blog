@@ -36,15 +36,15 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/21/2eVtNhBX8jC9HAo.jpg">
 <meta property="og:image" content="https://i.loli.net/2020/09/21/YI4PwTR73UEqWSh.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/21/fiCyMKr2sIEBSzn.png">
-<meta property="og:image" content="https://harperchen.github.io/Users/harper/Library/Application%20Support/typora-user-images/image-20200921222843992.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/ficbyROY3ntDUZV.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/21/HPzSNKxCvVayBjU.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/21/y4P6zwo8DcAB5R3.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/21/wfVJax3QIPOFNsr.png">
-<meta property="og:image" content="https://harperchen.github.io/Users/harper/Library/Application%20Support/typora-user-images/image-20200921221127514.png">
-<meta property="og:image" content="https://harperchen.github.io/Users/harper/Library/Application%20Support/typora-user-images/image-20200921221444701.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/VJC8tbmI9RxZN6r.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/IsV7lnCDGdjkeYf.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/21/MQPI8vWODSmocf1.png">
 <meta property="article:published_time" content="2020-09-15T15:18:16.000Z">
-<meta property="article:modified_time" content="2020-09-21T14:43:11.577Z">
+<meta property="article:modified_time" content="2020-09-21T14:48:07.426Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -299,7 +299,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-21 22:43:11" itemprop="dateModified" datetime="2020-09-21T22:43:11+08:00">2020-09-21</time>
+        <time title="Modified: 2020-09-21 22:48:07" itemprop="dateModified" datetime="2020-09-21T22:48:07+08:00">2020-09-21</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -447,24 +447,26 @@
 <ol start="4">
 <li>Switch to the <strong>IDA View-A</strong> view, go to arbitrary address such as <code>0x98C</code>,  we can check the value of each register. From the <strong>BinCAT IL</strong> view, the intermediate language of instruction <code>mov [ebp+var_22C], edi</code> is <code>(32)[ebp+0xfffffdd4]&lt;-edi</code>.</li>
 </ol>
-<p><img src="/Users/harper/Library/Application%20Support/typora-user-images/image-20200921222843992.png" alt="image-20200921222843992"></p>
+<p><img src="https://i.loli.net/2020/09/21/ficbyROY3ntDUZV.png" alt="image-20200921222843992"></p>
 <ol start="5">
 <li>Override the taint of every byte at addresses <code>0x300140</code>-<code>0x300147</code> which contains the null-terminated <code>company</code> string.</li>
 </ol>
-<img src="https://i.loli.net/2020/09/21/HPzSNKxCvVayBjU.png" alt="image-20200921220721353" style="zoom:40%;" />
+<img src="https://i.loli.net/2020/09/21/HPzSNKxCvVayBjU.png" alt="image-20200921220721353" style="zoom:37%;" />
 
 <p>​    Set it to <code>!|FF|</code> (this fully taints the byte, without changing its value). </p>
-<p><img src="https://i.loli.net/2020/09/21/y4P6zwo8DcAB5R3.png" alt="image-20200921220823674"></p>
+<img src="https://i.loli.net/2020/09/21/y4P6zwo8DcAB5R3.png" alt="image-20200921220823674" style="zoom:37%;" />
+
 <p>​    We can check that the user-defined taint overrides at <strong>BinCAT Overrides</strong> view. Re-run the analysis.</p>
-<img src="https://i.loli.net/2020/09/21/wfVJax3QIPOFNsr.png" alt="image-20200921221039291" style="zoom:50%;" />
+<img src="https://i.loli.net/2020/09/21/wfVJax3QIPOFNsr.png" alt="image-20200921221039291" style="zoom:37%;" />
 
 <ol start="6">
 <li>Advance to the instruction at address <code>0x93F</code>, and observe that this memory range is indeed tainted: both the ASCII and hexadecimal representations of this string are displayed as green text.</li>
 </ol>
-<img src="/Users/harper/Library/Application%20Support/typora-user-images/image-20200921221127514.png" alt="image-20200921221127514" style="zoom: 53%;" />
+<img src="https://i.loli.net/2020/09/21/VJC8tbmI9RxZN6r.png" alt="image-20200921221127514" style="zoom: 37%;" />
 
 <p>​    In the <strong>IDA View-A</strong> view, notice that some instructions are displayed against a non-gray background, since they manipulate tainted data. For example, the instruction at address <code>0x9E6</code> (<code>push eax</code>) is highlighted because <code>eax</code>is tainted.</p>
-<p><img src="/Users/harper/Library/Application%20Support/typora-user-images/image-20200921221444701.png" alt="image-20200921221444701"></p>
+<img src="https://i.loli.net/2020/09/21/IsV7lnCDGdjkeYf.png" alt="image-20200921221444701" style="zoom:35%;" />
+
 <ol start="7">
 <li>In the IDA View-A view, we can see some instructions are displayed with a white background, since these instructions are not executed with the given parameters.</li>
 </ol>
