@@ -45,8 +45,10 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/21/MQPI8vWODSmocf1.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/22/yzIhduSG5k7xw6i.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/22/XqsBbYnF7wihrv3.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/22/gehaNQpXklCjnbs.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/22/kbvLpgYRq6XPSfM.png">
 <meta property="article:published_time" content="2020-09-15T15:18:16.000Z">
-<meta property="article:modified_time" content="2020-09-22T06:59:44.335Z">
+<meta property="article:modified_time" content="2020-09-22T07:27:34.193Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -301,7 +303,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-22 14:59:44" itemprop="dateModified" datetime="2020-09-22T14:59:44+08:00">2020-09-22</time>
+        <time title="Modified: 2020-09-22 15:27:34" itemprop="dateModified" datetime="2020-09-22T15:27:34+08:00">2020-09-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -491,6 +493,12 @@
 <p>The reasons are: first, psalm not support implicit data flow tracking; second, operation <code>stripslashes</code> remove taints from data because this function removes backslashes in the string, which eliminates the risk of suffering cross-site-scripting attacks. In that case,  there is no need to track how taint flows anymore. We can feel that Psalm is developed mainly for security analysis of web applications. However, this is not consistent with our idea: If the output changes with the different inputs, the output should be tainted once the input is tainted. </p>
 <p>If we put <code>echo $data</code> ahead of <code>stripslashes</code> function, the error can be detected.</p>
 <img src="https://i.loli.net/2020/09/22/XqsBbYnF7wihrv3.png" alt="image-20200922145913877" style="zoom:45%;" />
+
+<p>Except for the three default taint sources <code>$_POST/$_GET/$_COOKIE</code>, we can define our custom taint sources using annotations <code>@psalm-taint-source &lt;taint-type&gt;</code> shown as follows, which are always the return value of user-controlled functions.</p>
+<img src="https://i.loli.net/2020/09/22/gehaNQpXklCjnbs.png" alt="image-20200922151007945" style="zoom: 43%;" />
+
+<p>Also, except for a number of default builtin taint sinks such as <code>echo</code>, we can define our custom taint sinks using annotation <code>@psalm-taint-sink &lt;taint-type&gt; &lt;param-name&gt;</code> shown as follows, which are always the parameters of functions that should be carefully treated.</p>
+<img src="https://i.loli.net/2020/09/22/kbvLpgYRq6XPSfM.png" alt="image-20200922152410422" style="zoom:43%;" />
 
 
     </div>
