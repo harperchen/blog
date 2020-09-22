@@ -48,7 +48,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/22/gehaNQpXklCjnbs.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/22/kbvLpgYRq6XPSfM.png">
 <meta property="article:published_time" content="2020-09-15T15:18:16.000Z">
-<meta property="article:modified_time" content="2020-09-22T07:27:34.193Z">
+<meta property="article:modified_time" content="2020-09-22T08:39:12.421Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -195,7 +195,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Categories"><span class="nav-text">1. Categories</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Dynamic-Taint-Analysis-Taintgrind"><span class="nav-text">2. Dynamic Taint Analysis: Taintgrind</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Static-Analysis-Tool-but-Emulate-Execution-Bincat"><span class="nav-text">3. Static Analysis Tool but Emulate Execution: Bincat</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Static-Analysis-Tool-Psalm"><span class="nav-text">4. Static Analysis Tool: Psalm</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Categories"><span class="nav-text">1. Categories</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Dynamic-Taint-Analysis-Taintgrind"><span class="nav-text">2. Dynamic Taint Analysis: Taintgrind</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Static-Analysis-Tool-but-Emulate-Execution-Bincat"><span class="nav-text">3. Static Analysis Tool but Emulate Execution: Bincat</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Static-Analysis-Tool-Psalm"><span class="nav-text">4. Static Analysis Tool: Psalm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Static-Analysis-Tool-Pysa"><span class="nav-text">5. Static Analysis Tool: Pysa</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -303,7 +303,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-22 15:27:34" itemprop="dateModified" datetime="2020-09-22T15:27:34+08:00">2020-09-22</time>
+        <time title="Modified: 2020-09-22 16:39:12" itemprop="dateModified" datetime="2020-09-22T16:39:12+08:00">2020-09-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -475,7 +475,7 @@
 <li>In the IDA View-A view, we can see some instructions are displayed with a white background, since these instructions are not executed with the given parameters.</li>
 </ol>
 <p><img src="https://i.loli.net/2020/09/21/MQPI8vWODSmocf1.png" alt="image-20200921224200323"></p>
-<h4 id="4-Static-Analysis-Tool-Psalm"><a href="#4-Static-Analysis-Tool-Psalm" class="headerlink" title="4. Static Analysis Tool: Psalm"></a>4. Static Analysis Tool: Psalm</h4><p>Psalm is a static analysis tool, it can be easily installed using Composer.</p>
+<h4 id="4-Static-Analysis-Tool-Psalm"><a href="#4-Static-Analysis-Tool-Psalm" class="headerlink" title="4. Static Analysis Tool: Psalm"></a>4. Static Analysis Tool: Psalm</h4><p>Psalm is a static analysis tool for php applicationn, it can be easily installed using Composer.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer require --dev vimeo/psalm</span><br></pre></td></tr></table></figure>
 
 <p>Assume we plan to analysis the following <code>target.php</code> program using Psalm. <code>$_POST</code> is user-controlled input, which is defined as taint source by default. <code>echo</code> is the place that we don’t want untrusted user data to end up, which is also defined as taint sink by dafault. In this program, the data explicitly flows from <code>$_POST</code> to <code>echo $name</code> and implicitly from <code>$_POST</code> to <code>echo $a</code>.</p>
@@ -494,12 +494,20 @@
 <p>If we put <code>echo $data</code> ahead of <code>stripslashes</code> function, the error can be detected.</p>
 <img src="https://i.loli.net/2020/09/22/XqsBbYnF7wihrv3.png" alt="image-20200922145913877" style="zoom:45%;" />
 
-<p>Except for the three default taint sources <code>$_POST/$_GET/$_COOKIE</code>, we can define our custom taint sources using annotations <code>@psalm-taint-source &lt;taint-type&gt;</code> shown as follows, which are always the return value of user-controlled functions.</p>
+<p>Except for the three default taint sources <code>$_POST/$_GET/$_COOKIE</code>, we can define our custom taint sources using annotations <code>@psalm-taint-source &lt;taint-type&gt;</code>, which are always the return value of user-controlled functions. The following example define the return value of <code>getUser</code> function as taint source whose type is <code>input</code>. When the taint flows into taint sink <code>echo</code>, an error will be reported.</p>
 <img src="https://i.loli.net/2020/09/22/gehaNQpXklCjnbs.png" alt="image-20200922151007945" style="zoom: 43%;" />
 
-<p>Also, except for a number of default builtin taint sinks such as <code>echo</code>, we can define our custom taint sinks using annotation <code>@psalm-taint-sink &lt;taint-type&gt; &lt;param-name&gt;</code> shown as follows, which are always the parameters of functions that should be carefully treated.</p>
+<p>Also, except for a number of default builtin taint sinks such as <code>echo</code>, we can define our custom taint sinks using annotation <code>@psalm-taint-sink &lt;taint-type&gt; &lt;param-name&gt;</code>, which are always the parameters of functions that should be carefully treated. The following example defines the parameter <code>$str</code> of <code>myExec</code> function as taint sink whose type is <code>shell</code>.</p>
 <img src="https://i.loli.net/2020/09/22/kbvLpgYRq6XPSfM.png" alt="image-20200922152410422" style="zoom:43%;" />
 
+<h4 id="5-Static-Analysis-Tool-Pysa"><a href="#5-Static-Analysis-Tool-Pysa" class="headerlink" title="5. Static Analysis Tool: Pysa"></a>5. Static Analysis Tool: Pysa</h4><p>Pysa is a static analysis tool for python. We first define different types of  taint source and sink in <code>taint.config</code> file. In the following config, we define source type <code>UserControlled</code>, sink type <code>RemoteCodeExecution</code>, as well as a rule showing that we concern about the data flows from source <code>UserControlled</code> to sink <code>RemoteCodeExecution</code>.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  sources: [</span><br><span class="line">    &#123;</span><br><span class="line">      name: &quot;UserControlled&quot;,</span><br><span class="line">      comment: &quot;use to annotate user input&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line"></span><br><span class="line">  sinks: [</span><br><span class="line">    &#123;</span><br><span class="line">      name: &quot;RemoteCodeExecution&quot;,</span><br><span class="line">      comment: &quot;use to annotate execution of code&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  features: [],</span><br><span class="line"></span><br><span class="line">  rules: [</span><br><span class="line">    &#123;</span><br><span class="line">      name: &quot;Possible shell injection&quot;,</span><br><span class="line">      code: 5001,</span><br><span class="line">      sources: [ &quot;UserControlled&quot; ],</span><br><span class="line">      sinks: [ &quot;RemoteCodeExecution&quot; ],</span><br><span class="line">      message_format: &quot;Data from [&#123;$sources&#125;] source(s) may reach [&#123;$sinks&#125;] sink(s)&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Then we need to attach the source and sink type to the entities in target program. The following <code>.pysa</code> file using python annotation syntax indicates that the return value of <code>input</code> is taint source with type <code>UserControlled</code>, and the parameter of <code>os.system</code> is taint sink with type <code>RemoteCodeExecution</code>. Once there is a data flow path from <code>input</code> to <code>os.system</code>, Pysa will report an error. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># taint/general.pysa</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># model for raw_input</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">input</span>(<span class="params">__prompt = ...</span>) -&gt; TaintSource[UserControlled]:</span> ...</span><br><span class="line"></span><br><span class="line"><span class="comment"># model for os.system</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">os</span>.<span class="title">system</span>(<span class="params">command: TaintSink[RemoteCodeExecution]</span>):</span> ...</span><br></pre></td></tr></table></figure>
+
+<p>Therefore, for the target program</p>
+<p>The input function is a taint source since it gets input directly from the user.<br>The os.system function is a taint sink, since we do not want user-controlled values to flow into it.</p>
 
     </div>
 
