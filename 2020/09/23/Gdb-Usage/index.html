@@ -23,31 +23,40 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wei&#39;s Blog">
-<meta property="og:url" content="https://harperchen.github.io/blog/index.html">
+  <meta name="description" content="I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT. 12345678910111213141516171819#include &lt;stdio.h&gt;#includ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gdb-usage">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/09/23/Gdb-Usage/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
+<meta property="og:description" content="I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT. 12345678910111213141516171819#include &lt;stdio.h&gt;#includ">
 <meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2020/09/23/F7yVHlqONRnjvfo.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/23/kPIyaBRxn4S6OFt.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/23/zrZ3WwRlQDEMYIB.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/23/BP3m19Z6DWupTQg.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/23/mXwTZjuxY139dbf.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/23/wXNM7ngi49TY2hv.png">
+<meta property="article:published_time" content="2020-09-23T11:37:42.000Z">
+<meta property="article:modified_time" content="2020-09-26T14:05:37.083Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/23/F7yVHlqONRnjvfo.png">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/09/23/Gdb-Usage/">
 
 
 <script data-pjax class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>Wei's Blog</title>
+  <title>gdb-usage | Wei's Blog</title>
   
 
 
@@ -238,11 +247,12 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
       
 
       
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
@@ -261,10 +271,9 @@
     
     
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/09/23/Gdb-Usage/" class="post-title-link" itemprop="url">gdb-usage</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          gdb-usage
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -294,7 +303,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT.</p>
+        <p>I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_sign</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (x == <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (x &lt; <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a = atoi(argv[<span class="number">1</span>]);</span><br><span class="line">	<span class="keyword">int</span> s = get_sign(a);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>Basically, I’m trying to set up argc and argv in correct memory location. The machine code of below C program is shown as below.</p>
@@ -328,7 +337,6 @@
 <p>The same as concrete execution, <code>rsi</code> is argv, <code>argv[1]=0x300200</code>, and the input 1 is store at <code>argv[1]</code>.</p>
 <p><img src="https://i.loli.net/2020/09/23/wXNM7ngi49TY2hv.png" alt="image-20200923203244031"></p>
 
-      
     </div>
 
     
@@ -336,599 +344,22 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/20/Taint-Analysis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/09/20/Taint-Analysis/" class="post-title-link" itemprop="url">Taint Analysis</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-09-20 19:15:57" itemprop="dateCreated datePublished" datetime="2020-09-20T19:15:57+08:00">2020-09-20</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-26 15:48:23" itemprop="dateModified" datetime="2020-09-26T15:48:23+08:00">2020-09-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Taint/" itemprop="url" rel="index"><span itemprop="name">Taint</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><strong>Taint Analysis Classification</strong></p>
-<ol>
-<li><p>Explicit Analysis<br>How taint propagates based on the data dependencies between variables.</p>
-</li>
-<li><p>Implicit Analysis<br>How taint propogates through condition instructions based on the control dependencies between variables.</p>
-</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2020/09/20/Taint-Analysis/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/15/Taint-Benchmark/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/09/15/Taint-Benchmark/" class="post-title-link" itemprop="url">Usages and problems of Taint Tools</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-09-15 23:18:16" itemprop="dateCreated datePublished" datetime="2020-09-15T23:18:16+08:00">2020-09-15</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-26 22:06:12" itemprop="dateModified" datetime="2020-09-26T22:06:12+08:00">2020-09-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Taint/" itemprop="url" rel="index"><span itemprop="name">Taint</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="1-Tool-Categories"><a href="#1-Tool-Categories" class="headerlink" title="1. Tool Categories"></a>1. Tool Categories</h4><p>Existing taint analysis tools can be divided into three categories. </p>
-<h5 id="Dynamic-Taint-Analysis"><a href="#Dynamic-Taint-Analysis" class="headerlink" title="Dynamic Taint Analysis"></a>Dynamic Taint Analysis</h5><p>The first category of tools track the information flow from taint source to taint sink at runtime following the execution trace. Most of these dynamic analysis tools are built on the top of dynamic binary instrumentation (DBI) framework such as Pin and Valgrind. These tools dynamically insert analysis code into the target executable while the executable is running. Some other tools like PolyTracker work as an LLVM Pass that instruments taint tracking logic into the programs during compilation to perform taint analysis with lower overhead. Such tools always ship with their own compiler, for example, <code>polybuild</code> and <code>polybuild++</code> of Tool PolyTracker. Given a specific input, the dynamic analysis tools will track how the taint is propagated along the executed path.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2020/09/15/Taint-Benchmark/#more" rel="contents">
-                Read more &raquo;
-              </a>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/09/20/Taint-Analysis/" rel="prev" title="Taint Analysis">
+                  <i class="fa fa-chevron-left"></i> Taint Analysis
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/13/Science-Writing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/09/13/Science-Writing/" class="post-title-link" itemprop="url">Science Writing</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2020-09-13 21:30:48 / Modified: 23:24:53" itemprop="dateCreated datePublished" datetime="2020-09-13T21:30:48+08:00">2020-09-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Ph-D/" itemprop="url" rel="index"><span itemprop="name">Ph.D.</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Good Examples:</p>
-<ol>
-<li><a target="_blank" rel="noopener" href="http://iacoma.cs.uiuc.edu/iacoma-papers/ssp19.pdf">http://iacoma.cs.uiuc.edu/iacoma-papers/ssp19.pdf</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.usenix.org/system/files/sec20spring_yan_prepub.pdf">https://www.usenix.org/system/files/sec20spring_yan_prepub.pdf</a></li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2020/09/13/Science-Writing/#more" rel="contents">
-                Read more &raquo;
-              </a>
+            <div class="post-nav-item">
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          </div>
     </footer>
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/13/Ph.D.-Related/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/09/13/Ph.D.-Related/" class="post-title-link" itemprop="url">Ph.D. Related</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2020-09-13 00:37:55 / Modified: 23:23:55" itemprop="dateCreated datePublished" datetime="2020-09-13T00:37:55+08:00">2020-09-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Ph-D/" itemprop="url" rel="index"><span itemprop="name">Ph.D.</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>3 qualities of successful Ph.D. students: <a target="_blank" rel="noopener" href="http://matt.might.net/articles/successful-phd-students/">http://matt.might.net/articles/successful-phd-students/</a></p>
-<p>10 reasons Ph.D. students fail: <a target="_blank" rel="noopener" href="http://matt.might.net/articles/ways-to-fail-a-phd/">http://matt.might.net/articles/ways-to-fail-a-phd/</a></p>
-<p>The Ph.D. Grind: <a target="_blank" rel="noopener" href="https://www.goodreads.com/book/show/15731248-the-ph-d-grind">https://www.goodreads.com/book/show/15731248-the-ph-d-grind</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/" class="post-title-link" itemprop="url">How to enable MTE in ArmStudio</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2020-09-12 18:47:16 / Modified: 21:29:43" itemprop="dateCreated datePublished" datetime="2020-09-12T18:47:16+08:00">2020-09-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/ARM/" itemprop="url" rel="index"><span itemprop="name">ARM</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Configure memory tagging extension (MTE) using Arm Studio and FVP</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/12/CGroup-Experiment/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/09/12/CGroup-Experiment/" class="post-title-link" itemprop="url">CGroup Experiments</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-09-12 16:51:41" itemprop="dateCreated datePublished" datetime="2020-09-12T16:51:41+08:00">2020-09-12</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-13 23:52:12" itemprop="dateModified" datetime="2020-09-13T23:52:12+08:00">2020-09-13</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Container/" itemprop="url" rel="index"><span itemprop="name">Container</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>CGroups Experiments including CPUSet, CPU, Memory usage limitation, etc.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2020/09/12/CGroup-Experiment/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/12/How-to-config-MTE-using-Qemu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/09/12/How-to-config-MTE-using-Qemu/" class="post-title-link" itemprop="url">How to config MTE using Qemu</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2020-09-12 12:20:20 / Modified: 20:09:03" itemprop="dateCreated datePublished" datetime="2020-09-12T12:20:20+08:00">2020-09-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/ARM/" itemprop="url" rel="index"><span itemprop="name">ARM</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Configure memory tagging extension (MTE) using Qemu</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2020/09/12/How-to-config-MTE-using-Qemu/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
