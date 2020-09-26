@@ -23,12 +23,12 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT. 12345678910111213141516171819#include &lt;stdio.h&gt;#includ">
+  <meta name="description" content="I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="gdb-usage">
+<meta property="og:title" content="Gdb Usage">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/09/23/Gdb-Usage/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT. 12345678910111213141516171819#include &lt;stdio.h&gt;#includ">
+<meta property="og:description" content="I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT.">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/09/23/F7yVHlqONRnjvfo.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/23/kPIyaBRxn4S6OFt.png">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/23/mXwTZjuxY139dbf.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/23/wXNM7ngi49TY2hv.png">
 <meta property="article:published_time" content="2020-09-23T11:37:42.000Z">
-<meta property="article:modified_time" content="2020-09-26T14:05:37.083Z">
+<meta property="article:modified_time" content="2020-09-26T14:08:04.985Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2020/09/23/F7yVHlqONRnjvfo.png">
@@ -56,7 +56,7 @@
   };
 </script>
 
-  <title>gdb-usage | Wei's Blog</title>
+  <title>Gdb Usage | Wei's Blog</title>
   
 
 
@@ -272,7 +272,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          gdb-usage
+          Gdb Usage
         </h1>
 
         <div class="post-meta-container">
@@ -290,7 +290,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-26 22:05:37" itemprop="dateModified" datetime="2020-09-26T22:05:37+08:00">2020-09-26</time>
+        <time title="Modified: 2020-09-26 22:08:04" itemprop="dateModified" datetime="2020-09-26T22:08:04+08:00">2020-09-26</time>
       </span>
 
   
@@ -304,6 +304,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT.</p>
+<a id="more"></a>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_sign</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (x == <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (x &lt; <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a = atoi(argv[<span class="number">1</span>]);</span><br><span class="line">	<span class="keyword">int</span> s = get_sign(a);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>Basically, I’m trying to set up argc and argv in correct memory location. The machine code of below C program is shown as below.</p>

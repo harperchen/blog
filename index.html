@@ -263,7 +263,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/blog/2020/09/23/Gdb-Usage/" class="post-title-link" itemprop="url">gdb-usage</a>
+            <a href="/blog/2020/09/23/Gdb-Usage/" class="post-title-link" itemprop="url">Gdb Usage</a>
         </h2>
 
         <div class="post-meta-container">
@@ -281,7 +281,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-26 22:05:37" itemprop="dateModified" datetime="2020-09-26T22:05:37+08:00">2020-09-26</time>
+        <time title="Modified: 2020-09-26 22:08:04" itemprop="dateModified" datetime="2020-09-26T22:08:04+08:00">2020-09-26</time>
       </span>
 
   
@@ -295,39 +295,14 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>I would like to debug the following C program using gdb to check how to set the memory content to run this program statically using BinCAT.</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_sign</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (x == <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (x &lt; <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a = atoi(argv[<span class="number">1</span>]);</span><br><span class="line">	<span class="keyword">int</span> s = get_sign(a);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Basically, I’m trying to set up argc and argv in correct memory location. The machine code of below C program is shown as below.</p>
-<img src="https://i.loli.net/2020/09/23/F7yVHlqONRnjvfo.png" style="zoom: 85%;" />
-
-<p>First, we compile this code with <code>clang</code> and set the args as 1.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ clang test.c -o <span class="built_in">test</span></span><br><span class="line">$ gdb <span class="built_in">test</span></span><br><span class="line">(gdb) <span class="built_in">set</span> args 1</span><br></pre></td></tr></table></figure>
-
-<img src="https://i.loli.net/2020/09/23/kPIyaBRxn4S6OFt.png" alt="image-20200923194924624" style="zoom:43%;" />
-
-<p>Second, we use <code>layout asm</code> command to show the disassembly of test and use <code>b main</code> to set break at the start address of main.</p>
-<img src="https://i.loli.net/2020/09/23/zrZ3WwRlQDEMYIB.png" alt="image-20200923195515733" style="zoom:43%;" />
-
-<p>Third, we run the program using command <code>r</code>, the program stops at the instruction in address <code>0x400534</code>.</p>
-<img src="https://i.loli.net/2020/09/23/BP3m19Z6DWupTQg.png" alt="image-20200923195704924" style="zoom:43%;" />
-
-<p>We can use p to show the value of register.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p <span class="variable">$rsp</span></span><br><span class="line"><span class="variable">$1</span> = (void *) 0x7fffffffe220</span><br><span class="line">(gdb) p <span class="variable">$rbp</span></span><br><span class="line"><span class="variable">$2</span> = (void *) 0x7fffffffe220</span><br></pre></td></tr></table></figure>
-
-<p><code>ni</code> is used to execute instruction one by one. We stop at <code>0x400546</code> and check the value of <code>edi</code> and <code>rsi</code>.  </p>
-<p><img src="https://i.loli.net/2020/09/23/mXwTZjuxY139dbf.png" alt="image-20200923200911169"></p>
-<p>The result shows that <code>edi=2</code>, which is exactly <code>argc</code>, cause there are two parameters. <code>rsi=0x0x7fffffffe308</code> which should be the value of <code>argv</code>. We check the memory content at address <code>$rsi</code>, then we can find that <code>argv[0]=0x7fffffffe581</code> and <code>argv[1] = 0x00007fffffffe594</code>. Further, we check the memory content of <code>argv[0]</code> and <code>argv[1]</code>, the two parameters are listed.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p /x <span class="variable">$rsi</span></span><br><span class="line"><span class="variable">$5</span> = 0x7fffffffe308</span><br><span class="line">(gdb) x/4x <span class="variable">$rsi</span></span><br><span class="line">0x7fffffffe308: 0xffffe581      0x00007fff      0xffffe594      0x00007fff</span><br><span class="line">(gdb) x/19c 0x00007fffffffe581</span><br><span class="line">0x7fffffffe581: 47 <span class="string">&#x27;/&#x27;</span>  104 <span class="string">&#x27;h&#x27;</span> 111 <span class="string">&#x27;o&#x27;</span> 109 <span class="string">&#x27;m&#x27;</span> 101 <span class="string">&#x27;e&#x27;</span> 47 <span class="string">&#x27;/&#x27;</span>  119 <span class="string">&#x27;w&#x27;</span> 99 <span class="string">&#x27;c&#x27;</span></span><br><span class="line">0x7fffffffe589: 104 <span class="string">&#x27;h&#x27;</span> 101 <span class="string">&#x27;e&#x27;</span> 110 <span class="string">&#x27;n&#x27;</span> 98 <span class="string">&#x27;b&#x27;</span>  116 <span class="string">&#x27;t&#x27;</span> 47 <span class="string">&#x27;/&#x27;</span>  116 <span class="string">&#x27;t&#x27;</span> 101 <span class="string">&#x27;e&#x27;</span></span><br><span class="line">0x7fffffffe591: 115 <span class="string">&#x27;s&#x27;</span> 116 <span class="string">&#x27;t&#x27;</span> 0 <span class="string">&#x27;\000&#x27;</span></span><br><span class="line">(gdb) x/2c 0x00007fffffffe594</span><br><span class="line">0x7fffffffe594: 49 <span class="string">&#x27;1&#x27;</span>  0 <span class="string">&#x27;\000&#x27;</span></span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
-
-<p>Therefore, <code>mov rax, [rbp+var_10]</code> will move the value of argv to register <code>rax</code>, then <code>mov rdi, [rax+8]</code> will move the value of argv[1] to <code>rdi</code>, which is the paramter of atoi function. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p/x <span class="variable">$rdi</span></span><br><span class="line"><span class="variable">$7</span> = 0x7fffffffe594</span><br><span class="line">(gdb) p/x <span class="variable">$rax</span></span><br><span class="line"><span class="variable">$8</span> = 0x7fffffffe308</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
-
-<p>Based on the observation, we configure BinCAT to perform taint analysis.</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">reg</span>[rsi] = <span class="number">0</span>xb<span class="number">8001008</span> # argv</span><br><span class="line"><span class="attribute">reg</span>[rdi] = <span class="number">0</span>x<span class="number">2</span> # argc</span><br><span class="line"><span class="attribute">reg</span>[rsp] = <span class="number">0</span>xb<span class="number">8001000</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">mem</span>[<span class="number">0</span>xb<span class="number">8000000</span>*<span class="number">4099</span>] = |<span class="number">00</span>|?<span class="number">0</span>xFF</span><br><span class="line"><span class="attribute">mem</span>[<span class="number">0</span>xb<span class="number">8001008</span>] = <span class="number">0</span>x<span class="number">300100</span> # argv[<span class="number">0</span>]</span><br><span class="line"><span class="attribute">mem</span>[<span class="number">0</span>xb<span class="number">8001010</span>] = <span class="number">0</span>x<span class="number">300200</span> # argv[<span class="number">1</span>]</span><br><span class="line"><span class="attribute">mem</span>[<span class="number">0</span>x<span class="number">300200</span>] = |<span class="number">3300</span>|</span><br></pre></td></tr></table></figure>
-
-<p>The same as concrete execution, <code>rsi</code> is argv, <code>argv[1]=0x300200</code>, and the input 1 is store at <code>argv[1]</code>.</p>
-<p><img src="https://i.loli.net/2020/09/23/wXNM7ngi49TY2hv.png" alt="image-20200923203244031"></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2020/09/23/Gdb-Usage/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
