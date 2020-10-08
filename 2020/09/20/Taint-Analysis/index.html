@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/15/KbfkLZHJRtndPg4.png">
 <meta property="article:published_time" content="2020-09-20T11:15:57.000Z">
-<meta property="article:modified_time" content="2020-09-26T07:48:23.689Z">
+<meta property="article:modified_time" content="2020-10-05T15:36:00.291Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -180,7 +180,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Taintgrind"><span class="nav-text">1. Taintgrind</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Triton"><span class="nav-text">2. Triton</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Pyre"><span class="nav-text">3. Pyre</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Psalm"><span class="nav-text">4. Psalm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-LibDFT"><span class="nav-text">5. LibDFT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Bincat-or-Ponce"><span class="nav-text">6. Bincat or Ponce</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-PolyTracker"><span class="nav-text">7. PolyTracker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Tigress"><span class="nav-text">8. Tigress</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-DECAF-DECAF"><span class="nav-text">9. DECAF&#x2F;DECAF++</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-TaintInduce"><span class="nav-text">10. TaintInduce</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-DFSan"><span class="nav-text">11. DFSan</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Taintgrind"><span class="nav-text">1. Taintgrind</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Triton"><span class="nav-text">2. Triton</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Pyre"><span class="nav-text">3. Pyre</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Psalm"><span class="nav-text">4. Psalm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-LibDFT"><span class="nav-text">5. LibDFT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Bincat-or-Ponce"><span class="nav-text">6. Bincat or Ponce</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-PolyTracker"><span class="nav-text">7. PolyTracker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Tigress"><span class="nav-text">8. Tigress</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-DECAF-DECAF"><span class="nav-text">9. DECAF&#x2F;DECAF++</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-TaintInduce"><span class="nav-text">10. TaintInduce</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-DFSan"><span class="nav-text">11. DFSan</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Doop"><span class="nav-text">12. Doop</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -196,7 +196,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -288,7 +288,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-26 15:48:23" itemprop="dateModified" datetime="2020-09-26T15:48:23+08:00">2020-09-26</time>
+        <time title="Modified: 2020-10-05 23:36:00" itemprop="dateModified" datetime="2020-10-05T23:36:00+08:00">2020-10-05</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -387,12 +387,16 @@
 <h4 id="7-PolyTracker"><a href="#7-PolyTracker" class="headerlink" title="7. PolyTracker"></a>7. PolyTracker</h4><p><a target="_blank" rel="noopener" href="https://github.com/trailofbits/polytracker">github</a> 动态分析 binary tree (二叉森林？)</p>
 <p>Polytracker is an LLVM pass that instruments the programs it compiles to track which bytes of an input file are operated on by which functions. It outputs a JSON file containing the function-to-input-bytes mapping.</p>
 <p>The blog instroduce Polytracker and PolyFile <a target="_blank" rel="noopener" href="https://blog.trailofbits.com/2019/11/01/two-new-tools-that-tame-the-treachery-of-files/">https://blog.trailofbits.com/2019/11/01/two-new-tools-that-tame-the-treachery-of-files/</a>.</p>
-<h4 id="8-Tigress"><a href="#8-Tigress" class="headerlink" title="8. Tigress"></a>8. Tigress</h4><h4 id="9-DECAF-DECAF"><a href="#9-DECAF-DECAF" class="headerlink" title="9. DECAF/DECAF++"></a>9. DECAF/DECAF++</h4><h4 id="10-TaintInduce"><a href="#10-TaintInduce" class="headerlink" title="10. TaintInduce"></a>10. TaintInduce</h4><h4 id="11-DFSan"><a href="#11-DFSan" class="headerlink" title="11. DFSan"></a>11. DFSan</h4><p><strong>Phosphor</strong> <a target="_blank" rel="noopener" href="https://github.com/gmu-swe/phosphor">github</a> taint analysis for JVM</p>
+<h4 id="8-Tigress"><a href="#8-Tigress" class="headerlink" title="8. Tigress"></a>8. Tigress</h4><h4 id="9-DECAF-DECAF"><a href="#9-DECAF-DECAF" class="headerlink" title="9. DECAF/DECAF++"></a>9. DECAF/DECAF++</h4><h4 id="10-TaintInduce"><a href="#10-TaintInduce" class="headerlink" title="10. TaintInduce"></a>10. TaintInduce</h4><h4 id="11-DFSan"><a href="#11-DFSan" class="headerlink" title="11. DFSan"></a>11. DFSan</h4><h4 id="12-Doop"><a href="#12-Doop" class="headerlink" title="12. Doop"></a>12. Doop</h4><p>Android <a target="_blank" rel="noopener" href="https://bitbucket.org/yanniss/doop/src/master/">https://bitbucket.org/yanniss/doop/src/master/</a></p>
+<p>Pyt <a target="_blank" rel="noopener" href="https://github.com/python-security/pyt">https://github.com/python-security/pyt</a></p>
+<p><strong>Pixy</strong> <a target="_blank" rel="noopener" href="https://github.com/oliverklee/pixy">https://github.com/oliverklee/pixy</a></p>
+<p><strong>Phosphor</strong> <a target="_blank" rel="noopener" href="https://github.com/gmu-swe/phosphor">github</a> taint analysis for JVM</p>
 <p><strong>Neuzz/NeuTaint</strong> <a target="_blank" rel="noopener" href="https://github.com/Dongdongshe/neuzz">github</a> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.05620">paper</a></p>
 <p><strong>Dytan</strong> 找不到GitHub 嘤嘤嘤 备用<a target="_blank" rel="noopener" href="https://github.com/dytan-taint-tracking/dytan-taint-tracking/blob/master/Dytan.zip">github</a> <a target="_blank" rel="noopener" href="https://github.com/behzad-a/Dytan">github2</a> 基于Pin</p>
 <p><strong>DataTracker</strong> <a target="_blank" rel="noopener" href="https://github.com/m000/dtracker">github</a></p>
 <p><strong>DataTracker-EWAH</strong> <a target="_blank" rel="noopener" href="https://github.com/vusec/vuzzer">github</a> used by <a target="_blank" rel="noopener" href="https://www.cs.vu.nl/~giuffrida/papers/vuzzer-ndss-2017.pdf">Vuzzer</a></p>
 <p><strong>DFSan</strong> <a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/DataFlowSanitizer.html">github</a></p>
+<p><strong>Taintdroid</strong></p>
 
     </div>
 

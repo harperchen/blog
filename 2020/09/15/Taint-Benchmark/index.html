@@ -52,7 +52,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/22/3lx1IHiL5VJfMKW.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/22/CrF9YpiZR37jXeT.png">
 <meta property="article:published_time" content="2020-09-15T15:18:16.000Z">
-<meta property="article:modified_time" content="2020-09-27T10:27:59.299Z">
+<meta property="article:modified_time" content="2020-09-27T11:40:54.523Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Taint Analysis">
 <meta name="twitter:card" content="summary">
@@ -215,7 +215,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -307,7 +307,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-27 18:27:59" itemprop="dateModified" datetime="2020-09-27T18:27:59+08:00">2020-09-27</time>
+        <time title="Modified: 2020-09-27 19:40:54" itemprop="dateModified" datetime="2020-09-27T19:40:54+08:00">2020-09-27</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -444,7 +444,7 @@
 <p>PolyTrack works as <a target="_blank" rel="noopener" href="https://llvm.org/docs/WritingAnLLVMPass.html">LLVM Pass</a>. The generated shared object <code>.so</code> can be loaded either through <code>opt</code> tool to instrument the LLVM bitcode, or through <code>clang</code> when the source code is avaliable. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Through opt tool</span></span><br><span class="line">opt -<span class="built_in">local</span> -mypass.so -mypass code.bc</span><br><span class="line"><span class="comment"># Through clang</span></span><br><span class="line">clang -Xclang -load -Xclang mypass.so code.c</span><br></pre></td></tr></table></figure>
 
-<p>PolyTracker provides compilers <code>polybuild</code> and <code>polybuild++</code>, which are wrappers around <code>gclang</code> and <code>gclang++</code>. When the source code is avaiable, we can instrument it by invoking compiler and pass <code>--instrument-target</code> option before the cflags.</p>
+<p>PolyTracker provides compilers <code>polybuild</code> and <code>polybuild++</code>, which are wrappers around <code>gclang</code> and <code>gclang++</code>. When the source code is avaiable, we can instrument it by simply replacing the compiler with PolyTracker and passing <code>--instrument-target</code> option before the cflags during the normal build process.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># export CC=`which polybuild`</span></span><br><span class="line"><span class="variable">$&#123;CC&#125;</span> --instrument-target -g -o my_target my_target.c</span><br><span class="line"><span class="comment"># export CXX=`which polybuild++`</span></span><br><span class="line"><span class="variable">$&#123;CXX&#125;</span> --instrument-target -g -o my_target my_target.cpp</span><br></pre></td></tr></table></figure>
 
 <p>If only the binary executable is given, we can first extract the bitcode from the target, then instrument it by passing <code>--instrument-bitcode</code> option.</p>
@@ -472,7 +472,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">testfunc</span><span class="params">(<span class="keyword">char</span> *buf)</span> </span>&#123; <span class="comment">// not be labeled as tainted</span></span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strlen</span>(buf) &gt; <span class="number">5</span>)&#123;</span><br><span class="line">        a = <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        a = <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>In fact, Polytrack is designed to be used in conjunction with <a target="_blank" rel="noopener" href="https://github.com/trailofbits/polyfile">PolyFile</a> to automatically determine the semantic purpose of the functions in a parser. PolyFile is a file identification utility to parse the file structure and map each byte of the file into the corresponding semantic. Take PDF file as an example, PolyFile first identifies that the given file is in PDF format, then outputs the sematic of each byte in the file, such as PDFComment, PDFObject. </p>
-<p>Assume we want to reverse-engineer the PDF parser <a target="_blank" rel="noopener" href="https://mupdf.com/">MuPDF</a>. PolyTracker is used to instrument the parser to output the mapping from each byte of PDF file to each function in that parser. With the file format parsed by PolyFile as ground truth, we can easily infer the sematic purpose of each function in MuPDF by merging the two mappings (function &lt;-&gt; input byte &lt;-&gt; semantic).  Based on this design consideration, it’s straightforward to answer why Polytracker only use function as taint sink granularity to perform analysis.</p>
+<p>Assume we want to reverse-engineer the PDF parser <a target="_blank" rel="noopener" href="https://mupdf.com/">MuPDF</a>. PolyTracker is used to instrument the parser to output the associate each byte of PDF file with each function in that parser. With the file format parsed by PolyFile as ground truth, we can easily infer the sematic purpose of each function in MuPDF by merging the two mappings (function &lt;-&gt; input byte &lt;-&gt; semantic).  Based on this design consideration, it’s straightforward to answer why Polytracker only use function as taint sink granularity to perform analysis.</p>
 <h4 id="4-Static-Analysis-Tool-but-Emulate-Execution-Bincat"><a href="#4-Static-Analysis-Tool-but-Emulate-Execution-Bincat" class="headerlink" title="4. Static Analysis Tool but Emulate Execution: Bincat"></a>4. Static Analysis Tool but Emulate Execution: Bincat</h4><p>The following keygen-me-style program takes a few arguments as command-line parameters, then generates a hash depending on these parameters, and compares it to an expected license value.</p>
 <img src="https://i.loli.net/2020/09/21/v25azExLrdseBJ8.png" style="zoom:45%;" >
 
