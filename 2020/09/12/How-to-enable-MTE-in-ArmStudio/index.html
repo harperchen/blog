@@ -51,7 +51,7 @@
 <meta property="og:image" content="http://harperchen.qiniudn.com/image027.png">
 <meta property="og:image" content="http://harperchen.qiniudn.com/image028.png">
 <meta property="article:published_time" content="2020-09-12T10:47:16.000Z">
-<meta property="article:modified_time" content="2020-09-12T13:29:43.941Z">
+<meta property="article:modified_time" content="2020-10-10T14:27:56.088Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="ARM">
 <meta property="article:tag" content="MTE">
@@ -298,10 +298,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2020-09-12 18:47:16 / Modified: 21:29:43" itemprop="dateCreated datePublished" datetime="2020-09-12T18:47:16+08:00">2020-09-12</time>
+      <time title="Created: 2020-09-12 18:47:16" itemprop="dateCreated datePublished" datetime="2020-09-12T18:47:16+08:00">2020-09-12</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-10-10 22:27:56" itemprop="dateModified" datetime="2020-10-10T22:27:56+08:00">2020-10-10</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -399,16 +405,19 @@ Add the model parameters as follows to enable MTE support.
 <img src="http://harperchen.qiniudn.com/image025.png" style="zoom:30%;" />
 9. In the disassembly view, we search main to get the assembly instructions of main. The presence of IRG, ADDG shows the code is generated using memory tagging instructions. We set a breakpoint at ADDG instruction, let the program stop at this breakpoint.
 
-<img src="http://harperchen.qiniudn.com/image026.png" style="zoom:30%;" />
-<img src="http://harperchen.qiniudn.com/image027.png" style="zoom:30%;" />
-10. Let the program continue to execute and finally we can see “Hello world!” from target console.
-
+<p><img src="http://harperchen.qiniudn.com/image026.png" style="zoom:30%;" /><img src="http://harperchen.qiniudn.com/image027.png" style="zoom:30%;" /></p>
+<p>Let the program continue to execute and finally we can see “Hello world!” from target console.</p>
 <img src="http://harperchen.qiniudn.com/image028.png" style="zoom:45%;" />
 
 <p><strong>Use-after-free</strong></p>
 <p><strong>Reference:</strong></p>
 <ol>
-<li>White Paper:</li>
+<li><p>Armv8.5-A Memory Tagging Extension White Paper <a target="_blank" rel="noopener" href="https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Arm_Memory_Tagging_Extension_Whitepaper.pdf">https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Arm_Memory_Tagging_Extension_Whitepaper.pdf</a></p>
+</li>
+<li><p>Arm Architecture Registers Manual for Armv8-A Architecture Profile. <a target="_blank" rel="noopener" href="http://harperchen.qiniudn.com/SysReg_xml_v86A-2020-06.pdf">http://harperchen.qiniudn.com/SysReg_xml_v86A-2020-06.pdf</a></p>
+</li>
+<li><p>Arm A64 Instruction Set Architecture Manual for Armv8-A Architecture Profile. <a target="_blank" rel="noopener" href="http://harperchen.qiniudn.com/ISA_A64_xml_v86A-2020-06_OPT.pdf">http://harperchen.qiniudn.com/ISA_A64_xml_v86A-2020-06_OPT.pdf</a></p>
+</li>
 </ol>
 
     </div>
