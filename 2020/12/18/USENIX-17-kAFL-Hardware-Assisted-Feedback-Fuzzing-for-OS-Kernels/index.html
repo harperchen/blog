@@ -23,18 +23,21 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wei&#39;s Blog">
-<meta property="og:url" content="https://harperchen.github.io/blog/tags/CGroup/index.html">
+  <meta name="description" content="What is feedback-driven fuzzer  learn the format of inputs: keep interesting inputs and discard inputs that do not trigger interesting behaviors How to collect feedback Dynamic Binary Instrumentation">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[USENIX&#39;17] kAFL: Hardware-Assisted Feedback Fuzzing for OS Kernels">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
+<meta property="og:description" content="What is feedback-driven fuzzer  learn the format of inputs: keep interesting inputs and discard inputs that do not trigger interesting behaviors How to collect feedback Dynamic Binary Instrumentation">
 <meta property="og:locale">
+<meta property="article:published_time" content="2020-12-18T07:02:13.000Z">
+<meta property="article:modified_time" content="2020-12-18T07:06:08.180Z">
 <meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Papers">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/tags/CGroup/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/">
 
 
 <script data-pjax class="page-configurations">
@@ -42,12 +45,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>Tag: CGroup | Wei's Blog</title>
+  <title>[USENIX'17] kAFL: Hardware-Assisted Feedback Fuzzing for OS Kernels | Wei's Blog</title>
   
 
 
@@ -238,53 +241,170 @@
 </noscript>
 
 
-    <div class="main-inner tag posts-collapse">
+    <div class="main-inner post posts-expand">
       
 
       
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h2 class="collection-header">CGroup
-          <small>Tag</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/">
 
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [USENIX'17] kAFL: Hardware-Assisted Feedback Fuzzing for OS Kernels
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+
+      <time title="Created: 2020-12-18 15:02:13 / Modified: 15:06:08" itemprop="dateCreated datePublished" datetime="2020-12-18T15:02:13+08:00">2020-12-18</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <ul>
+<li>What is feedback-driven fuzzer <ul>
+<li>learn the format of inputs: keep interesting inputs and discard inputs that do not trigger interesting behaviors</li>
+<li>How to collect feedback<ul>
+<li>Dynamic Binary Instrumentation: Pin or DynamoRIO such as WinAFL</li>
+<li>Virtualization: Qemu or Boch to monitor the code coverage, such as AFL</li>
+<li>Hardware Assisted: Intel PT, such as kAFL, honggfuzz</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Difficulties of kernel fuzzing<ul>
+<li>Crashes and timeouts need virtualization</li>
+<li>More non-determinism such as interrupts, kernel threads, stateful</li>
+<li>Interact with kernel via system calls</li>
+<li>Closed-source that cannot be instrumented</li>
+</ul>
+</li>
+<li>Drawbacks of previous work<ul>
+<li>Triforce:  Emulation to gather feedback</li>
+<li>Syzkaller: Recompilation, need open source </li>
+<li>Trinity: Not feedback-driven</li>
+</ul>
+</li>
+<li>Why this paper is accepted<ul>
+<li>The first approach that can fuzz arbitrary x86-64 kernels without any customization and a near-native performance</li>
+<li>Usefulness<ul>
+<li>Portable, OS-independent, even for closed source kernels</li>
+<li>Small performance overhead, high-throughput</li>
+</ul>
+</li>
+<li>Novelty<ul>
+<li>Show the possibility of performing feedback-driven kernel fuzzing in an almost - OS-independent manner with the help of hypervisor and Intel PT to collect coverage </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Inputs: Binary file for file system and a single system call</li>
+<li>How it works<ul>
+<li>Feedback: Intel PT provides control flow information on running code<ul>
+<li>KVM-PT traces each vCPU, an implementation of Intel PT</li>
+<li>Qemu-PT runs on top of KVM-PT and decode the trace data to AFL bitmap<ul>
+<li>JIT decoder</li>
+<li>cache disassembled code</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Intel’s hardware virtualization features Intel VT-x<ul>
+<li>Fuzzing logic (kAFL): ring 3 process on host OS</li>
+<li>VM Infrastructure: ring 3 QEMU-PT, ring 0 KVM-PT</li>
+<li>User mode agent: run inside guest to run system call</li>
+</ul>
+</li>
+<li>Dealing with non-determinism<ul>
+<li>Do not reset the whole VM state after each execution, too costly</li>
+<li>Filter out interrupts related PT trace data, by FUP packet</li>
+<li>Blacklist any basic block that occurs non-deterministically, run multiple times</li>
+</ul>
+</li>
+<li>How to keep dependencies between different system calls<ul>
+<li>Seems like the evolutionary algorithm as AFL</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Evaluation<ul>
+<li>Perform fuzzing campaigns across different platform<ul>
+<li>Windows: NTFS file system;  fuzz a single system call</li>
+<li>Linux: ext4 file system</li>
+<li>MacOS: HFS file system; Apple file system kernel extension</li>
+</ul>
+</li>
+<li>Compare with Triforce<ul>
+<li>On a  created json parser driver</li>
+<li>Syzkaller is not applicable to file system domain</li>
+</ul>
+</li>
+<li>Performance of KVM-PT: Small</li>
+<li>Compare PT decoder with Intel decoder<ul>
+<li>Caching</li>
+<li>JIT decode</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-09-12T16:51:41+08:00"
-              content="2020-09-12">
-          09-12
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/09/12/CGroup-Experiment/" itemprop="url">
-            <span itemprop="name">CGroup Experiments</span>
-          </a>
-      </div>
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Papers/" rel="tag"># Papers</a>
+          </div>
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/09/30/Taint-Specifications/" rel="prev" title="Taint-Specifications">
+                  <i class="fa fa-chevron-left"></i> Taint-Specifications
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
