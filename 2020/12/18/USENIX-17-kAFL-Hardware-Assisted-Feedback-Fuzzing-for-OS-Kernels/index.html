@@ -30,10 +30,12 @@
 <meta property="og:site_name" content="Wei&#39;s Blog">
 <meta property="og:description" content="AbstractMany kinds of memory safety vulnerabilities have been endangering software systems for decades. Amongst other approaches, fuzzing is a promising technique to unveil various software faults. Re">
 <meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2020/12/18/REtD1Xsgq6U5YSH.png">
 <meta property="article:published_time" content="2020-12-18T07:02:13.000Z">
-<meta property="article:modified_time" content="2020-12-18T07:10:05.697Z">
+<meta property="article:modified_time" content="2020-12-18T07:14:15.557Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/12/18/REtD1Xsgq6U5YSH.png">
 
 
 <link rel="canonical" href="https://harperchen.github.io/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/">
@@ -278,7 +280,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2020-12-18 15:02:13 / Modified: 15:10:05" itemprop="dateCreated datePublished" datetime="2020-12-18T15:02:13+08:00">2020-12-18</time>
+      <time title="Created: 2020-12-18 15:02:13 / Modified: 15:14:15" itemprop="dateCreated datePublished" datetime="2020-12-18T15:02:13+08:00">2020-12-18</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -304,7 +306,8 @@
 <a id="more"></a>
 <p>In this paper, we approach the problem of coverage- guided kernel fuzzing in an OS-independent and hardware-assisted way: We utilize a hypervisor and In- tel’s Processor Trace (PT) technology. This allows us to remain independent of the target OS as we just re- quire a small user space component that interacts with the targeted OS. As a result, our approach introduces almost no performance overhead, even in cases where the OS crashes, and performs up to 17,000 executions per second on an off-the-shelf laptop. We developed a framework called kernel-AFL (kAFL) to assess the secu- rity of Linux, macOS, and Windows kernel components. Among many crashes, we uncovered several flaws in the ext4 driver for Linux, the HFS and APFS file system of macOS, and the NTFS driver of Windows.</p>
 <h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
-<li>What is feedback-driven fuzzer <ul>
+<li><p>What is feedback-driven fuzzer </p>
+<ul>
 <li>learn the format of inputs: keep interesting inputs and discard inputs that do not trigger interesting behaviors</li>
 <li>How to collect feedback<ul>
 <li>Dynamic Binary Instrumentation: Pin or DynamoRIO such as WinAFL</li>
@@ -314,20 +317,23 @@
 </li>
 </ul>
 </li>
-<li>Difficulties of kernel fuzzing<ul>
+<li><p>Difficulties of kernel fuzzing</p>
+<ul>
 <li>Crashes and timeouts need virtualization</li>
 <li>More non-determinism such as interrupts, kernel threads, stateful</li>
 <li>Interact with kernel via system calls</li>
 <li>Closed-source that cannot be instrumented</li>
 </ul>
 </li>
-<li>Drawbacks of previous work<ul>
+<li><p>Drawbacks of previous work</p>
+<ul>
 <li>Triforce:  Emulation to gather feedback</li>
 <li>Syzkaller: Recompilation, need open source </li>
 <li>Trinity: Not feedback-driven</li>
 </ul>
 </li>
-<li>Why this paper is accepted<ul>
+<li><p>Why this paper is accepted</p>
+<ul>
 <li>The first approach that can fuzz arbitrary x86-64 kernels without any customization and a near-native performance</li>
 <li>Usefulness<ul>
 <li>Portable, OS-independent, even for closed source kernels</li>
@@ -340,8 +346,11 @@
 </li>
 </ul>
 </li>
-<li>Inputs: Binary file for file system and a single system call</li>
-<li>How it works<ul>
+<li><p>Inputs: Binary file for file system and a single system call</p>
+</li>
+<li><p>How it works</p>
+<p>  <img src="https://i.loli.net/2020/12/18/REtD1Xsgq6U5YSH.png" alt="image-20201218151357615"></p>
+<ul>
 <li>Feedback: Intel PT provides control flow information on running code<ul>
 <li>KVM-PT traces each vCPU, an implementation of Intel PT</li>
 <li>Qemu-PT runs on top of KVM-PT and decode the trace data to AFL bitmap<ul>
@@ -369,7 +378,8 @@
 </li>
 </ul>
 </li>
-<li>Evaluation<ul>
+<li><p>Evaluation</p>
+<ul>
 <li>Perform fuzzing campaigns across different platform<ul>
 <li>Windows: NTFS file system;  fuzz a single system call</li>
 <li>Linux: ext4 file system</li>
