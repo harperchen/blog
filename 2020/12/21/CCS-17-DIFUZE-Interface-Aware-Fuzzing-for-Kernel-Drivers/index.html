@@ -23,18 +23,20 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wei&#39;s Blog">
-<meta property="og:url" content="https://harperchen.github.io/blog/archives/2020/page/2/index.html">
+  <meta name="description" content="AbstractDevice drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[CCS&#39;17] DIFUZE: Interface Aware Fuzzing for Kernel Drivers ">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
+<meta property="og:description" content="AbstractDevice drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge o">
 <meta property="og:locale">
+<meta property="article:published_time" content="2020-12-21T10:54:50.000Z">
+<meta property="article:modified_time" content="2020-12-21T11:14:25.560Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/archives/2020/page/2/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/">
 
 
 <script data-pjax class="page-configurations">
@@ -42,12 +44,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>Archive | Wei's Blog</title>
+  <title>[CCS'17] DIFUZE: Interface Aware Fuzzing for Kernel Drivers  | Wei's Blog</title>
   
 
 
@@ -162,7 +164,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -174,6 +176,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-text">Outline</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -238,76 +241,176 @@
 </noscript>
 
 
-    <div class="main-inner archive posts-collapse">
+    <div class="main-inner post posts-expand">
       
 
       
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <span class="collection-header">Um..! 12 posts in total. Keep on posting.</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/">
 
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [CCS'17] DIFUZE: Interface Aware Fuzzing for Kernel Drivers 
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+
+      <time title="Created: 2020-12-21 18:54:50 / Modified: 19:14:25" itemprop="dateCreated datePublished" datetime="2020-12-21T18:54:50+08:00">2020-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Device drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge of new hardware, particularly on mobile devices, introduces an explosive growth of device drivers in system kernels. Many such drivers are provided by third-party developers, which are susceptible to se- curity vulnerabilities and lack proper vetting. Unfortunately, the complex input data structures for device drivers render traditional analysis tools, such as fuzz testing, less effective, and so far, research on kernel driver security is comparatively sparse.</p>
+<a id="more"></a>
+<p>In this paper, we present DIFUZE, an interface-aware fuzzing tool to automatically generate valid inputs and trigger the execu- tion of the kernel drivers. We leverage static analysis to compose correctly-structured input in the userspace to explore kernel dri- vers. DIFUZE is fully automatic, ranging from identifying driver handlers, to mapping to device file names, to constructing complex argument instances. We evaluate our approach on seven modern Android smartphones. The results show that DIFUZE can effectively identify kernel driver bugs, and reports 32 previously unknown vul- nerabilities, including flaws that lead to arbitrary code execution.</p>
+<h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
+<li>Difficulties of kernel driver fuzzing<ul>
+<li>ioctl comprises structured, deriver-dependent arguments </li>
+<li>int ioctl(int file_descriptor, int request, …)  variable arguments</li>
+<li>Highly constrained inputs, must know the knowledge of how driver process different command identifiers</li>
+<li>Hard to detect cross-dependency between different arguments</li>
+</ul>
+</li>
+<li>Why this paper is accepted<ul>
+<li>The first completely automated system that can be generalized to fuzz all Linux kernel drivers.</li>
+<li>Usefulness<ul>
+<li>Facilitate fuzzing  of interface-sensitive targets and find 36 bugs on seven Android devices.</li>
+</ul>
+</li>
+<li>Novelty<ul>
+<li>This paper shows that fuzzing with accurate interface information is quite powerful.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Inputs: source code of kernel (include source code of device deriver)</li>
+<li>How it works: Static analysis of kernel driver code<ul>
+<li>Interface recovery: LLVM Pass<ul>
+<li>Enable LLVM Analysis (Now supported <a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/kbuild/llvm.html">https://www.kernel.org/doc/html/latest/kbuild/llvm.html</a>)<ul>
+<li>GCC Compilation</li>
+<li>GCC-to-LLVM conversion (for bitcode)</li>
+<li>Bitcode consolidation: consolidate bitcode files into one single file per driver</li>
+</ul>
+</li>
+<li>Identify ioctl handler by structures used to register ioctl handler</li>
+<li>Analyze path of device file by registration functions</li>
+<li>Recover valid set of ioctl commands identifiers<ul>
+<li>Perform inter-procedural, path-sensitive analysis </li>
+<li>Collect equality constraints</li>
+</ul>
+</li>
+<li>Retrieve associated data structure definitions<ul>
+<li>mapping from ioctl command identifiers to data structure</li>
+<li>identify the type of the destination operand of copy_from_user</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Structure generation<ul>
+<li>Compose and mutate correctly-structured input</li>
+<li>Favor integers that are likely trigger corner case<ul>
+<li>a power of two</li>
+<li>or one less than a power of two</li>
+<li>or one greater than a power of two </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>On-device execution<ul>
+<li>Finalize generated structures and trigger ioctl</li>
+<li>Pointer Fix up: build complete structure</li>
+<li>Execution: open-ioctl-…; Target host does not restart very often</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Evaluation<ul>
+<li>Interface Recovery Evaluation<ul>
+<li>Device name identification: 59.44%; failures come from dynamically generated name </li>
+<li>Valid Command Identifiers: over approximates</li>
+<li>User argument types:  53% of command identifier, the argument is pointer</li>
+<li>Compare with manually analysis results on ioctl</li>
+</ul>
+</li>
+<li>Bug-finding capabilities<ul>
+<li>Compare DIFUZE with DIFUZE &amp; Syzkaller (No coverage info, need recompilation)</li>
+<li>Both the ioctl command identifiers and structure information matters</li>
+<li>36 unique bugs on seven Android devices</li>
+</ul>
+</li>
+<li>Augmented with coverage-guided fuzzing <ul>
+<li>DIFUZE &amp; Syzkaller (x86-64 instead of Android, can recompile)</li>
+<li>Interface information increase basic block coverage</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-09-12T16:51:41+08:00"
-              content="2020-09-12">
-          09-12
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/09/12/CGroup-Experiment/" itemprop="url">
-            <span itemprop="name">CGroup Experiments</span>
-          </a>
-      </div>
+    <footer class="post-footer">
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/" rel="prev" title="[USENIX ATC'17] CAB-FUZZ: Practical Concolic Testing Techniques for COTS Operating Systems ">
+                  <i class="fa fa-chevron-left"></i> [USENIX ATC'17] CAB-FUZZ: Practical Concolic Testing Techniques for COTS Operating Systems 
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
   </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-09-12T12:20:20+08:00"
-              content="2020-09-12">
-          09-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/09/12/How-to-config-MTE-using-Qemu/" itemprop="url">
-            <span itemprop="name">How to config MTE using Qemu</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-
-    </div>
-  </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/archives/2020/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/archives/2020/">1</a><span class="page-number current">2</span>
-  </nav>
 
 
 
