@@ -31,7 +31,7 @@
 <meta property="og:description" content="1. Race Bug两个访问内存区域的线程，当下面三个条件同时满足时，即可认定是Race bug。  访问的内存区域地址相同 其中一个内存访问是写操作 两个线程的执行顺序是不受限制的">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T07:21:02.000Z">
-<meta property="article:modified_time" content="2020-12-24T08:30:30.882Z">
+<meta property="article:modified_time" content="2020-12-24T08:40:37.387Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Kernel">
 <meta property="article:tag" content="Race Bugs">
@@ -280,7 +280,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2020-12-24 15:21:02 / Modified: 16:30:30" itemprop="dateCreated datePublished" datetime="2020-12-24T15:21:02+08:00">2020-12-24</time>
+      <time title="Created: 2020-12-24 15:21:02 / Modified: 16:40:37" itemprop="dateCreated datePublished" datetime="2020-12-24T15:21:02+08:00">2020-12-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -336,7 +336,7 @@
 <li>由于Race Bug的不确定性，上述1-4的检测过程可能需要重复很多次。</li>
 </ol>
 <h4 id="4-现有工作的解决方案"><a href="#4-现有工作的解决方案" class="headerlink" title="4. 现有工作的解决方案"></a>4. 现有工作的解决方案</h4><p>现在我主要看了两个工作Razzer和Krace，两个工作各有利弊，针对上述问题，提出了各自的解决方案。</p>
-<h5 id="4-1-如何确定哪些指令访问同一内存区域？"><a href="#4-1-如何确定哪些指令访问同一内存区域？" class="headerlink" title="4.1 如何确定哪些指令访问同一内存区域？"></a>4.1 如何确定哪些指令访问同一内存区域？</h5><p>=&gt; Razzer：利用静态分析，分析内核的LLVM代码。</p>
+<h5 id="4-1-如何确定哪些指令访问同一内存区域？"><a href="#4-1-如何确定哪些指令访问同一内存区域？" class="headerlink" title="4.1 如何确定哪些指令访问同一内存区域？"></a>4.1 如何确定哪些指令访问同一内存区域？</h5><p>Razzer：利用静态分析，分析内核的LLVM代码。</p>
 <p><strong>优点</strong>：</p>
 <ol>
 <li>此过程offline，对实效性要求并不高。</li>
@@ -354,7 +354,7 @@
 </ul>
 </li>
 </ol>
-<p>=&gt; Krace: 动态运行时检测，提出alias coverage的概念，应用到coverage-guided fuzzing中，alias coverage指的是有多少可能会出现竞态漏洞的指令对被覆盖了。</p>
+<p>Krace: 动态运行时检测，提出alias coverage的概念，应用到coverage-guided fuzzing中，alias coverage指的是有多少可能会出现竞态漏洞的指令对被覆盖了。</p>
 <p><strong>优点</strong>：</p>
 <ol>
 <li>动态过程自然而然解决了false-positive的问题，准确率比较满意</li>
