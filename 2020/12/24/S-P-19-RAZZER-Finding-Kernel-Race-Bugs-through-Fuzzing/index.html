@@ -31,7 +31,7 @@
 <meta property="og:description" content="AbstractA data race in a kernel is an important class of bugs, critically impacting the reliability and security of the associated system. As a result of a race, the kernel may become unresponsive. Ev">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T04:40:46.000Z">
-<meta property="article:modified_time" content="2020-12-24T04:59:25.577Z">
+<meta property="article:modified_time" content="2020-12-24T05:11:36.826Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Race Bug">
 <meta property="article:tag" content="Kernel">
@@ -195,7 +195,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -208,7 +208,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -281,7 +281,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2020-12-24 12:40:46 / Modified: 12:59:25" itemprop="dateCreated datePublished" datetime="2020-12-24T12:40:46+08:00">2020-12-24</time>
+      <time title="Created: 2020-12-24 12:40:46 / Modified: 13:11:36" itemprop="dateCreated datePublished" datetime="2020-12-24T12:40:46+08:00">2020-12-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -349,6 +349,11 @@
 <li>Usefulness<ul>
 <li>More faster than Syzkaller (meet R1)</li>
 <li>More efficient than SKI (meet R2)</li>
+<li>No need to modify the kernel<ul>
+<li>static analysis is performed offline</li>
+<li>using a tailored hypervisor (transparent)</li>
+</ul>
+</li>
 <li>Facilitate easy, low-cost patching for data races<ul>
 <li>Detailed analysis report consisting of race location (memory access instruction) and call stacks that assist developers to determine the root cause of the race and fix a reported race quickly</li>
 </ul>

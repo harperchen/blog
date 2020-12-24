@@ -31,7 +31,7 @@
 <meta property="og:description" content="AbstractData races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes a">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T04:42:43.000Z">
-<meta property="article:modified_time" content="2020-12-24T04:59:32.110Z">
+<meta property="article:modified_time" content="2020-12-24T07:19:31.428Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Race Bug">
 <meta property="article:tag" content="Kernel">
@@ -196,7 +196,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -209,7 +209,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -282,7 +282,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2020-12-24 12:42:43 / Modified: 12:59:32" itemprop="dateCreated datePublished" datetime="2020-12-24T12:42:43+08:00">2020-12-24</time>
+      <time title="Created: 2020-12-24 12:42:43 / Modified: 15:19:31" itemprop="dateCreated datePublished" datetime="2020-12-24T12:42:43+08:00">2020-12-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -326,17 +326,19 @@
 </ul>
 </li>
 <li>Drawbacks of previous work<ul>
-<li>Stress testing relies on handwritten test suites</li>
+<li>Stress testing relies on handwritten test suites that are not sufficient to cover enormous states</li>
 <li>Existing file system fuzzing focus on sequential view of program execution<ul>
-<li>Effective in single-threaded syscall sequences generation/mutation</li>
+<li>Effective in single-threaded syscall sequences generation/mutation </li>
+<li>Not suitable for multi-threaded scenarios</li>
+<li>No existing work to synthesize multi-threaded sequences to maximize thread interleaving coverage</li>
+<li>Different thread interleaving can result in same branch coverage</li>
 </ul>
 </li>
-<li>Different thread interleaving can result in same branch coverage</li>
-<li>No existing work to synthesize multi-threaded sequences to maximize thread interleaving coverage</li>
 </ul>
 </li>
 <li>Difficulties of data race fuzzing<ul>
 <li>Hard to detect and diagnose due to non-determinism in thread interleaving</li>
+<li>Only a small fraction of interleavings may trigger a data race</li>
 <li>Thread schedule consists of both user threads and kernel threads</li>
 <li>Data race often leads to silent failures, do not raise visible signals in short term</li>
 </ul>
@@ -435,6 +437,9 @@
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/blog/2020/12/24/Difficultise-to-find-race-bugs-and-how-existing-work-solove-them/" rel="next" title="Difficultise to find race bugs and how existing work solove them">
+                  Difficultise to find race bugs and how existing work solove them <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>
