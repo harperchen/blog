@@ -31,7 +31,7 @@
 <meta property="og:description" content="AbstractData races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes a">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T04:42:43.000Z">
-<meta property="article:modified_time" content="2020-12-24T04:43:57.199Z">
+<meta property="article:modified_time" content="2020-12-24T04:46:27.878Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
 
@@ -278,7 +278,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2020-12-24 12:42:43 / Modified: 12:43:57" itemprop="dateCreated datePublished" datetime="2020-12-24T12:42:43+08:00">2020-12-24</time>
+      <time title="Created: 2020-12-24 12:42:43 / Modified: 12:46:27" itemprop="dateCreated datePublished" datetime="2020-12-24T12:42:43+08:00">2020-12-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -308,135 +308,92 @@
     
     <div class="post-body" itemprop="articleBody">
         <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes and often wreak havoc on the users, causing inconsistent states or data losses. Prior fuzzing practices on file systems have been effective in uncovering hundreds of bugs, but they mostly focus on the sequential aspect of file system execution and do not comprehensively explore the concurrency dimension and hence, forgo the opportunity to catch data races.</p>
+<a id="more"></a>
 <p>In this paper, we bring coverage-guided fuzzing to the concur- rency dimension with three new constructs: 1) a new coverage tracking metric, alias coverage, specially designed to capture the exploration progress in the concurrency dimension; 2) an evolution algorithm for generating, mutating, and merging multi- threaded syscall sequences as inputs for concurrency fuzzing; and 3) a comprehensive lockset and happens-before modeling for kernel synchronization primitives for precise data race detection. These components are integrated into KRACE, an end-to-end fuzzing framework that has discovered 23 data races in ext4, btrfs, and the VFS layer so far, and 9 are confirmed to be harmful.</p>
 <h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
-<li><p>What is data race (memory access bugs)</p>
-<ul>
-<li><p>Two threads fail to use proper synchronization </p>
-<ul>
-<li><p>Two threads access same memory address</p>
-</li>
-<li><p>At least one thread is a memory write</p>
-</li>
-<li><p>They are issued from different contexts </p>
-</li>
+<li>What is data race (memory access bugs)<ul>
+<li>Two threads fail to use proper synchronization <ul>
+<li>Two threads access same memory address</li>
+<li>At least one thread is a memory write</li>
+<li>They are issued from different contexts </li>
 </ul>
 </li>
-<li><p>Cause inconsistent states or data losses</p>
-</li>
+<li>Cause inconsistent states or data losses</li>
 </ul>
 </li>
-<li><p>Drawbacks of previous work</p>
-<ul>
-<li><p>Stress testing relies on handwritten test suites</p>
-</li>
-<li><p>Existing file system fuzzing focus on sequential view of program execution</p>
-<ul>
+<li>Drawbacks of previous work<ul>
+<li>Stress testing relies on handwritten test suites</li>
+<li>Existing file system fuzzing focus on sequential view of program execution<ul>
 <li>Effective in single-threaded syscall sequences generation/mutation</li>
 </ul>
 </li>
-<li><p>Different thread interleaving can result in same branch coverage</p>
-</li>
-<li><p>No existing work to synthesize multi-threaded sequences to maximize thread interleaving coverage</p>
-</li>
+<li>Different thread interleaving can result in same branch coverage</li>
+<li>No existing work to synthesize multi-threaded sequences to maximize thread interleaving coverage</li>
 </ul>
 </li>
-<li><p>Difficulties of data race fuzzing</p>
-<ul>
-<li><p>Hard to detect and diagnose due to non-determinism in thread interleaving</p>
-</li>
-<li><p>Thread schedule consists of both user threads and kernel threads</p>
-</li>
-<li><p>Data race often leads to silent failures, do not raise visible signals in short term</p>
-</li>
+<li>Difficulties of data race fuzzing<ul>
+<li>Hard to detect and diagnose due to non-determinism in thread interleaving</li>
+<li>Thread schedule consists of both user threads and kernel threads</li>
+<li>Data race often leads to silent failures, do not raise visible signals in short term</li>
 </ul>
 </li>
-<li><p>Why this paper is accepted</p>
-<ul>
-<li><p>The first completely automated system that can </p>
-</li>
-<li><p>Usefulness</p>
-<ul>
+<li>Why this paper is accepted<ul>
+<li>The first completely automated system that can </li>
+<li>Usefulness<ul>
 <li>Bring coverage-guided fuzzing to concurrency dimension</li>
 </ul>
 </li>
-<li><p>Novelty</p>
-<ul>
-<li><p>A novel coverage tracking metric alias instruction pair coverage</p>
-</li>
-<li><p>An evolution algorithm for generate/mutate/merge-ing multi-threaded syscall sequences for concurrency fuzzing</p>
-</li>
-<li><p>A comprehensive lockset and happens-before modeling for precise data race detection </p>
-</li>
+<li>Novelty<ul>
+<li>A novel coverage tracking metric alias instruction pair coverage</li>
+<li>An evolution algorithm for generate/mutate/merge-ing multi-threaded syscall sequences for concurrency fuzzing</li>
+<li>A comprehensive lockset and happens-before modeling for precise data race detection </li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>How it works</p>
-<ul>
-<li><p>Coverage Tracking (LLVM Pass)</p>
-<ul>
-<li><p>Branch coverage for sequential dimension</p>
-</li>
-<li><p>Alias coverage for concurrency dimension</p>
-<ul>
+<li>How it works<ul>
+<li>Coverage Tracking (LLVM Pass)<ul>
+<li>Branch coverage for sequential dimension</li>
+<li>Alias coverage for concurrency dimension<ul>
 <li>How many pairs of memory access instructions that may interleave against with each other have been covered</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>Input generation  (Python)</p>
-<ul>
-<li><p>Evolve and merge multi-threaded seeds to induce new interleaving</p>
-<ul>
-<li><p>syscall specification, inter-dependencies among syscalls</p>
-</li>
-<li><p>mutation/addition/deletion/shuffling/<font color="#dd0000">merge</font> two seeds/primitive collection</p>
-</li>
+<li>Input generation  (Python)<ul>
+<li>Evolve and merge multi-threaded seeds to induce new interleaving<ul>
+<li>syscall specification, inter-dependencies among syscalls</li>
+<li>mutation/addition/deletion/shuffling/<font color="#dd0000">merge</font> two seeds/primitive collection</li>
 </ul>
 </li>
-<li><p>Thread delay schedules: a lightweight delay injection scheme</p>
-</li>
+<li>Thread delay schedules: a lightweight delay injection scheme</li>
 </ul>
 </li>
-<li><p>Bug manifestation</p>
-<ul>
-<li><p>Detect data race given an execution trace by hooking memory access (Python)</p>
-<ul>
-<li><p>How to confirm whether a data race is a true race</p>
-<ul>
-<li><p>lockset: no locks are held by both contexts</p>
-</li>
-<li><p>happens-before: no ordering between two contexts  is guaranteed</p>
-<ul>
-<li><p>fork-style relations</p>
-</li>
-<li><p>join-style relationship</p>
-</li>
-<li><p>publisher-subscriber model</p>
-</li>
+<li>Bug manifestation<ul>
+<li>Detect data race given an execution trace by hooking memory access (Python)<ul>
+<li>How to confirm whether a data race is a true race<ul>
+<li>lockset: no locks are held by both contexts</li>
+<li>happens-before: no ordering between two contexts  is guaranteed<ul>
+<li>fork-style relations</li>
+<li>join-style relationship</li>
+<li>publisher-subscriber model</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>A comprehensive framework of synchronization mechanisms</p>
-<ul>
-<li><p>locking primitives modeling for lockset analysis</p>
-</li>
-<li><p>thread ordering primitive annotations for happens-before analysis</p>
-</li>
+<li>A comprehensive framework of synchronization mechanisms<ul>
+<li>locking primitives modeling for lockset analysis</li>
+<li>thread ordering primitive annotations for happens-before analysis</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>Clean kernel state after each execution for trackability and debuggability</p>
-</li>
+<li>Clean kernel state after each execution for trackability and debuggability</li>
 </ul>
 </li>
-<li><p>Evaluation</p>
-<ul>
+<li>Evaluation<ul>
 <li>23 data races in ext4 and btrfs<ul>
 <li>9 harmful and 11 benign (2 months)</li>
 </ul>
@@ -445,8 +402,9 @@
 <li>(感觉怎么突破coverage的瓶颈是个合理的方向)</li>
 </ul>
 </li>
-<li><p>Reflection</p>
-<p>Fuzzing distributed file systems that involve not only thread interleavings but also network event ordering, which requires completely new coverage metrics to capture.</p>
+<li>Reflection<ul>
+<li>Fuzzing distributed file systems that involve not only thread interleavings but also network event ordering, which requires completely new coverage metrics to capture.</li>
+</ul>
 </li>
 </ul>
 
