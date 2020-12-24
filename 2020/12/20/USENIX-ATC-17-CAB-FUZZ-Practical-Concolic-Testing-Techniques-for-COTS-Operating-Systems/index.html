@@ -31,8 +31,10 @@
 <meta property="og:description" content="AbstractDiscovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug i">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-20T13:31:34.000Z">
-<meta property="article:modified_time" content="2020-12-20T13:40:13.924Z">
+<meta property="article:modified_time" content="2020-12-24T04:51:22.143Z">
 <meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Concolic Testing">
+<meta property="article:tag" content="Device Driver">
 <meta name="twitter:card" content="summary">
 
 
@@ -205,7 +207,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -276,10 +278,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2020-12-20 21:31:34 / Modified: 21:40:13" itemprop="dateCreated datePublished" datetime="2020-12-20T21:31:34+08:00">2020-12-20</time>
+      <time title="Created: 2020-12-20 21:31:34" itemprop="dateCreated datePublished" datetime="2020-12-20T21:31:34+08:00">2020-12-20</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-12-24 12:51:22" itemprop="dateModified" datetime="2020-12-24T12:51:22+08:00">2020-12-24</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -307,9 +315,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Discovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug information. Concolic testing, which generates all feasible inputs of a program by using symbolic execution and tests the program with the gen- erated inputs, is one of the most promising approaches to solve this problem. Unfortunately, the state-of-the-art concolic testing tools do not scale well for testing COTS OSes because of state explosion. Indeed, they often fail to find a single bug (or crash) in COTS OSes despite their long execution time.</p>
+        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Discovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug information. Concolic testing, which generates all feasible inputs of a program by using symbolic execution and tests the program with the generated inputs, is one of the most promising approaches to solve this problem. Unfortunately, the state-of-the-art concolic testing tools do not scale well for testing COTS OSes because of state explosion. Indeed, they often fail to find a single bug (or crash) in COTS OSes despite their long execution time.</p>
 <a id="more"></a>
-<p>In this paper, we propose CAB-FUZZ (Context-Aware and Boundary-focused), a practical concolic testing tool to quickly explore interesting paths that are highly likely triggering real bugs without debug information. First, CAB-FUZZ prioritizes the boundary states of arrays and loops, inspired by the fact that many vulnerabilities originate from a lack of proper boundary checks. Sec- ond, CAB-FUZZ exploits real programs interacting with COTS OSes to construct proper contexts to explore deep and complex kernel states without debug information. We applied CAB-FUZZ to Windows 7 and Windows Server 2008 and found 21 undisclosed unique crashes, includ- ing two local privilege escalation vulnerabilities (CVE- 2015-6098 and CVE-2016-0040) and one information disclosure vulnerability in a cryptography driver (CVE- 2016-7219). CAB-FUZZ found vulnerabilities that are non-trivial to discover; five vulnerabilities have existed for 14 years, and we could trigger them even in the initial version of Windows XP (August 2001).</p>
+<p>In this paper, we propose CAB-FUZZ (Context-Aware and Boundary-focused), a practical concolic testing tool to quickly explore interesting paths that are highly likely triggering real bugs without debug information. First, CAB-FUZZ prioritizes the boundary states of arrays and loops, inspired by the fact that many vulnerabilities originate from a lack of proper boundary checks. Second, CAB-FUZZ exploits real programs interacting with COTS OSes to construct proper contexts to explore deep and complex kernel states without debug information. We applied CAB-FUZZ to Windows 7 and Windows Server 2008 and found 21 undisclosed unique crashes, includ- ing two local privilege escalation vulnerabilities (CVE- 2015-6098 and CVE-2016-0040) and one information disclosure vulnerability in a cryptography driver (CVE- 2016-7219). CAB-FUZZ found vulnerabilities that are non-trivial to discover; five vulnerabilities have existed for 14 years, and we could trigger them even in the initial version of Windows XP (August 2001).</p>
 <h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
 <li>Difficulties of testing COTS OSes using concolic execution<ul>
 <li>COTS OS is huge and complex, lack debug information</li>
@@ -398,6 +406,10 @@
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Concolic-Testing/" rel="tag"># Concolic Testing</a>
+              <a href="/blog/tags/Device-Driver/" rel="tag"># Device Driver</a>
+          </div>
 
         
 
