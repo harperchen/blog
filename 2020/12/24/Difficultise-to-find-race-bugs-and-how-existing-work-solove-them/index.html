@@ -31,7 +31,7 @@
 <meta property="og:description" content="1. 什么是Race Bug两个访问内存区域的线程  访问的内存区域地址相同 其中一个内存访问是写操作 两个线程的执行顺序是不受限制的  当这三个条件同时满足时，即可认定是Race bug。Race bug又可分为harmful和benign两种：">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T07:21:02.000Z">
-<meta property="article:modified_time" content="2020-12-24T08:21:39.324Z">
+<meta property="article:modified_time" content="2020-12-24T08:23:22.165Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Kernel">
 <meta property="article:tag" content="Race Bugs">
@@ -280,7 +280,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2020-12-24 15:21:02 / Modified: 16:21:39" itemprop="dateCreated datePublished" datetime="2020-12-24T15:21:02+08:00">2020-12-24</time>
+      <time title="Created: 2020-12-24 15:21:02 / Modified: 16:23:22" itemprop="dateCreated datePublished" datetime="2020-12-24T15:21:02+08:00">2020-12-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -337,18 +337,35 @@
 </ol>
 <h4 id="4-现有工作的解决方案"><a href="#4-现有工作的解决方案" class="headerlink" title="4. 现有工作的解决方案"></a>4. 现有工作的解决方案</h4><p>现在我主要看了两个工作Razzer和Krace，两个工作各有利弊，针对上述问题，提出了各自的解决方案。</p>
 <ol>
-<li>如何确定哪些指令访问同一内存区域？<ol>
-<li>Razzer: 利用静态分析，分析内核的LLVM代码。<br>优点：<ol>
+<li><p>如何确定哪些指令访问同一内存区域？</p>
+<ol>
+<li><p>Razzer: 利用静态分析，分析内核的LLVM代码。</p>
+<p>优点：</p>
+<ol>
 <li>此过程offline，对实效性要求并不高。</li>
-<li>提前对kernel有全面的把握，覆盖率问题可以得到解决。<br>缺点：</li>
-<li>内核代码这么多，怎么高效检测？<br>分模块分析，不考虑模块间的指令对，不考虑同步元语，因此是over-approximated的。</li>
+<li>提前对kernel有全面的把握，覆盖率问题可以得到解决。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>内核代码这么多，怎么高效检测？<ul>
+<li>分模块分析，不考虑模块间的指令对，不考虑同步元语，因此是over-approximated的。</li>
+</ul>
+</li>
 <li>如何解决静态分析固有的false-positive比较高的问题？（见问题3）</li>
-<li>对于访问同一内存区域的指令，如何找到相应的程序来运行这些指令？<br>利用fuzzing，先找到相应的单线程程序，同时覆盖两个指令对，再多线程运行，进行线程交织。</li>
+<li>对于访问同一内存区域的指令，如何找到相应的程序来运行这些指令？<ul>
+<li>利用fuzzing，先找到相应的单线程程序，同时覆盖两个指令对，再多线程运行，进行线程交织。</li>
+</ul>
+</li>
 </ol>
 </li>
-<li>Krace: 动态运行时检测，提出alias coverage的概念，应用到coverage-guided fuzzing中，alias coverage指的是有多少可能会出现竞态漏洞的指令对被覆盖了。<br>优点：<ol>
+<li><p>Krace: 动态运行时检测，提出alias coverage的概念，应用到coverage-guided fuzzing中，alias coverage指的是有多少可能会出现竞态漏洞的指令对被覆盖了。</p>
+<p>优点：</p>
+<ol>
 <li>动态过程自然而然解决了false-positive的问题，准确率比较满意</li>
-<li>此过程先有相应的执行序列，再检测到有两个指令访问相同的内存区域，自然解决了为指令找序列的问题。<br>缺点：</li>
+<li>此过程先有相应的执行序列，再检测到有两个指令访问相同的内存区域，自然解决了为指令找序列的问题。</li>
+</ol>
+<p>缺点：</p>
+<ol>
 <li>此过程是online的，如何执行高效的检测机制是一个需要克服的问题？ （见问题2）</li>
 <li>面对两个程序这么多组可能的指令对，如何高效查找其中访问相同内存区域的指令？</li>
 <li>如何提高代码覆盖率，尽可能多的覆盖指令对？</li>
@@ -356,7 +373,8 @@
 </li>
 </ol>
 </li>
-<li>对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？<ol>
+<li><p>对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？</p>
+<ol>
 <li>Razzer：</li>
 <li>Krace：</li>
 </ol>
