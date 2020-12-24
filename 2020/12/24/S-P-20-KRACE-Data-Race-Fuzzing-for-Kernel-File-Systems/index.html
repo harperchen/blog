@@ -23,21 +23,20 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="3 qualities of successful Ph.D. students: http:&#x2F;&#x2F;matt.might.net&#x2F;articles&#x2F;successful-phd-students&#x2F; 10 reasons Ph.D. students fail: http:&#x2F;&#x2F;matt.might.net&#x2F;articles&#x2F;ways-to-fail-a-phd&#x2F; The Ph.D. Grind: ht">
+  <meta name="description" content="AbstractData races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes a">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ph.D. Related">
-<meta property="og:url" content="https://harperchen.github.io/blog/2020/09/13/Ph.D.-Related/index.html">
+<meta property="og:title" content="[S&amp;P&#39;20] KRACE: Data Race Fuzzing for Kernel File Systems">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="3 qualities of successful Ph.D. students: http:&#x2F;&#x2F;matt.might.net&#x2F;articles&#x2F;successful-phd-students&#x2F; 10 reasons Ph.D. students fail: http:&#x2F;&#x2F;matt.might.net&#x2F;articles&#x2F;ways-to-fail-a-phd&#x2F; The Ph.D. Grind: ht">
+<meta property="og:description" content="AbstractData races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes a">
 <meta property="og:locale">
-<meta property="article:published_time" content="2020-09-12T16:37:55.000Z">
-<meta property="article:modified_time" content="2020-12-07T03:56:34.723Z">
+<meta property="article:published_time" content="2020-12-24T04:42:43.000Z">
+<meta property="article:modified_time" content="2020-12-24T04:43:57.199Z">
 <meta property="article:author" content="Wei CHEN">
-<meta property="article:tag" content="Ph.D.">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/2020/09/13/Ph.D.-Related/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/">
 
 
 <script data-pjax class="page-configurations">
@@ -50,7 +49,7 @@
   };
 </script>
 
-  <title>Ph.D. Related | Wei's Blog</title>
+  <title>[S&P'20] KRACE: Data Race Fuzzing for Kernel File Systems | Wei's Blog</title>
   
 
 
@@ -165,7 +164,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -177,6 +176,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-text">Outline</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -250,7 +250,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/13/Ph.D.-Related/">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -266,7 +266,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Ph.D. Related
+          [S&P'20] KRACE: Data Race Fuzzing for Kernel File Systems
         </h1>
 
         <div class="post-meta-container">
@@ -276,23 +276,17 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2020-09-13 00:37:55" itemprop="dateCreated datePublished" datetime="2020-09-13T00:37:55+08:00">2020-09-13</time>
+      <time title="Created: 2020-12-24 12:42:43 / Modified: 12:43:57" itemprop="dateCreated datePublished" datetime="2020-12-24T12:42:43+08:00">2020-12-24</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-07 11:56:34" itemprop="dateModified" datetime="2020-12-07T11:56:34+08:00">2020-12-07</time>
-      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Ph-D/" itemprop="url" rel="index"><span itemprop="name">Ph.D.</span></a>
+          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
         </span>
     </span>
 
@@ -313,12 +307,148 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>3 qualities of successful Ph.D. students: <a target="_blank" rel="noopener" href="http://matt.might.net/articles/successful-phd-students/">http://matt.might.net/articles/successful-phd-students/</a></p>
-<p>10 reasons Ph.D. students fail: <a target="_blank" rel="noopener" href="http://matt.might.net/articles/ways-to-fail-a-phd/">http://matt.might.net/articles/ways-to-fail-a-phd/</a></p>
-<p>The Ph.D. Grind: <a target="_blank" rel="noopener" href="https://www.goodreads.com/book/show/15731248-the-ph-d-grind">https://www.goodreads.com/book/show/15731248-the-ph-d-grind</a></p>
-<a id="more"></a>
-<p>Conferences: <a target="_blank" rel="noopener" href="http://harperchen.qiniudn.com/%E4%B8%AD%E5%9B%BD%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AD%A6%E4%BC%9A%E6%8E%A8%E8%8D%90%E5%9B%BD%E9%99%85%E5%AD%A6%E6%9C%AF%E4%BC%9A%E8%AE%AE%E5%92%8C%E6%9C%9F%E5%88%8A%E7%9B%AE%E5%BD%95.pdf">http://harperchen.qiniudn.com/%E4%B8%AD%E5%9B%BD%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AD%A6%E4%BC%9A%E6%8E%A8%E8%8D%90%E5%9B%BD%E9%99%85%E5%AD%A6%E6%9C%AF%E4%BC%9A%E8%AE%AE%E5%92%8C%E6%9C%9F%E5%88%8A%E7%9B%AE%E5%BD%95.pdf</a></p>
-<p>Ranking of conference from Tsinghua: <a target="_blank" rel="noopener" href="http://numbda.cs.tsinghua.edu.cn/~yuwj/TH-CPL.pdf">http://numbda.cs.tsinghua.edu.cn/~yuwj/TH-CPL.pdf</a></p>
+        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes and often wreak havoc on the users, causing inconsistent states or data losses. Prior fuzzing practices on file systems have been effective in uncovering hundreds of bugs, but they mostly focus on the sequential aspect of file system execution and do not comprehensively explore the concurrency dimension and hence, forgo the opportunity to catch data races.</p>
+<p>In this paper, we bring coverage-guided fuzzing to the concur- rency dimension with three new constructs: 1) a new coverage tracking metric, alias coverage, specially designed to capture the exploration progress in the concurrency dimension; 2) an evolution algorithm for generating, mutating, and merging multi- threaded syscall sequences as inputs for concurrency fuzzing; and 3) a comprehensive lockset and happens-before modeling for kernel synchronization primitives for precise data race detection. These components are integrated into KRACE, an end-to-end fuzzing framework that has discovered 23 data races in ext4, btrfs, and the VFS layer so far, and 9 are confirmed to be harmful.</p>
+<h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
+<li><p>What is data race (memory access bugs)</p>
+<ul>
+<li><p>Two threads fail to use proper synchronization </p>
+<ul>
+<li><p>Two threads access same memory address</p>
+</li>
+<li><p>At least one thread is a memory write</p>
+</li>
+<li><p>They are issued from different contexts </p>
+</li>
+</ul>
+</li>
+<li><p>Cause inconsistent states or data losses</p>
+</li>
+</ul>
+</li>
+<li><p>Drawbacks of previous work</p>
+<ul>
+<li><p>Stress testing relies on handwritten test suites</p>
+</li>
+<li><p>Existing file system fuzzing focus on sequential view of program execution</p>
+<ul>
+<li>Effective in single-threaded syscall sequences generation/mutation</li>
+</ul>
+</li>
+<li><p>Different thread interleaving can result in same branch coverage</p>
+</li>
+<li><p>No existing work to synthesize multi-threaded sequences to maximize thread interleaving coverage</p>
+</li>
+</ul>
+</li>
+<li><p>Difficulties of data race fuzzing</p>
+<ul>
+<li><p>Hard to detect and diagnose due to non-determinism in thread interleaving</p>
+</li>
+<li><p>Thread schedule consists of both user threads and kernel threads</p>
+</li>
+<li><p>Data race often leads to silent failures, do not raise visible signals in short term</p>
+</li>
+</ul>
+</li>
+<li><p>Why this paper is accepted</p>
+<ul>
+<li><p>The first completely automated system that can </p>
+</li>
+<li><p>Usefulness</p>
+<ul>
+<li>Bring coverage-guided fuzzing to concurrency dimension</li>
+</ul>
+</li>
+<li><p>Novelty</p>
+<ul>
+<li><p>A novel coverage tracking metric alias instruction pair coverage</p>
+</li>
+<li><p>An evolution algorithm for generate/mutate/merge-ing multi-threaded syscall sequences for concurrency fuzzing</p>
+</li>
+<li><p>A comprehensive lockset and happens-before modeling for precise data race detection </p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>How it works</p>
+<ul>
+<li><p>Coverage Tracking (LLVM Pass)</p>
+<ul>
+<li><p>Branch coverage for sequential dimension</p>
+</li>
+<li><p>Alias coverage for concurrency dimension</p>
+<ul>
+<li>How many pairs of memory access instructions that may interleave against with each other have been covered</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Input generation  (Python)</p>
+<ul>
+<li><p>Evolve and merge multi-threaded seeds to induce new interleaving</p>
+<ul>
+<li><p>syscall specification, inter-dependencies among syscalls</p>
+</li>
+<li><p>mutation/addition/deletion/shuffling/<font color="#dd0000">merge</font> two seeds/primitive collection</p>
+</li>
+</ul>
+</li>
+<li><p>Thread delay schedules: a lightweight delay injection scheme</p>
+</li>
+</ul>
+</li>
+<li><p>Bug manifestation</p>
+<ul>
+<li><p>Detect data race given an execution trace by hooking memory access (Python)</p>
+<ul>
+<li><p>How to confirm whether a data race is a true race</p>
+<ul>
+<li><p>lockset: no locks are held by both contexts</p>
+</li>
+<li><p>happens-before: no ordering between two contexts  is guaranteed</p>
+<ul>
+<li><p>fork-style relations</p>
+</li>
+<li><p>join-style relationship</p>
+</li>
+<li><p>publisher-subscriber model</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>A comprehensive framework of synchronization mechanisms</p>
+<ul>
+<li><p>locking primitives modeling for lockset analysis</p>
+</li>
+<li><p>thread ordering primitive annotations for happens-before analysis</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Clean kernel state after each execution for trackability and debuggability</p>
+</li>
+</ul>
+</li>
+<li><p>Evaluation</p>
+<ul>
+<li>23 data races in ext4 and btrfs<ul>
+<li>9 harmful and 11 benign (2 months)</li>
+</ul>
+</li>
+<li>Throughput: at least 7 seconds for each execution</li>
+<li>(感觉怎么突破coverage的瓶颈是个合理的方向)</li>
+</ul>
+</li>
+<li><p>Reflection</p>
+<p>Fuzzing distributed file systems that involve not only thread interleavings but also network event ordering, which requires completely new coverage metrics to capture.</p>
+</li>
+</ul>
 
     </div>
 
@@ -327,22 +457,16 @@
     
 
     <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/blog/tags/Ph-D/" rel="tag"># Ph.D.</a>
-          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/" rel="prev" title="How to enable MTE in ArmStudio">
-                  <i class="fa fa-chevron-left"></i> How to enable MTE in ArmStudio
+                <a href="/blog/2020/12/24/S-P-19-RAZZER-Finding-Kernel-Race-Bugs-through-Fuzzing/" rel="prev" title="[S&P'19] RAZZER: Finding Kernel Race Bugs through Fuzzing">
+                  <i class="fa fa-chevron-left"></i> [S&P'19] RAZZER: Finding Kernel Race Bugs through Fuzzing
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/blog/2020/09/13/Science-Writing/" rel="next" title="Science Writing">
-                  Science Writing <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
