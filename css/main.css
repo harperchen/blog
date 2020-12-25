@@ -199,6 +199,9 @@ h6 {
   line-height: 1.5;
   margin: 20px 0 15px;
 }
+ol {
+  margin: 0 0 10px 0;
+}
 h1 {
   font-size: 1.5em;
 }
@@ -218,7 +221,7 @@ h6 {
   font-size: 0.875em;
 }
 p {
-  margin: 0 0 20px 0;
+  margin: 0 0 10px 0;
 }
 a,
 span.exturl {
@@ -1952,7 +1955,7 @@ pre code {
 .post-body h4,
 .post-body h5,
 .post-body h6 {
-  padding-top: 10px;
+  padding-top: 0px;
 }
 .post-body h1 .header-anchor,
 .post-body h2 .header-anchor,
