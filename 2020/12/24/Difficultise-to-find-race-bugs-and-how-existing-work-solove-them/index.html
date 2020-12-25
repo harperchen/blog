@@ -31,7 +31,7 @@
 <meta property="og:description" content="1. Race Bug两个访问内存区域的线程，当下面三个条件同时满足时，即可认定是Race bug。  访问的内存区域地址相同 其中一个内存访问是写操作 两个线程的执行顺序是不受限制的">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T07:21:02.000Z">
-<meta property="article:modified_time" content="2020-12-24T08:47:07.531Z">
+<meta property="article:modified_time" content="2020-12-25T14:05:25.653Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Kernel">
 <meta property="article:tag" content="Race Bugs">
@@ -278,10 +278,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2020-12-24 15:21:02 / Modified: 16:47:07" itemprop="dateCreated datePublished" datetime="2020-12-24T15:21:02+08:00">2020-12-24</time>
+      <time title="Created: 2020-12-24 15:21:02" itemprop="dateCreated datePublished" datetime="2020-12-24T15:21:02+08:00">2020-12-24</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-12-25 22:05:25" itemprop="dateModified" datetime="2020-12-25T22:05:25+08:00">2020-12-25</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -366,7 +372,8 @@
 <li>面对两个程序这么多组可能的指令对，如何高效查找其中访问相同内存区域的指令？</li>
 <li>如何提高代码覆盖率，尽可能多的覆盖指令对？</li>
 </ol>
-<h4 id="4-2-对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？"><a href="#4-2-对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？" class="headerlink" title="4.2 对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？"></a>4.2 对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？</h4><h5 id="Razzer-1"><a href="#Razzer-1" class="headerlink" title="Razzer"></a>Razzer</h5><h5 id="Krace-1"><a href="#Krace-1" class="headerlink" title="Krace"></a>Krace</h5><h4 id="5-哪些可以改进的地方"><a href="#5-哪些可以改进的地方" class="headerlink" title="5. 哪些可以改进的地方"></a>5. 哪些可以改进的地方</h4>
+<h4 id="4-2-对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？"><a href="#4-2-对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？" class="headerlink" title="4.2 对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？"></a>4.2 对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？</h4><h5 id="Razzer-1"><a href="#Razzer-1" class="headerlink" title="Razzer"></a>Razzer</h5><p>   <strong>优点</strong></p>
+<h5 id="Krace-1"><a href="#Krace-1" class="headerlink" title="Krace"></a>Krace</h5><h4 id="5-哪些可以改进的地方"><a href="#5-哪些可以改进的地方" class="headerlink" title="5. 哪些可以改进的地方"></a>5. 哪些可以改进的地方</h4>
     </div>
 
     
