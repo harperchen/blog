@@ -223,6 +223,9 @@ h6 {
 p {
   margin: 0 0 10px 0;
 }
+ul {
+  padding-left: 25px;
+}
 a,
 span.exturl {
   border-bottom: 1px solid #999;
