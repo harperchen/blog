@@ -31,7 +31,7 @@
 <meta property="og:description" content="1. Race Bug两个访问内存区域的线程，当下面三个条件同时满足时，即可认定是Race bug。  访问的内存区域地址相同 其中一个内存访问是写操作 两个线程的执行顺序是不受限制的">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T07:21:02.000Z">
-<meta property="article:modified_time" content="2020-12-26T08:45:17.567Z">
+<meta property="article:modified_time" content="2020-12-26T08:56:47.614Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Kernel">
 <meta property="article:tag" content="Race Bugs">
@@ -286,7 +286,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-26 16:45:17" itemprop="dateModified" datetime="2020-12-26T16:45:17+08:00">2020-12-26</time>
+        <time title="Modified: 2020-12-26 16:56:47" itemprop="dateModified" datetime="2020-12-26T16:56:47+08:00">2020-12-26</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -383,8 +383,7 @@
 </ol>
 <p><strong>缺点：</strong></p>
 <ol>
-<li><p>极其依赖syscall序列的后续处理过程，由于大多数情况下，竞态漏洞并不能立即崩溃系统，因此需要合理的后续系统调用的执行，触发竞态漏洞导致的有害影响，而本步骤在Razzer中是利用fuzzing实现的，其效率可能有待提高。</p>
-<p>（可能是可以突破的地方）</p>
+<li><p>极其依赖syscall序列的后续处理过程，由于大多数情况下，竞态漏洞并不能立即崩溃系统，因此需要合理的后续系统调用的执行，触发竞态漏洞导致的有害影响，而本步骤在Razzer中是利用fuzzing实现的，其效率可能有待提高。（可能是可以突破的地方）</p>
 <h5 id="2-Krace-1"><a href="#2-Krace-1" class="headerlink" title="2. Krace"></a>2. Krace</h5></li>
 </ol>
 <p>针对内核文件系统中常见的锁和同步机制建模，对于访问同一内存地址的指令，执行精确、全面的竞态监测，主要是针对第三个条件，两个线程的执行顺序是不受限制的，检测过程从以下两个方面入手：</p>
