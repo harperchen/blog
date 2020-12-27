@@ -31,7 +31,7 @@
 <meta property="og:description" content="AbstractData races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes a">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T04:42:43.000Z">
-<meta property="article:modified_time" content="2020-12-24T07:19:31.428Z">
+<meta property="article:modified_time" content="2020-12-27T08:22:26.906Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Fuzz Testing">
 <meta property="article:tag" content="Kernel">
@@ -280,10 +280,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2020-12-24 12:42:43 / Modified: 15:19:31" itemprop="dateCreated datePublished" datetime="2020-12-24T12:42:43+08:00">2020-12-24</time>
+      <time title="Created: 2020-12-24 12:42:43" itemprop="dateCreated datePublished" datetime="2020-12-24T12:42:43+08:00">2020-12-24</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-12-27 16:22:26" itemprop="dateModified" datetime="2020-12-27T16:22:26+08:00">2020-12-27</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -344,13 +350,12 @@
 </ul>
 </li>
 <li>Why this paper is accepted<ul>
-<li>The first completely automated system that can </li>
 <li>Usefulness<ul>
 <li>Bring coverage-guided fuzzing to concurrency dimension</li>
 </ul>
 </li>
 <li>Novelty<ul>
-<li>A novel coverage tracking metric alias instruction pair coverage</li>
+<li>A novel coverage tracking metric–alias instruction pair coverage</li>
 <li>An evolution algorithm for generate/mutate/merge-ing multi-threaded syscall sequences for concurrency fuzzing</li>
 <li>A comprehensive lockset and happens-before modeling for precise data race detection </li>
 </ul>
@@ -358,21 +363,22 @@
 </ul>
 </li>
 <li>How it works<ul>
-<li>Coverage Tracking (LLVM Pass)<ul>
+<li>Coverage Tracking (LLVM Instrumentation Pass)<ul>
 <li>Branch coverage for sequential dimension</li>
 <li>Alias coverage for concurrency dimension<ul>
 <li>How many pairs of memory access instructions that may interleave against with each other have been covered</li>
+<li>Tracking online, a new metrics to decide whether current fuzzing seed should be further mutated</li>
 </ul>
 </li>
 </ul>
 </li>
 <li>Input generation  (Python)<ul>
-<li>Evolve and merge multi-threaded seeds to induce new interleaving<ul>
+<li>Evolve and merge multi-threaded seeds (3 threads in total) to induce new interleaving<ul>
 <li>syscall specification, inter-dependencies among syscalls</li>
 <li>mutation/addition/deletion/shuffling/<font color="#dd0000">merge</font> two seeds/primitive collection</li>
 </ul>
 </li>
-<li>Thread delay schedules: a lightweight delay injection scheme</li>
+<li>Thread delay schedules: delays each memory access a random number of time</li>
 </ul>
 </li>
 <li>Bug manifestation<ul>
