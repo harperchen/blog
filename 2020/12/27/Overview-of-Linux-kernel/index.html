@@ -23,16 +23,16 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 http:&#x2F;&#x2F;seclab.cs.sunysb.edu&#x2F;sekar&#x2F;papers&#x2F;syscallclassif.htm：  进程管理模块 内存管理模块 文件系统模块 设备控制模块 网络模块">
+  <meta name="description" content="Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 http:&#x2F;&#x2F;seclab.cs.sunysb.edu&#x2F;sekar&#x2F;papers&#x2F;syscallclassif.htm  进程管理模块 内存管理模块 文件系统模块 设备控制模块 网络模块">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Overview of Linux kernel">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/27/Overview-of-Linux-kernel/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 http:&#x2F;&#x2F;seclab.cs.sunysb.edu&#x2F;sekar&#x2F;papers&#x2F;syscallclassif.htm：  进程管理模块 内存管理模块 文件系统模块 设备控制模块 网络模块">
+<meta property="og:description" content="Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 http:&#x2F;&#x2F;seclab.cs.sunysb.edu&#x2F;sekar&#x2F;papers&#x2F;syscallclassif.htm  进程管理模块 内存管理模块 文件系统模块 设备控制模块 网络模块">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/12/27/mgGj6SIcwTAOnxk.png">
 <meta property="article:published_time" content="2020-12-27T12:47:53.000Z">
-<meta property="article:modified_time" content="2020-12-28T04:50:49.355Z">
+<meta property="article:modified_time" content="2020-12-28T04:54:21.874Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Kernel">
 <meta name="twitter:card" content="summary">
@@ -287,7 +287,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-28 12:50:49" itemprop="dateModified" datetime="2020-12-28T12:50:49+08:00">2020-12-28</time>
+        <time title="Modified: 2020-12-28 12:54:21" itemprop="dateModified" datetime="2020-12-28T12:54:21+08:00">2020-12-28</time>
       </span>
 
   
@@ -307,7 +307,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 <a target="_blank" rel="noopener" href="http://seclab.cs.sunysb.edu/sekar/papers/syscallclassif.htm%EF%BC%9A">http://seclab.cs.sunysb.edu/sekar/papers/syscallclassif.htm：</a></p>
+        <p>Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 <a target="_blank" rel="noopener" href="http://seclab.cs.sunysb.edu/sekar/papers/syscallclassif.htm">http://seclab.cs.sunysb.edu/sekar/papers/syscallclassif.htm</a></p>
 <ol>
 <li>进程管理模块</li>
 <li>内存管理模块</li>
