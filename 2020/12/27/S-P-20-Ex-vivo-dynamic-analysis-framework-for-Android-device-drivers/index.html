@@ -32,7 +32,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/12/28/8HLgaI6wWkPjVmq.png">
 <meta property="article:published_time" content="2020-12-27T11:06:47.000Z">
-<meta property="article:modified_time" content="2020-12-28T12:24:16.962Z">
+<meta property="article:modified_time" content="2020-12-28T15:24:37.354Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Kernel">
 <meta property="article:tag" content="Hardware Boostup">
@@ -288,7 +288,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-28 20:24:16" itemprop="dateModified" datetime="2020-12-28T20:24:16+08:00">2020-12-28</time>
+        <time title="Modified: 2020-12-28 23:24:37" itemprop="dateModified" datetime="2020-12-28T23:24:37+08:00">2020-12-28</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -389,8 +389,8 @@
 </ul>
 </li>
 <li>EASIER (Ex-vivo Analysis framework)：在用户空间对驱动进行fuzzing或符号执行<ul>
-<li>利用Qemu模拟器，将初始化的驱动和内核提取为内存快照，导出所有内存页和寄存器的值</li>
-<li>利用dUnicorn加载内存和恢复寄存器的值，从文件中读取传递给系统调用的参数，模拟执行系统调用直到返回用户空间</li>
+<li>利用Qemu模拟器，初始化驱动和内核，运行应用程序调用ioctl，在进入内核空间时提取内存快照，导出所有内存页和寄存器的值</li>
+<li>利用CPU模拟器dUnicorn加载内存和恢复寄存器的值，从文件中读取传递给系统调用的参数，模拟执行系统调用直到返回用户空间</li>
 </ul>
 </li>
 </ul>
@@ -417,7 +417,7 @@
 </li>
 <li>确保内核和驱动之间传输数据结构的一致性<ul>
 <li>结构体各字段要对齐，偏移量要一致</li>
-<li>若主机内核代码不可访问，则对比二进制，插入填充使字段对齐</li>
+<li>若主机内核代码不可访问，则对比二进制中字段的偏移量，插入填充使字段对齐</li>
 <li>若主机内核代码可访问，直接尝试不同配置编译evasion，使最终各字段一致</li>
 </ul>
 </li>
