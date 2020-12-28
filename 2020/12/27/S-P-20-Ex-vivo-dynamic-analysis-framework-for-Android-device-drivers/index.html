@@ -23,25 +23,20 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="AbstractMany kinds of memory safety vulnerabilities have been endangering software systems for decades. Amongst other approaches, fuzzing is a promising technique to unveil various software faults. Re">
+  <meta name="description" content="AbstractThe ability to execute and analyze code makes many security tasks such as exploit development, reverse engineering, and vulnerability detection much easier. However, on embedded devices such a">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[USENIX&#39;17] kAFL: Hardware-Assisted Feedback Fuzzing for OS Kernels">
-<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/index.html">
+<meta property="og:title" content="[S&amp;P&#39;20] Ex-vivo dynamic analysis framework for Android device drivers">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="AbstractMany kinds of memory safety vulnerabilities have been endangering software systems for decades. Amongst other approaches, fuzzing is a promising technique to unveil various software faults. Re">
+<meta property="og:description" content="AbstractThe ability to execute and analyze code makes many security tasks such as exploit development, reverse engineering, and vulnerability detection much easier. However, on embedded devices such a">
 <meta property="og:locale">
-<meta property="og:image" content="https://i.loli.net/2020/12/18/REtD1Xsgq6U5YSH.png">
-<meta property="article:published_time" content="2020-12-18T07:02:13.000Z">
-<meta property="article:modified_time" content="2020-12-24T04:59:35.568Z">
+<meta property="article:published_time" content="2020-12-27T11:06:47.000Z">
+<meta property="article:modified_time" content="2020-12-28T04:48:02.458Z">
 <meta property="article:author" content="Wei CHEN">
-<meta property="article:tag" content="Kernel">
-<meta property="article:tag" content="Fuzz Testing">
-<meta property="article:tag" content="File System">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/12/18/REtD1Xsgq6U5YSH.png">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/">
 
 
 <script data-pjax class="page-configurations">
@@ -54,7 +49,7 @@
   };
 </script>
 
-  <title>[USENIX'17] kAFL: Hardware-Assisted Feedback Fuzzing for OS Kernels | Wei's Blog</title>
+  <title>[S&P'20] Ex-vivo dynamic analysis framework for Android device drivers | Wei's Blog</title>
   
 
 
@@ -181,7 +176,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-text">Outline</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-text">Outline</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EASIER-Ex-vivo-Analysis-framework-%EF%BC%9A%E5%9C%A8%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E5%AF%B9%E9%A9%B1%E5%8A%A8%E8%BF%9B%E8%A1%8Cfuzzing%E6%88%96%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C"><span class="nav-text">EASIER (Ex-vivo Analysis framework)：在用户空间对驱动进行fuzzing或符号执行</span></a></div>
       </section>
       <!--/noindex-->
 
@@ -255,7 +250,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -271,7 +266,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          [USENIX'17] kAFL: Hardware-Assisted Feedback Fuzzing for OS Kernels
+          [S&P'20] Ex-vivo dynamic analysis framework for Android device drivers
         </h1>
 
         <div class="post-meta-container">
@@ -282,24 +277,15 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2020-12-18 15:02:13" itemprop="dateCreated datePublished" datetime="2020-12-18T15:02:13+08:00">2020-12-18</time>
+      <time title="Created: 2020-12-27 19:06:47" itemprop="dateCreated datePublished" datetime="2020-12-27T19:06:47+08:00">2020-12-27</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-24 12:59:35" itemprop="dateModified" datetime="2020-12-24T12:59:35+08:00">2020-12-24</time>
+        <time title="Modified: 2020-12-28 12:48:02" itemprop="dateModified" datetime="2020-12-28T12:48:02+08:00">2020-12-28</time>
       </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
-        </span>
-    </span>
 
   
     <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -318,101 +304,125 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Many kinds of memory safety vulnerabilities have been endangering software systems for decades. Amongst other approaches, fuzzing is a promising technique to unveil various software faults. Recently, feedback-guided fuzzing demonstrated its power, pro- ducing a steady stream of security-critical software bugs. Most fuzzing efforts—especially feedback fuzzing—are limited to user space components of an operating system (OS), although bugs in kernel components are more severe, because they allow an attacker to gain access to a system with full privileges. Unfortunately, kernel components are difficult to fuzz as feedback mechanisms (i.e., guided code coverage) cannot be easily applied. Additionally, non-determinism due to interrupts, kernel threads, statefulness, and similar mechanisms poses problems. Furthermore, if a process fuzzes its own kernel, a kernel crash highly impacts the performance of the fuzzer as the OS needs to reboot.</p>
+        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>The ability to execute and analyze code makes many security tasks such as exploit development, reverse engineering, and vulnerability detection much easier. However, on embedded devices such as Android smartphones, executing code in-vivo, on the device, for analysis is limited by the need to acquire such devices, the speed of the device, and in some cases the need to flash custom code onto the devices. The other option is to execute the code ex-vivo, off the device, but this approach either requires porting or complex hardware emulation.</p>
 <a id="more"></a>
-<p>In this paper, we approach the problem of coverage- guided kernel fuzzing in an OS-independent and hardware-assisted way: We utilize a hypervisor and In- tel’s Processor Trace (PT) technology. This allows us to remain independent of the target OS as we just require a small user space component that interacts with the targeted OS. As a result, our approach introduces almost no performance overhead, even in cases where the OS crashes, and performs up to 17,000 executions per second on an off-the-shelf laptop. We developed a framework called kernel-AFL (kAFL) to assess the security of Linux, macOS, and Windows kernel components. Among many crashes, we uncovered several flaws in the ext4 driver for Linux, the HFS and APFS file system of macOS, and the NTFS driver of Windows.</p>
+
+<p>In this paper, we take advantage of the observation that many execution paths in drivers are only superficially dependent on both the hardware and kernel on which the driver executes, to create an ex-vivo dynamic driver analysis framework for Android devices that requires neither porting nor emulation. We achieve this by developing a generic <em>evasion</em> framework that enables driver initialization by evading hardware and kernel dependen- cies instead of precisely emulating them, and then developing a novel <em>Ex-vivo AnalySIs framEwoRk (EASIER)</em> that enables off-device analysis with the initialized driver state. Compared to on-device analysis, our approach enables the use of userspace tools and scales with the number of available commodity CPU’s, not the number of smartphones.</p>
+<p>We demonstrate the usefulness of our framework by targeting privilege escalation vulnerabilities in system call handlers in platform device drivers. We find it can load 48/62 (77%) drivers from three different Android kernels: MSM, Xiaomi, and Huawei. We then confirm that it is able to reach and detect 21 known vulnerabilities. Finally, we have discovered 12 new bugs which we have reported and confirmed.</p>
 <h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
-<li><p>What is feedback-driven fuzzer </p>
+<li><p>感想</p>
 <ul>
-<li>learn the format of inputs: keep interesting inputs and discard inputs that do not trigger interesting behaviors</li>
-<li>How to collect feedback<ul>
-<li>Dynamic Binary Instrumentation: Pin or DynamoRIO such as WinAFL</li>
-<li>Virtualization: Qemu or Boch to monitor the code coverage, such as AFL</li>
-<li>Hardware Assisted: Intel PT, such as kAFL, honggfuzz</li>
+<li>这篇感觉是DiFUZE的后续工作，DIFUZE就是需要刷机才能支持Syzkaller的kcov功能，采用x86模拟了一些驱动来检测生成ioctl结构体信息的有效性，这里既然可以解决这个问题，说不定可以两者结合。</li>
+</ul>
+</li>
+<li><p>Target Problem</p>
+<ul>
+<li>对嵌入式系统例如Android设备的分析经常需要flash系统，例如重新编译linux来利用kcov收集coverage进行coverage-guided fuzzing。在设备外运行分析的话，需要模拟化或者移植，观察到很多驱动程序的代码只是表面上依赖硬件和内核，因此提出不需要模拟化和移植的对驱动程序的动态分析框架。</li>
+</ul>
+</li>
+<li><p>Existing approaches</p>
+<ul>
+<li>[CCS’17] DIFUZE<ul>
+<li>真机运行</li>
+<li>无法利用syzkaller的coverage-guided fuzzing</li>
+</ul>
+</li>
+<li>[USENIX’18] Charm：当驱动需要访问外设时，会被转移到物理设备上，否则则在虚拟机里运行。<ul>
+<li>需要移植驱动</li>
+<li>需要手动分离驱动</li>
+<li>需要为每个分析实例提供真实的硬件设备</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>Difficulties of kernel fuzzing</p>
+<li><p>Difficulties of ex-vivo derive analysis</p>
 <ul>
-<li>Crashes and timeouts need virtualization</li>
-<li>More non-determinism such as interrupts, kernel threads, stateful</li>
-<li>Interact with kernel via system calls</li>
-<li>Closed-source that cannot be instrumented</li>
+<li><p>In-vivo: 在设备内运行动态分析的扩展性不够好，因为对内核的动态分许需要</p>
+<ul>
+<li>特定硬件的支持：kAFL利用Intel PT特性是在Arm上不支持的</li>
+<li>有足够高的特权操作内核：Syzkaller需要对内核进行重新编译来启动kcov和kasan功能</li>
 </ul>
 </li>
-<li><p>Drawbacks of previous work</p>
+<li><p>Ex-vivo：一般是需要硬件模拟器，然而对于驱动的分析</p>
 <ul>
-<li>Triforce:  Emulation to gather feedback</li>
-<li>Syzkaller: Recompilation, need open source </li>
-<li>Trinity: Not feedback-driven</li>
+<li><p>驱动是生来就依赖硬件的，这些相应的硬件在虚拟机中是不支持的</p>
+<ul>
+<li>尽管这些硬件是支持的，驱动在模拟器中也没有合适的环境</li>
+</ul>
+</li>
+<li><p>驱动也在软件上依赖内核，但其实很多硬件特定的内核也没法在虚拟机里运行</p>
+</li>
+<li><p>为了在虚拟机里运行相应的驱动，需要将驱动移植到可以被模拟运行的内核中</p>
+</li>
+</ul>
+</li>
+<li><p>商用的驱动一般是没有相应的文档</p>
+</li>
 </ul>
 </li>
 <li><p>Why this paper is accepted</p>
 <ul>
-<li>The first approach that can fuzz arbitrary x86-64 kernels without any customization and a near-native performance</li>
+<li>A specifically designed fuzz testing mechanism for race bug in kernel</li>
 <li>Usefulness<ul>
-<li>Portable, OS-independent, even for closed source kernels</li>
-<li>Small performance overhead, high-throughput</li>
+<li>可以设备外执行驱动程序的动态分析，不需设备移植，不需设备模拟，也不需真实的物理设备。</li>
+<li>该技术允许AFL和Manticore等用户级的漏洞检测技术应用到针对驱动程序的分析中</li>
 </ul>
 </li>
 <li>Novelty<ul>
-<li>Show the possibility of performing feedback-driven kernel fuzzing in an almost - OS-independent manner with the help of hypervisor and Intel PT to collect coverage </li>
+<li>观察驱动程序对硬件和软件的依赖是非常表面的，而且这些路径上是有漏洞的。<ul>
+<li>例如具备读取设备寄存器的能力而不关心实际寄存器的值。</li>
+<li>例如只需要特定的函数返回success代码，并不依赖这个函数的实际语义</li>
+</ul>
+</li>
+<li>实现一种逃避依赖的方案，内核表面声称满足依赖，但其实不需要真的被依赖的软件和硬件</li>
+<li>该技术允许AFL和Manticore（符号执行工具）等用户级的漏洞检测技术应用到针对驱动程序的分析中</li>
 </ul>
 </li>
 </ul>
-</li>
-<li><p>Inputs: Binary file for file system and a single system call</p>
 </li>
 <li><p>How it works</p>
-<p>  <img src="https://i.loli.net/2020/12/18/REtD1Xsgq6U5YSH.png" alt="image-20201218151357615"></p>
 <ul>
-<li>Feedback: Intel PT provides control flow information on running code<ul>
-<li>KVM-PT traces each vCPU, an implementation of Intel PT</li>
-<li>Qemu-PT runs on top of KVM-PT and decode the trace data to AFL bitmap<ul>
-<li>JIT decoder</li>
-<li>cache disassembled code</li>
+<li>利用逃逸的kernel初始化驱动，并拍摄快照</li>
+<li>利用ARM虚拟机运行相应快照，并注入AFL生成的fuzz的输入</li>
+<li>Evasion kernel：初始化驱动<ul>
+<li>内核数据结构、全局变量、系统调用中使用的内核API数据结构和例如MIMO内存范围等资源、以及中断等都需要被初始化</li>
+<li>利用可以被虚拟化的内核（vexpress和virt）加载和初始化不被支持的内核相关联的驱动</li>
+<li>为什么不直接重新编译驱动使其在能被虚拟化的内核中运行呢？<ul>
+<li>因为驱动依赖主机内核特定的子系统、头文件和配置文件等。</li>
+</ul>
+</li>
+<li>Evasion需满足的条件：<ul>
+<li>满足驱动对内核的软件依赖</li>
+<li>伪装驱动对硬件的硬件依赖</li>
+<li>确保内核和驱动之间传输数据结构的一致性</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Intel’s hardware virtualization features Intel VT-x<ul>
-<li>Fuzzing logic (kAFL): ring 3 process on host OS</li>
-<li>VM Infrastructure: ring 3 QEMU-PT, ring 0 KVM-PT</li>
-<li>User mode agent: run inside guest to run system call</li>
+<li><h2 id="EASIER-Ex-vivo-Analysis-framework-：在用户空间对驱动进行fuzzing或符号执行"><a href="#EASIER-Ex-vivo-Analysis-framework-：在用户空间对驱动进行fuzzing或符号执行" class="headerlink" title="EASIER (Ex-vivo Analysis framework)：在用户空间对驱动进行fuzzing或符号执行"></a>EASIER (Ex-vivo Analysis framework)：在用户空间对驱动进行fuzzing或符号执行</h2></li>
 </ul>
 </li>
-<li>Dealing with non-determinism<ul>
-<li>Do not reset the whole VM state after each execution, too costly</li>
-<li>Filter out interrupts related PT trace data, by FUP packet</li>
-<li>Blacklist any basic block that occurs non-deterministically, run multiple times</li>
-</ul>
-</li>
-<li>How to keep dependencies between different system calls<ul>
-<li>Seems like the evolutionary algorithm as AFL</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>Evaluation</p>
+<li><p>Evalution</p>
 <ul>
-<li>Perform fuzzing campaigns across different platform<ul>
-<li>Windows: NTFS file system;  fuzz a single system call</li>
-<li>Linux: ext4 file system</li>
-<li>MacOS: HFS file system; Apple file system kernel extension</li>
+<li>检测ioctl中的特权升级漏洞</li>
+<li>针对3个设备上的72个驱动，实现对其中77%的驱动的加载和初始化，及ioctl的分析</li>
+<li>对于26个已知的程序漏洞，可以触发其中81%</li>
+<li>fuzz过程发现29个漏洞，其中12个是零日漏洞</li>
 </ul>
 </li>
-<li>Compare with Triforce<ul>
-<li>On a  created json parser driver</li>
-<li>Syzkaller is not applicable to file system domain</li>
+<li><p>Reflection</p>
+<ul>
+<li>Syzkaller也有自己的线程交织吗 whereas Syzkaller spawns multiple worker threads to identify data races.</li>
+<li>Static analysis does not consider synchronization primitives in the kernel<ul>
+<li>Synchronization information helps to determine memory pairs that must not race so that reduces the false positive rate (implemented by Paper Krace’s happens before analysis)</li>
 </ul>
 </li>
-<li>Performance of KVM-PT: Small</li>
-<li>Compare PT decoder with Intel decoder<ul>
-<li>Caching</li>
-<li>JIT decode</li>
+<li>Need proper post-race harmful behaviors, just randomly generated for this paper</li>
 </ul>
 </li>
+<li><p>How to improve this work</p>
+<ul>
+<li>Thread scheduling coverage?</li>
 </ul>
 </li>
 </ul>
@@ -424,23 +434,18 @@
     
 
     <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/blog/tags/Kernel/" rel="tag"># Kernel</a>
-              <a href="/blog/tags/Fuzz-Testing/" rel="tag"># Fuzz Testing</a>
-              <a href="/blog/tags/File-System/" rel="tag"># File System</a>
-          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/blog/2020/09/30/Taint-Specifications/" rel="prev" title="Taint-Specifications">
-                  <i class="fa fa-chevron-left"></i> Taint-Specifications
+                <a href="/blog/2020/12/24/Difficultise-to-find-race-bugs-and-how-existing-work-solove-them/" rel="prev" title="Difficultise to find race bugs and how existing work solve them">
+                  <i class="fa fa-chevron-left"></i> Difficultise to find race bugs and how existing work solve them
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/" rel="next" title="[USENIX ATC'17] CAB-FUZZ: Practical Concolic Testing Techniques for COTS Operating Systems ">
-                  [USENIX ATC'17] CAB-FUZZ: Practical Concolic Testing Techniques for COTS Operating Systems  <i class="fa fa-chevron-right"></i>
+                <a href="/blog/2020/12/27/Overview-of-Linux-kernel/" rel="next" title="Overview of Linux kernel">
+                  Overview of Linux kernel <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
