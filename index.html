@@ -189,7 +189,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -353,172 +353,6 @@
           <h3 id="ASAN"><a href="#ASAN" class="headerlink" title="ASAN"></a>ASAN</h3><p><a target="_blank" rel="noopener" href="https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf">https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf</a></p>
 <h3 id="TSAN"><a href="#TSAN" class="headerlink" title="TSAN"></a>TSAN</h3><p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892"></p>
 <h4 id="KTSAN"><a href="#KTSAN" class="headerlink" title="KTSAN"></a>KTSAN</h4><h4 id="KCSAN"><a href="#KCSAN" class="headerlink" title="KCSAN"></a>KCSAN</h4><p>• KCSAN, developed by Google 2019, found more than 300 race bugs.</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/30/S-P-19-Fuzzing-File-Systems-via-Two-Dimensional-Input-Space-Exploration/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/12/30/S-P-19-Fuzzing-File-Systems-via-Two-Dimensional-Input-Space-Exploration/" class="post-title-link" itemprop="url">[S&P'19] Fuzzing File Systems via Two-Dimensional Input Space Exploration</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2020-12-30 14:08:25 / Modified: 16:54:07" itemprop="dateCreated datePublished" datetime="2020-12-30T14:08:25+08:00">2020-12-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><p>File systems, a basic building block of an OS, are too big and too complex to be bug free. Nevertheless, file systems rely on regular stress-testing tools and formal checkers to find bugs, which are limited due to the ever-increasing complexity of both file systems and OSes. Thus, fuzzing, proven to be an effective and a practical approach, becomes a preferable choice, as it does not need much knowledge about a target. However, three main challenges exist in fuzzing file systems: mutating a large image blob that degrades overall performance, generating image-dependent file operations, and reproducing found bugs, which is difficult for existing OS fuzzers.</p>
-<p>Hence, we present JANUS, the first feedback-driven fuzzer that explores the two-dimensional input space of a file system, i.e., mutating metadata on a large image, while emitting image-directed file operations. In addition, JANUS relies on a library OS rather than on traditional VMs for fuzzing, which enables JANUS to load a fresh copy of the OS, thereby leading to better reproducibility of bugs. We evaluate JANUS on eight file systems and found 90 bugs in the upstream Linux kernel, 62 of which have been acknowledged. Forty-three bugs have been fixed with 32 CVEs assigned. In addition, JANUS achieves higher code coverage on all the file systems after fuzzing 12 hours, when compared with the state-of-the-art fuzzer Syzkaller for fuzzing file systems. JANUS visits 4.19× and 2.01× more code paths in Btrfs and ext4, respectively. Moreover, JANUS is able to reproduce 88–100% of the crashes, while Syzkaller fails on all of them.</p>
-<h4 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h4><ul>
-<li>Fuzz file system<ul>
-<li>disk image</li>
-<li>file system-specific operation</li>
-</ul>
-</li>
-<li>Drawbacks of previous work on detecting bugs in file system<ul>
-<li>Stress testing ：focus on the regression of file systems with minimal integrity checks</li>
-<li>Model checking：需要对文件系统和内核状态有深层次的理解，使其不再适用于目前越来越复杂的操作系统</li>
-<li>Fuzzing：只在file system的一个维度上做测试，但实际上文件系统的状态决定了系统调用可以在那个文件对象上操作，而且系统调用的执行也更改了文件系统的状态，因此两者是互相作用的，互相依赖的。<ul>
-<li>要么只将disk image作为二进制文件来mutate，例如kAFL和FuzzBSD</li>
-<li>要么只生成随机的操作文件的系统调用序列，例如Syzkaller、Trinity和TriforceAFL<ul>
-<li>无法对文件系统执行有效的操作</li>
-</ul>
-</li>
-<li>而且还不重启内核和刷新文件系统的状态，导致很多bug无法复现</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Difficulties of fuzzing file systems<ul>
-<li>输入一：a mounted disk image；输入二：a sequence of file operations (system calls)</li>
-<li>Mutate a large image blob will degrade overall performance<ul>
-<li>disk image虽然是有结构的，但是很复杂，有的还是AFL maximum preferred size的100倍。由于读、写和保存image包含大量的IO操作，因此极大降低Fuzzing的吞吐量</li>
-<li>现有mutate image仅修改非零chunks，不完整且效率不高，因为没有利用文件系统的布局，实际上修改metadata block比data blocks更有效</li>
-<li>在不了解文件系统布局的情况下，现有Fuzzer很难在修改metadata后修复metadata checksum，无法满足文件系统的checksum</li>
-</ul>
-</li>
-<li>How to generate image-dependent file operations<ul>
-<li>现有工作仅执行系统调用操作image上的file objects</li>
-<li>Syzkaller无法探索一组系统调用的集体影响，例如对同一路径执行多个open操作但是这个路径可能早就renamed或者removed</li>
-</ul>
-</li>
-<li>How to reproduce found bugs<ul>
-<li>不重启会导致不稳定，syscall的行为不一致（例如kmalloc），而且还不好debug</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Disk image<ul>
-<li>包含用户数据和元数据metadata，其中元数据仅占有1%的大小</li>
-</ul>
-</li>
-<li>Why this paper is accepted<ul>
-<li>The first feedback-driven fuzzer explores the two-dimensional input space of a file system (改文件系统镜像中的元数据/生成用于特定镜像的文件操作)</li>
-<li>Usefulness<ul>
-<li>依赖library OS而不是虚拟机来fuzzing，可以每次都加在一个全新状态的内核</li>
-</ul>
-</li>
-<li>Novelty<ul>
-<li>A novel coverage tracking metric–alias instruction pair coverage</li>
-<li>An evolution algorithm for generate/mutate/merge-ing multi-threaded syscall sequences for concurrency fuzzing</li>
-<li>A comprehensive lockset and happens-before modeling for precise data race detection </li>
-</ul>
-</li>
-</ul>
-</li>
-<li>How it works<ul>
-<li>Mutate a large image blob will degrade overall performance<ul>
-<li>如何减轻频繁IO操作<ul>
-<li>仅mutate metadata block</li>
-</ul>
-</li>
-<li><h2 id="恢复mutate后元数据对应的checksum"><a href="#恢复mutate后元数据对应的checksum" class="headerlink" title="恢复mutate后元数据对应的checksum"></a>恢复mutate后元数据对应的checksum</h2></li>
-</ul>
-</li>
-<li>How to generate image-dependent file operations<ul>
-<li>提出为image定制的syscall fuzzing技术，不仅生成系统调用序列，还推断系统调用执行后，每个文件对象的实时状态。</li>
-<li>将推断的状态作为feedback生成新的系统调用序列</li>
-</ul>
-</li>
-<li>How to reproduce found bugs<ul>
-<li>每次都加载fresh copy of OS using library OS LKL</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Evaluation<ul>
-<li>8个文件系统Fuzz了四个月，找到90个漏洞，其中62个被确认，43个被修复，32个CVE</li>
-<li>与Syzkaller相比，Fuzz文件系统12个小时实现了更高的代码覆盖率<ul>
-<li>4.19x code path in btrfs</li>
-<li>2.01x code path in ext4</li>
-</ul>
-</li>
-<li>使用library OS，与Syzkaller相比，Janus可以复现crash，而Syzkaller却不能</li>
-</ul>
-</li>
-<li>Reflection<ul>
-<li>ß</li>
-</ul>
-</li>
-</ul>
 
       
     </div>
@@ -1150,10 +984,96 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/" class="post-title-link" itemprop="url">[USENIX ATC'17] CAB-FUZZ: Practical Concolic Testing Techniques for COTS Operating Systems </a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-12-20 21:31:34" itemprop="dateCreated datePublished" datetime="2020-12-20T21:31:34+08:00">2020-12-20</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-12-24 12:59:36" itemprop="dateModified" datetime="2020-12-24T12:59:36+08:00">2020-12-24</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Discovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug information. Concolic testing, which generates all feasible inputs of a program by using symbolic execution and tests the program with the generated inputs, is one of the most promising approaches to solve this problem. Unfortunately, the state-of-the-art concolic testing tools do not scale well for testing COTS OSes because of state explosion. Indeed, they often fail to find a single bug (or crash) in COTS OSes despite their long execution time.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="page-number" href="/blog/page/3/">3</a><a class="extend next" rel="next" href="/blog/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="extend next" rel="next" href="/blog/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
