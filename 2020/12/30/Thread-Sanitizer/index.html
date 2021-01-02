@@ -23,18 +23,22 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wei&#39;s Blog">
-<meta property="og:url" content="https://harperchen.github.io/blog/categories/Ph-D/index.html">
+  <meta name="description" content="ASANhttps:&#x2F;&#x2F;www.ndss-symposium.org&#x2F;wp-content&#x2F;uploads&#x2F;2018&#x2F;02&#x2F;ndss2018_05A-5_Han_paper.pdf TSAN KTSANKCSAN• KCSAN, developed by Google 2019, found more than 300 race bugs.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Thread Sanitizer">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/30/Thread-Sanitizer/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
+<meta property="og:description" content="ASANhttps:&#x2F;&#x2F;www.ndss-symposium.org&#x2F;wp-content&#x2F;uploads&#x2F;2018&#x2F;02&#x2F;ndss2018_05A-5_Han_paper.pdf TSAN KTSANKCSAN• KCSAN, developed by Google 2019, found more than 300 race bugs.">
 <meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png">
+<meta property="article:published_time" content="2020-12-30T10:31:01.000Z">
+<meta property="article:modified_time" content="2020-12-30T13:40:58.573Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/categories/Ph-D/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/30/Thread-Sanitizer/">
 
 
 <script data-pjax class="page-configurations">
@@ -42,12 +46,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>Category: Ph.D. | Wei's Blog</title>
+  <title>Thread Sanitizer | Wei's Blog</title>
   
 
 
@@ -162,7 +166,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -174,6 +178,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ASAN"><span class="nav-text">ASAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TSAN"><span class="nav-text">TSAN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#KTSAN"><span class="nav-text">KTSAN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KCSAN"><span class="nav-text">KCSAN</span></a></li></ol></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -238,73 +243,93 @@
 </noscript>
 
 
-    <div class="main-inner category posts-collapse">
+    <div class="main-inner post posts-expand">
       
 
       
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h2 class="collection-header">Ph.D.
-          <small>Category</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/30/Thread-Sanitizer/">
 
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Thread Sanitizer
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+
+      <time title="Created: 2020-12-30 18:31:01 / Modified: 21:40:58" itemprop="dateCreated datePublished" datetime="2020-12-30T18:31:01+08:00">2020-12-30</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="ASAN"><a href="#ASAN" class="headerlink" title="ASAN"></a>ASAN</h3><p><a target="_blank" rel="noopener" href="https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf">https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf</a></p>
+<h3 id="TSAN"><a href="#TSAN" class="headerlink" title="TSAN"></a>TSAN</h3><p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892"></p>
+<h4 id="KTSAN"><a href="#KTSAN" class="headerlink" title="KTSAN"></a>KTSAN</h4><h4 id="KCSAN"><a href="#KCSAN" class="headerlink" title="KCSAN"></a>KCSAN</h4><p>• KCSAN, developed by Google 2019, found more than 300 race bugs.</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-09-13T21:30:48+08:00"
-              content="2020-09-13">
-          09-13
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/09/13/Science-Writing/" itemprop="url">
-            <span itemprop="name">Science Writing</span>
-          </a>
-      </div>
+    <footer class="post-footer">
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/12/30/S-P-19-Fuzzing-File-Systems-via-Two-Dimensional-Input-Space-Exploration/" rel="prev" title="[S&P'19] Fuzzing File Systems via Two-Dimensional Input Space Exploration">
+                  <i class="fa fa-chevron-left"></i> [S&P'19] Fuzzing File Systems via Two-Dimensional Input Space Exploration
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/01/02/Thread-Sanitizer-1/" rel="next" title="Thread Sanitizer">
+                  Thread Sanitizer <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
   </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-09-13T00:37:55+08:00"
-              content="2020-09-13">
-          09-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/09/13/Ph.D.-Related/" itemprop="url">
-            <span itemprop="name">Ph.D. Related</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
