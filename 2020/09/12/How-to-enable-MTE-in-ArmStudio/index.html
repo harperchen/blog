@@ -39,19 +39,19 @@
 <meta property="og:image" content="http://harperchen.qiniudn.com/image012.png">
 <meta property="og:image" content="http://harperchen.qiniudn.com/image013.png">
 <meta property="og:image" content="http://harperchen.qiniudn.com/image015.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image017.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image019.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image020.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image021.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image022.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image023.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image024.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image025.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/cx59vKWUawRXgmq.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/xuUp61mEygM8wIZ.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/qM589KRpbtOY471.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/4uRYwUbH9WLcXiE.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/EBrboUiMlPXp1dC.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/t8Q9qLOFH4exJjS.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/zYnjXhFoC2BkfyZ.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/l7Odx8M9kNcTIBY.png">
 <meta property="og:image" content="http://harperchen.qiniudn.com/image026.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image027.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image028.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/Pjwoi7bypYxdD5r.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/Oa4c6rYB7fZoFLR.png">
 <meta property="article:published_time" content="2020-09-12T10:47:16.000Z">
-<meta property="article:modified_time" content="2021-01-08T07:21:23.915Z">
+<meta property="article:modified_time" content="2021-01-08T08:03:49.558Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="ARM">
 <meta property="article:tag" content="MTE">
@@ -306,7 +306,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-08 15:21:23" itemprop="dateModified" datetime="2021-01-08T15:21:23+08:00">2021-01-08</time>
+        <time title="Modified: 2021-01-08 16:03:49" itemprop="dateModified" datetime="2021-01-08T16:03:49+08:00">2021-01-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -389,34 +389,49 @@
 <ul>
 <li>Create a use_model_semihostting.ds script to disable semihosting by Arm Debugger.</li>
 </ul>
-<img src="http://harperchen.qiniudn.com/image017.png" style="zoom:30%;" />
-- Select File \> New \> Model Connection, give the connection a name and associate debug connection with an existing project.
+<img src="https://i.loli.net/2021/01/08/cx59vKWUawRXgmq.png" style="zoom:30%;" />
 
-<img src="http://harperchen.qiniudn.com/image019.png" style="zoom:30%;" />
-- The FVP Armv8-A Base RevC AEM is not involved by default so we need to add it. Select the model from file system, the path is where you install Armv8-A Base RevC AEM.
+<ul>
+<li>Select File &gt; New &gt; Model Connection, give the connection a name and associate debug connection with an existing project.</li>
+</ul>
+<img src="https://i.loli.net/2021/01/08/xuUp61mEygM8wIZ.png" style="zoom:30%;" />
 
-<img src="http://harperchen.qiniudn.com/image020.png" style="zoom:30%;" />
-- Once added, we need to edit the debug configuration. In the Connection tab, select Bare Metal Debug/ARMAEMv8-A_MPx4 SMP Cluster 0. 
+<ul>
+<li>The FVP Armv8-A Base RevC AEM is not involved by default so we need to add it. Select the model from file system, the path is where you install Armv8-A Base RevC AEM.</li>
+</ul>
+<img src="https://i.loli.net/2021/01/08/qM589KRpbtOY471.png" style="zoom:30%;" />
 
-<img src="http://harperchen.qiniudn.com/image021.png" style="zoom:30%;" />
-Add the model parameters as follows to enable MTE support.
+<ul>
+<li>Once added, we need to edit the debug configuration. In the Connection tab, select Bare Metal Debug/ARMAEMv8-A_MPx4 SMP Cluster 0. </li>
+</ul>
+<img src="https://i.loli.net/2021/01/08/4uRYwUbH9WLcXiE.png" style="zoom:30%;" />
+
+<p>Add the model parameters as follows to enable MTE support.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cluster0.has_arm_v8-5=1 implements the Armv8.5 extension.</span></span><br><span class="line"><span class="comment"># cluster0.memory_tagging_support_level=2 specifies the memory tagging extension support level, 2 means supported at EL0 only.</span></span><br><span class="line"><span class="comment"># bp.dram_metadata.is_enabled=1 lets the memory system to support storing MTE tags.</span></span><br><span class="line"><span class="comment"># bp.secure_memory=false disables the TZC-400 TrustZone memory controller included in the Base_A53x1 FVP. By default, the memory controller refuses all accesses to DRAM memory.</span></span><br><span class="line">\-C cluster0.has_arm_v8-5=1 -C cluster0.memory_tagging_support_level=2 -C bp.dram_metadata.is_enabled=1 -C bp.secure_memory=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
 
-<img src="http://harperchen.qiniudn.com/image022.png" style="zoom:30%;" />
-- In the Files tab, select .axf file under Debug directory from workspace.
+<img src="https://i.loli.net/2021/01/08/EBrboUiMlPXp1dC.png" style="zoom:30%;" />
 
-<img src="http://harperchen.qiniudn.com/image023.png" style="zoom:30%;" />
-- In the Debuger tab, select Debug from entry point start64, enable run target initialization debugger script and select .ds script from workspace.
+<ul>
+<li>In the Files tab, select .axf file under Debug directory from workspace.</li>
+</ul>
+<img src="https://i.loli.net/2021/01/08/t8Q9qLOFH4exJjS.png" style="zoom:30%;" />
 
-<img src="http://harperchen.qiniudn.com/image024.png" style="zoom:30%;" />
-8. Click Debug to load the application on the target, and load the debug information into the debugger. The application stops at the entry point start64.
+<ul>
+<li>In the Debuger tab, select Debug from entry point start64, enable run target initialization debugger script and select .ds script from workspace.</li>
+</ul>
+<img src="https://i.loli.net/2021/01/08/zYnjXhFoC2BkfyZ.png" style="zoom:30%;" />
 
-<img src="http://harperchen.qiniudn.com/image025.png" style="zoom:30%;" />
-9. In the disassembly view, we search main to get the assembly instructions of main. The presence of IRG, ADDG shows the code is generated using memory tagging instructions. We set a breakpoint at ADDG instruction, let the program stop at this breakpoint.
+<ol start="8">
+<li>Click Debug to load the application on the target, and load the debug information into the debugger. The application stops at the entry point start64.</li>
+</ol>
+<img src="https://i.loli.net/2021/01/08/l7Odx8M9kNcTIBY.png" style="zoom:30%;" />
 
-<p><img src="http://harperchen.qiniudn.com/image026.png" style="zoom:30%;" /><img src="http://harperchen.qiniudn.com/image027.png" style="zoom:30%;" /></p>
+<ol start="9">
+<li>In the disassembly view, we search main to get the assembly instructions of main. The presence of IRG, ADDG shows the code is generated using memory tagging instructions. We set a breakpoint at ADDG instruction, let the program stop at this breakpoint.</li>
+</ol>
+<p><img src="http://harperchen.qiniudn.com/image026.png" style="zoom:30%;" /><img src="https://i.loli.net/2021/01/08/Pjwoi7bypYxdD5r.png" style="zoom:30%;" /></p>
 <p>Let the program continue to execute and finally we can see “Hello world!” from target console.</p>
-<img src="http://harperchen.qiniudn.com/image028.png" style="zoom:45%;" />
+<img src="https://i.loli.net/2021/01/08/Oa4c6rYB7fZoFLR.png" style="zoom:45%;" />
 
 <p><strong>Use-after-free</strong></p>
 <p><strong>Reference:</strong></p>
