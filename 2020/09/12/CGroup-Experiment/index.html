@@ -44,13 +44,13 @@
 <meta property="og:image" content="https://i.loli.net/2020/09/12/V2ghwftFK7J9m5z.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/12/EUkRcStm3Vx9nja.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/12/umYUjnaboCvRMEZ.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/Untitled%2014.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/Untitled%2015.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/Untitled%2016.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/Untitled%2017.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/Untitled%2018.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/SDMGnIzCkPEo8tU.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/CgWzjBvItwXyhrH.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/dknTaDC7RhNQJ31.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/LaSbo9ZpAGKihPR.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/xFiuS1sTLP27HpO.png">
 <meta property="article:published_time" content="2020-09-12T08:51:41.000Z">
-<meta property="article:modified_time" content="2020-09-13T15:52:12.898Z">
+<meta property="article:modified_time" content="2021-01-08T07:17:22.748Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="CGroup">
 <meta property="article:tag" content="Container">
@@ -306,7 +306,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-13 23:52:12" itemprop="dateModified" datetime="2020-09-13T23:52:12+08:00">2020-09-13</time>
+        <time title="Modified: 2021-01-08 15:17:22" itemprop="dateModified" datetime="2021-01-08T15:17:22+08:00">2021-01-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -418,12 +418,20 @@
 <p>We need add the following to <code>/etc/default/grub</code> and update.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">&quot;cgroup_no_v1=all&quot;</span></span><br><span class="line">sudo update-grub</span><br></pre></td></tr></table></figure>
 
-<p>Also, we need delete <code>/etc/init/cgroup-lite.conf</code> and reboot to unmount and disable cgroup v1.<br><img src="http://harperchen.qiniudn.com/Untitled%2014.png" style="zoom:45%;" /></p>
-<p>First, we mount cgroup v2 filesystem in /mnt/cgroup2<br><img src="http://harperchen.qiniudn.com/Untitled%2015.png" style="zoom:45%;" /></p>
-<p>Now, we create a new cgroup called cg2 by creating a directory under the mounted file system. To be able to edit the I/O limits using the the I/O controller on the newly created cgroup, we need to write “+io” to the <code>cgroup.subtree_control</code> file in the parent (in this case, root) cgroup, and check the <code>cgroup.controllers</code> file for the cg2 cgroup, we see that the io controller is enabled.<br><img src="http://harperchen.qiniudn.com/Untitled%2016.png" style="zoom:45%;" /></p>
-<p>To limit I/O to 10MB/s, as done previously, we write into the io.max file and use <code>dd</code> to generate some IO workload.<br><img src="http://harperchen.qiniudn.com/Untitled%2017.png" style="zoom:45%;" /></p>
+<p>Also, we need delete <code>/etc/init/cgroup-lite.conf</code> and reboot to unmount and disable cgroup v1.</p>
+<p><img src="https://i.loli.net/2021/01/08/SDMGnIzCkPEo8tU.png" alt="image-20210108151437090"></p>
+<p>First, we mount cgroup v2 filesystem in /mnt/cgroup2</p>
+<img src="https://i.loli.net/2021/01/08/CgWzjBvItwXyhrH.png" alt="image-20210108151457165" style="zoom:50%;" />
+
+<p>Now, we create a new cgroup called cg2 by creating a directory under the mounted file system. To be able to edit the I/O limits using the the I/O controller on the newly created cgroup, we need to write “+io” to the <code>cgroup.subtree_control</code> file in the parent (in this case, root) cgroup, and check the <code>cgroup.controllers</code> file for the cg2 cgroup, we see that the io controller is enabled.</p>
+<img src="https://i.loli.net/2021/01/08/dknTaDC7RhNQJ31.png" alt="image-20210108151520405" style="zoom:50%;" />
+
+
+<p>To limit I/O to 10MB/s, as done previously, we write into the io.max file and use <code>dd</code> to generate some IO workload.</p>
+<img src="https://i.loli.net/2021/01/08/LaSbo9ZpAGKihPR.png" alt="image-20210108151532020" style="zoom:50%;" />
+
 <p>The write bytes per second is around 700M/s. Let’s add our bash session to the cg2 cgroup, by writing its PID to <code>cgroup.procs</code> file. At the same time, we get this output from iostat (redacted).</p>
-<img src="http://harperchen.qiniudn.com/Untitled%2018.png" style="zoom:45%;" />
+<img src="https://i.loli.net/2021/01/08/xFiuS1sTLP27HpO.png" alt="image-20210108151542108" style="zoom:50%;" />
 
 <p>So, even relying on the writeback kernel cache we are able to limit the I/O on the disk with cgroup v2.</p>
 
