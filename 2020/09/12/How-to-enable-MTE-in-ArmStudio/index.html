@@ -30,11 +30,11 @@
 <meta property="og:site_name" content="Wei&#39;s Blog">
 <meta property="og:description" content="Configure memory tagging extension (MTE) using Arm Studio and FVP">
 <meta property="og:locale">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image002.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image004.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image005.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/UFo7AisZ5atbpTN.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/5ZnDHcfzp7g2Ete.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/1ZYN6OHr72yK5mD.png">
 <meta property="og:image" content="http://harperchen.qiniudn.com/image007.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image009.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/GSuYmN56f7HU4Tc.png">
 <meta property="og:image" content="http://harperchen.qiniudn.com/image011.png">
 <meta property="og:image" content="http://harperchen.qiniudn.com/image012.png">
 <meta property="og:image" content="http://harperchen.qiniudn.com/image013.png">
@@ -51,12 +51,12 @@
 <meta property="og:image" content="http://harperchen.qiniudn.com/image027.png">
 <meta property="og:image" content="http://harperchen.qiniudn.com/image028.png">
 <meta property="article:published_time" content="2020-09-12T10:47:16.000Z">
-<meta property="article:modified_time" content="2020-10-10T14:27:56.088Z">
+<meta property="article:modified_time" content="2021-01-08T07:21:23.915Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="ARM">
 <meta property="article:tag" content="MTE">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://harperchen.qiniudn.com/image002.png">
+<meta name="twitter:image" content="https://i.loli.net/2021/01/08/UFo7AisZ5atbpTN.png">
 
 
 <link rel="canonical" href="https://harperchen.github.io/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/">
@@ -306,7 +306,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-10-10 22:27:56" itemprop="dateModified" datetime="2020-10-10T22:27:56+08:00">2020-10-10</time>
+        <time title="Modified: 2021-01-08 15:21:23" itemprop="dateModified" datetime="2021-01-08T15:21:23+08:00">2021-01-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -347,15 +347,17 @@
 <ol>
 <li>Create a new C project, select: File &gt; New &gt; Project.</li>
 </ol>
-<img src="http://harperchen.qiniudn.com/image002.png" style="zoom:30%;" />
-2. Expand C/C++ menu, and select C project, then click Next.
-3. Give the project a name, select project type as Executable > Empty Project, then select Arm Compiler 6 Toolchains.
-4. Add asm and src directory, create main.c file under src directory. The asm directory is organized as follows. 
+<img src="https://i.loli.net/2021/01/08/UFo7AisZ5atbpTN.png" style="zoom:30%;" />
 
-<img src="http://harperchen.qiniudn.com/image004.png" style="zoom:30%;" />
-The FVP is a bare metal so startup.S is the startup code used to setup cache, MMU, stak and enable hardware floating point, etc. Without the startup code, even the simplest printf function cannot be executed. The startup code setups environment, then jumps to C library init code __main to execute the real function. We need to specify the entry point as start64 to run startup code at first.
+<ol start="2">
+<li>Expand C/C++ menu, and select C project, then click Next.</li>
+<li>Give the project a name, select project type as Executable &gt; Empty Project, then select Arm Compiler 6 Toolchains.</li>
+<li>Add asm and src directory, create main.c file under src directory. The asm directory is organized as follows. </li>
+</ol>
+<img src="https://i.loli.net/2021/01/08/5ZnDHcfzp7g2Ete.png" style="zoom:30%;" />
 
-<img src="http://harperchen.qiniudn.com/image005.png" style="zoom:35%;" />
+<p>The FVP is a bare metal so startup.S is the startup code used to setup cache, MMU, stak and enable hardware floating point, etc. Without the startup code, even the simplest printf function cannot be executed. The startup code setups environment, then jumps to C library init code __main to execute the real function. We need to specify the entry point as start64 to run startup code at first.</p>
+<img src="https://i.loli.net/2021/01/08/1ZYN6OHr72yK5mD.png" style="zoom:35%;" />
 
 <ol start="5">
 <li><p><strong>Right-click the project and select Properties to configure the project for further build.</strong></p>
@@ -363,7 +365,7 @@ The FVP is a bare metal so startup.S is the startup code used to setup cache, MM
  <img src="http://harperchen.qiniudn.com/image007.png" style="zoom:30%;" />
  b. Select Arm C Compiler 6 > Target, enable tool specific settings. We need to add **+memtag** feature in -mcpu option to provide hardware support for memory tagging, for more detailed information, please refer to [armclang_ref](https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_chr1392632801932.htm).
 
- <img src="http://harperchen.qiniudn.com/image009.png" style="zoom:30%;" />
+ <img src="https://i.loli.net/2021/01/08/GSuYmN56f7HU4Tc.png" style="zoom:30%;" />
  c. Select Arm C Compiler 6 \> Miscellaneous, add flag **-fsanitize=memtag** so that the compiler will use memory tagging instructions (IRG, ADDG, SUBG…) during code generation to protect the memory allocations on the stack. For more detailed information, please refer to [armclang_ref](https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_lnk1549304794624.htm).
 
  <img src="http://harperchen.qiniudn.com/image011.png" style="zoom:30%;" />
