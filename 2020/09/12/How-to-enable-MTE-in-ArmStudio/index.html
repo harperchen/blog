@@ -33,12 +33,12 @@
 <meta property="og:image" content="https://i.loli.net/2021/01/08/UFo7AisZ5atbpTN.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/5ZnDHcfzp7g2Ete.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/1ZYN6OHr72yK5mD.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image007.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/09/ienoAZRtrlGN81q.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/GSuYmN56f7HU4Tc.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image011.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image012.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image013.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image015.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/09/cQ1n6FT2BWSkrNu.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/09/9g2iLuIcX5F1Mw3.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/09/9tuxMpL24WYkTbD.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/09/yOPKiXlDL2MdwWv.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/cx59vKWUawRXgmq.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/xuUp61mEygM8wIZ.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/qM589KRpbtOY471.png">
@@ -47,11 +47,11 @@
 <meta property="og:image" content="https://i.loli.net/2021/01/08/t8Q9qLOFH4exJjS.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/zYnjXhFoC2BkfyZ.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/l7Odx8M9kNcTIBY.png">
-<meta property="og:image" content="http://harperchen.qiniudn.com/image026.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/09/6YwZzt5bysAkiTe.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/Pjwoi7bypYxdD5r.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/08/Oa4c6rYB7fZoFLR.png">
 <meta property="article:published_time" content="2020-09-12T10:47:16.000Z">
-<meta property="article:modified_time" content="2021-01-08T08:03:49.558Z">
+<meta property="article:modified_time" content="2021-01-09T08:41:17.501Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="ARM">
 <meta property="article:tag" content="MTE">
@@ -214,7 +214,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -306,7 +306,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-08 16:03:49" itemprop="dateModified" datetime="2021-01-08T16:03:49+08:00">2021-01-08</time>
+        <time title="Modified: 2021-01-09 16:41:17" itemprop="dateModified" datetime="2021-01-09T16:41:17+08:00">2021-01-09</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -362,24 +362,24 @@
 <ol start="5">
 <li><p><strong>Right-click the project and select Properties to configure the project for further build.</strong></p>
 <p> a. In the Tool Settings tab, select All Tools Settings &gt; Target to specify the Target CPU. Here I select Cortex-A76 AArch64 (The target CPU may be not 100% consistent to the real FVP, but it should be OK.)</p>
- <img src="http://harperchen.qiniudn.com/image007.png" style="zoom:30%;" />
- b. Select Arm C Compiler 6 > Target, enable tool specific settings. We need to add **+memtag** feature in -mcpu option to provide hardware support for memory tagging, for more detailed information, please refer to [armclang_ref](https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_chr1392632801932.htm).
+ <img src="https://i.loli.net/2021/01/09/ienoAZRtrlGN81q.png" style="zoom:30%;" />
 
+<p> b. Select Arm C Compiler 6 &gt; Target, enable tool specific settings. We need to add <strong>+memtag</strong> feature in -mcpu option to provide hardware support for memory tagging, for more detailed information, please refer to <a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_chr1392632801932.htm">armclang_ref</a>.</p>
  <img src="https://i.loli.net/2021/01/08/GSuYmN56f7HU4Tc.png" style="zoom:30%;" />
- c. Select Arm C Compiler 6 \> Miscellaneous, add flag **-fsanitize=memtag** so that the compiler will use memory tagging instructions (IRG, ADDG, SUBG…) during code generation to protect the memory allocations on the stack. For more detailed information, please refer to [armclang_ref](https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_lnk1549304794624.htm).
 
- <img src="http://harperchen.qiniudn.com/image011.png" style="zoom:30%;" />
- d. Select Arm Linker 6 \> Image Layout, specify the **entry point as start64**, then browse the scatter file.
+<p> c. Select Arm C Compiler 6 &gt; Miscellaneous, add flag <strong>-fsanitize=memtag</strong> so that the compiler will use memory tagging instructions (IRG, ADDG, SUBG…) during code generation to protect the memory allocations on the stack. For more detailed information, please refer to <a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_lnk1549304794624.htm">armclang_ref</a>.</p>
+ <img src="https://i.loli.net/2021/01/09/cQ1n6FT2BWSkrNu.png" style="zoom:30%;" />
 
- <img src="http://harperchen.qiniudn.com/image012.png" style="zoom:30%;" />
- e. Scatter file set up the RO base address (run the code from memory 0x80000000), etc.
+<p> d. Select Arm Linker 6 &gt; Image Layout, specify the <strong>entry point as start64</strong>, then browse the scatter file.</p>
+ <img src="https://i.loli.net/2021/01/09/9g2iLuIcX5F1Mw3.png" style="zoom:30%;" />
 
- <img src="http://harperchen.qiniudn.com/image013.png" style="zoom:30%;" />
- f. Select Arm Linker 6 \> Miscellaneous, add flag **–library_security=v8.5a**. This flag lets the armlink link the code with the library that compiled with memory tagging extension to provide full memory tagging stack protection. For more detailed information, please refer to [armclang_ref](https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_snk1537815692994.htm).
+<p> e. Scatter file set up the RO base address (run the code from memory 0x80000000), etc.</p>
+ <img src="https://i.loli.net/2021/01/09/9tuxMpL24WYkTbD.png" style="zoom:30%;" />
 
- <img src="http://harperchen.qiniudn.com/image015.png" style="zoom:30%;" />
- v8.5 not only provides memory tagging protection of the stack used by the library code, but also branch protection using Branch Target Identification (BTI) and Pointer Authentication Code (PAC).
- To enable heap protection with memory tagging (malloc, realloc, free..), we need to add code \__asm(".global \__use_memtag_heap\\n\\t") in C file.
+<p> f. Select Arm Linker 6 &gt; Miscellaneous, add flag <strong>–library_security=v8.5a</strong>. This flag lets the armlink link the code with the library that compiled with memory tagging extension to provide full memory tagging stack protection. For more detailed information, please refer to <a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_snk1537815692994.htm">armclang_ref</a>.</p>
+ <img src="https://i.loli.net/2021/01/09/yOPKiXlDL2MdwWv.png" style="zoom:30%;" />
+
+<p> v8.5 not only provides memory tagging protection of the stack used by the library code, but also branch protection using Branch Target Identification (BTI) and Pointer Authentication Code (PAC).<br> To enable heap protection with memory tagging (malloc, realloc, free..), we need to add code __asm(“.global __use_memtag_heap\n\t”) in C file.</p>
 </li>
 <li><p>Build the project, the Debug directory will be generated. When the project has built, in the Project Explorer view, under Debug, locate the HelloWorld.axf file. The .axf file contains the object code and debug symbols that enable Arm Debugger to perform source-level debugging.</p>
 </li>
@@ -429,7 +429,7 @@
 <ol start="9">
 <li>In the disassembly view, we search main to get the assembly instructions of main. The presence of IRG, ADDG shows the code is generated using memory tagging instructions. We set a breakpoint at ADDG instruction, let the program stop at this breakpoint.</li>
 </ol>
-<p><img src="http://harperchen.qiniudn.com/image026.png" style="zoom:30%;" /><img src="https://i.loli.net/2021/01/08/Pjwoi7bypYxdD5r.png" style="zoom:30%;" /></p>
+<p><img src="https://i.loli.net/2021/01/09/6YwZzt5bysAkiTe.png" style="zoom:30%;" /><img src="https://i.loli.net/2021/01/08/Pjwoi7bypYxdD5r.png" style="zoom:30%;" /></p>
 <p>Let the program continue to execute and finally we can see “Hello world!” from target console.</p>
 <img src="https://i.loli.net/2021/01/08/Oa4c6rYB7fZoFLR.png" style="zoom:45%;" />
 

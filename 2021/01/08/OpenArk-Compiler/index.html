@@ -23,18 +23,22 @@
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wei&#39;s Blog">
-<meta property="og:url" content="https://harperchen.github.io/blog/categories/Papers/index.html">
+  <meta name="description" content="IR is maple mplt HelloWorld.java 前端  jbc2mpl jbc &#x3D;&gt; mpl ir   dex2mpl js2mpl ast2mpl C和C++前端 clang &#x3D;&gt; ast &#x3D;&gt; mpl   mplfe 前端框架 多个前端开发作准备    FEIR 前端IR 数据流和控制流独立分开">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenArk Compiler">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/01/08/OpenArk-Compiler/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
+<meta property="og:description" content="IR is maple mplt HelloWorld.java 前端  jbc2mpl jbc &#x3D;&gt; mpl ir   dex2mpl js2mpl ast2mpl C和C++前端 clang &#x3D;&gt; ast &#x3D;&gt; mpl   mplfe 前端框架 多个前端开发作准备    FEIR 前端IR 数据流和控制流独立分开">
 <meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/gXVmaCA1wectkUL.png">
+<meta property="article:published_time" content="2021-01-08T08:49:25.000Z">
+<meta property="article:modified_time" content="2021-01-08T12:46:50.530Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/01/08/gXVmaCA1wectkUL.png">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/categories/Papers/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/01/08/OpenArk-Compiler/">
 
 
 <script data-pjax class="page-configurations">
@@ -42,12 +46,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>Category: Papers | Wei's Blog</title>
+  <title>OpenArk Compiler | Wei's Blog</title>
   
 
 
@@ -238,193 +242,111 @@
 </noscript>
 
 
-    <div class="main-inner category posts-collapse">
+    <div class="main-inner post posts-expand">
       
 
       
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h2 class="collection-header">Papers
-          <small>Category</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/08/OpenArk-Compiler/">
 
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenArk Compiler
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+
+      <time title="Created: 2021-01-08 16:49:25 / Modified: 20:46:50" itemprop="dateCreated datePublished" datetime="2021-01-08T16:49:25+08:00">2021-01-08</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>IR is maple mplt</p>
+<p>HelloWorld.java</p>
+<p>前端</p>
+<ul>
+<li>jbc2mpl<ul>
+<li>jbc =&gt; mpl ir</li>
+</ul>
+</li>
+<li>dex2mpl</li>
+<li>js2mpl</li>
+<li>ast2mpl<ul>
+<li>C和C++前端 clang =&gt; ast =&gt; mpl</li>
+</ul>
+</li>
+<li>mplfe<ul>
+<li>前端框架 多个前端开发作准备</li>
+</ul>
+</li>
+</ul>
+<p>FEIR 前端IR 数据流和控制流独立分开</p>
+<p><img src="https://i.loli.net/2021/01/08/gXVmaCA1wectkUL.png" alt="输入图片说明"></p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-30T14:08:25+08:00"
-              content="2020-12-30">
-          12-30
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/30/S-P-19-Fuzzing-File-Systems-via-Two-Dimensional-Input-Space-Exploration/" itemprop="url">
-            <span itemprop="name">[S&P'19] Fuzzing File Systems via Two-Dimensional Input Space Exploration</span>
-          </a>
-      </div>
+    <footer class="post-footer">
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/12/30/Thread-Sanitizer/" rel="prev" title="Thread Sanitizer">
+                  <i class="fa fa-chevron-left"></i> Thread Sanitizer
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/01/08/LLVM-Pass/" rel="next" title="LLVM Pass">
+                  LLVM Pass <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
   </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-29T13:13:22+08:00"
-              content="2020-12-29">
-          12-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/" itemprop="url">
-            <span itemprop="name">[USENIX'18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-27T19:06:47+08:00"
-              content="2020-12-27">
-          12-27
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/" itemprop="url">
-            <span itemprop="name">[S&P'20] Ex-vivo dynamic analysis framework for Android device drivers</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-24T12:42:43+08:00"
-              content="2020-12-24">
-          12-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/" itemprop="url">
-            <span itemprop="name">[S&P'20] KRACE: Data Race Fuzzing for Kernel File Systems</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-24T12:40:46+08:00"
-              content="2020-12-24">
-          12-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/24/S-P-19-RAZZER-Finding-Kernel-Race-Bugs-through-Fuzzing/" itemprop="url">
-            <span itemprop="name">[S&P'19] RAZZER: Finding Kernel Race Bugs through Fuzzing</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-21T18:54:50+08:00"
-              content="2020-12-21">
-          12-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/" itemprop="url">
-            <span itemprop="name">[CCS'17] DIFUZE: Interface Aware Fuzzing for Kernel Drivers </span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-20T21:31:34+08:00"
-              content="2020-12-20">
-          12-20
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/" itemprop="url">
-            <span itemprop="name">[USENIX ATC'17] CAB-FUZZ: Practical Concolic Testing Techniques for COTS Operating Systems </span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-18T15:02:13+08:00"
-              content="2020-12-18">
-          12-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/" itemprop="url">
-            <span itemprop="name">[USENIX'17] kAFL: Hardware-Assisted Feedback Fuzzing for OS Kernels</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
