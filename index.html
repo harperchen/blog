@@ -276,6 +276,13 @@
 
       <time title="Created: 2021-01-08 21:09:24" itemprop="dateCreated datePublished" datetime="2021-01-08T21:09:24+08:00">2021-01-08</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-01-09 16:56:40" itemprop="dateModified" datetime="2021-01-09T16:56:40+08:00">2021-01-09</time>
+      </span>
 
   
 </div>
@@ -287,7 +294,21 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          
+          <h4 id="1-Mac配置LLVM"><a href="#1-Mac配置LLVM" class="headerlink" title="1. Mac配置LLVM"></a>1. Mac配置LLVM</h4><p>下载<a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/llvm-11.0.0.src.tar.xz">LLVM</a>和<a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/clang-11.0.0.src.tar.xz">Clang</a>并解压，将Clang目录放置到llvm/tools目录下，llvm-10.0.0无法编译通过，选择llvm-11.0.0。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf llvm-11.0.0.src.tar.xz</span><br><span class="line">tar -xzvf clang-11.0.0.src.tar.xz</span><br></pre></td></tr></table></figure>
+
+<p>从官网下载<a target="_blank" rel="noopener" href="https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-macos-universal.dmg">.dmg</a>文件，安装cmake，配置环境变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$&gt; <span class="built_in">which</span> cmake</span><br><span class="line">/Applications/CMake.app/Contents/bin/cmake</span><br></pre></td></tr></table></figure>
+
+<p>进入llvm目录，新建build目录，进入build目录执行cmake生成配置文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">cmake -G Xcode CMAKE_BUILD_TYPE=<span class="string">&quot;Debug&quot;</span> ..</span><br></pre></td></tr></table></figure>
+
+<p>点击build目录下的LLVM.xcodeproj工程文件，提示是否自动创建schemes，点击manually manage schemes手动创建，并添加ALL_BUILD，如下图。</p>
+<img src="https://i.loli.net/2021/01/09/Y5XfyPxaQGcSgEu.png" alt="开发和调试第一个 LLVM Pass" style="zoom: 45%;" />
+
+<p>在Xcode中编译llvm，全程约半个小时。</p>
+<p><img src="https://i.loli.net/2021/01/09/ztK5RETxmkU71w4.png" alt="image-20210109165627072"></p>
+
       
     </div>
 
@@ -335,10 +356,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2021-01-08 16:49:25 / Modified: 20:46:50" itemprop="dateCreated datePublished" datetime="2021-01-08T16:49:25+08:00">2021-01-08</time>
+      <time title="Created: 2021-01-08 16:49:25" itemprop="dateCreated datePublished" datetime="2021-01-08T16:49:25+08:00">2021-01-08</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-01-10 14:43:51" itemprop="dateModified" datetime="2021-01-10T14:43:51+08:00">2021-01-10</time>
+      </span>
 
   
 </div>
@@ -352,26 +379,14 @@
     <div class="post-body" itemprop="articleBody">
           <p>IR is maple mplt</p>
 <p>HelloWorld.java</p>
-<p>前端</p>
-<ul>
-<li>jbc2mpl<ul>
-<li>jbc =&gt; mpl ir</li>
-</ul>
-</li>
-<li>dex2mpl</li>
-<li>js2mpl</li>
-<li>ast2mpl<ul>
-<li>C和C++前端 clang =&gt; ast =&gt; mpl</li>
-</ul>
-</li>
-<li>mplfe<ul>
-<li>前端框架 多个前端开发作准备</li>
-</ul>
-</li>
-</ul>
-<p>FEIR 前端IR 数据流和控制流独立分开</p>
-<p><img src="https://i.loli.net/2021/01/08/gXVmaCA1wectkUL.png" alt="输入图片说明"></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2021/01/08/OpenArk-Compiler/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
