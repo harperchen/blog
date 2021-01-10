@@ -281,7 +281,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-09 16:56:40" itemprop="dateModified" datetime="2021-01-09T16:56:40+08:00">2021-01-09</time>
+        <time title="Modified: 2021-01-10 14:44:44" itemprop="dateModified" datetime="2021-01-10T14:44:44+08:00">2021-01-10</time>
       </span>
 
   
@@ -442,7 +442,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-05 00:12:57" itemprop="dateModified" datetime="2021-01-05T00:12:57+08:00">2021-01-05</time>
+        <time title="Modified: 2021-01-10 15:19:05" itemprop="dateModified" datetime="2021-01-10T15:19:05+08:00">2021-01-10</time>
       </span>
 
   
@@ -456,6 +456,23 @@
     
     <div class="post-body" itemprop="articleBody">
           <h3 id="ASAN"><a href="#ASAN" class="headerlink" title="ASAN"></a>ASAN</h3><p><a target="_blank" rel="noopener" href="https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf">https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf</a></p>
+<p>Given the following C++ program <code>test.cpp</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>* a = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</span><br><span class="line">    a[<span class="number">5</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (a[argc])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;xx\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="1-查看LLVM-IR"><a href="#1-查看LLVM-IR" class="headerlink" title="1. 查看LLVM IR"></a>1. 查看LLVM IR</h5><p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bytecode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
+<ol>
+<li>.c -&gt; AST</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -Xclang -ast-dump -fsyntax-only test.cpp</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2021/01/10/qZK4whrQzI91L3l.png" alt="image-20210110151724272"></p>
+<p>or</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -Xclang </span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <h3 id="TSAN"><a href="#TSAN" class="headerlink" title="TSAN"></a>TSAN</h3><p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers">https://github.com/google/sanitizers</a></p>
 <p><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/ThreadSafetyAnalysis.html">https://clang.llvm.org/docs/ThreadSafetyAnalysis.html</a></p>
           <!--noindex-->
