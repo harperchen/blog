@@ -25,26 +25,30 @@
 
   <meta name="description" content="1. ASANhttps:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;6844904111570157575 https:&#x2F;&#x2F;www.ndss-symposium.org&#x2F;wp-content&#x2F;uploads&#x2F;2018&#x2F;02&#x2F;ndss2018_05A-5_Han_paper.pdf">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Memory Security">
-<meta property="og:url" content="https://harperchen.github.io/blog/2021/01/10/Memory-Security/index.html">
+<meta property="og:title" content="Memory Safety">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/01/10/Memory-Safety/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
 <meta property="og:description" content="1. ASANhttps:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;6844904111570157575 https:&#x2F;&#x2F;www.ndss-symposium.org&#x2F;wp-content&#x2F;uploads&#x2F;2018&#x2F;02&#x2F;ndss2018_05A-5_Han_paper.pdf">
 <meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2021/01/10/zgxjUHub6L5v2Mc.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/10/UgErhFblvkR4dxY.jpg">
 <meta property="og:image" content="https://i.loli.net/2021/01/10/NWLZavX1QoqfAYH.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/10/4q7FotgY5MdRAN6.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/10/qT4RmJiatWvuXHy.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/10/ezUOlgtBJKV6L9i.png">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/31/1713137c20d75aab?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://i.loli.net/2021/01/10/cB8fOa2qsTdQkE5.jpg">
+<meta property="og:image" content="https://i.loli.net/2021/01/10/icTWFOy1l7Q9Emb.png">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/31/1713138a2f5cb553?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/3/31/1713138d91688f78?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
 <meta property="article:published_time" content="2021-01-10T09:10:01.000Z">
-<meta property="article:modified_time" content="2021-01-10T10:17:29.427Z">
+<meta property="article:modified_time" content="2021-01-11T04:42:57.437Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2021/01/10/NWLZavX1QoqfAYH.png">
+<meta name="twitter:image" content="https://i.loli.net/2021/01/10/zgxjUHub6L5v2Mc.png">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/2021/01/10/Memory-Security/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/01/10/Memory-Safety/">
 
 
 <script data-pjax class="page-configurations">
@@ -57,7 +61,7 @@
   };
 </script>
 
-  <title>Memory Security | Wei's Blog</title>
+  <title>Memory Safety | Wei's Blog</title>
   
 
 
@@ -184,7 +188,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-ASAN"><span class="nav-text">1. ASAN</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E6%9F%A5%E7%9C%8BLLVM-IR"><span class="nav-text">1. 查看LLVM IR</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-ASan%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">2. ASan工作原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-Shadow-Memory"><span class="nav-text">3. Shadow Memory</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-ASan-%E6%A3%80%E9%AA%8C%E7%AE%97%E6%B3%95"><span class="nav-text">4. ASan 检验算法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E7%BC%BA%E9%99%B7"><span class="nav-text">5. 缺陷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HWASAN"><span class="nav-text">HWASAN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AFHWASAN"><span class="nav-text">1. 什么是HWASAN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%A3%80%E6%B5%8BUseAfterFree"><span class="nav-text">2. 检测UseAfterFree</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-Use-After-Free"><span class="nav-text">2.1 Use-After-Free</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-Heap-Over-Flow"><span class="nav-text">2.2 Heap-Over-Flow</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-text">2.3 优缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-MTE"><span class="nav-text">3. MTE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reference"><span class="nav-text">Reference</span></a></li></ol></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-ASAN"><span class="nav-text">1. ASAN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%9F%A5%E7%9C%8BLLVM-IR"><span class="nav-text">1. 查看LLVM IR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-ASan%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">2. ASan工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Shadow-Memory"><span class="nav-text">3. Shadow Memory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-ASan-%E6%A3%80%E9%AA%8C%E7%AE%97%E6%B3%95"><span class="nav-text">4. ASan 检验算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-ASAN%E4%BB%A3%E7%A0%81%E8%A7%A3%E9%87%8A"><span class="nav-text">5. ASAN代码解释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E7%BC%BA%E9%99%B7"><span class="nav-text">6. 缺陷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HWASAN"><span class="nav-text">HWASAN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AFHWASAN"><span class="nav-text">1. 什么是HWASAN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%A3%80%E6%B5%8BUseAfterFree"><span class="nav-text">2. 检测UseAfterFree</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-Use-After-Free"><span class="nav-text">2.1 Use-After-Free</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-Heap-Over-Flow"><span class="nav-text">2.2 Heap-Over-Flow</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-text">2.3 优缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-MTE"><span class="nav-text">3. MTE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reference"><span class="nav-text">Reference</span></a></li></ol></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -258,7 +262,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/10/Memory-Security/">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/10/Memory-Safety/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -274,7 +278,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Memory Security
+          Memory Safety
         </h1>
 
         <div class="post-meta-container">
@@ -284,10 +288,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2021-01-10 17:10:01 / Modified: 18:17:29" itemprop="dateCreated datePublished" datetime="2021-01-10T17:10:01+08:00">2021-01-10</time>
+      <time title="Created: 2021-01-10 17:10:01" itemprop="dateCreated datePublished" datetime="2021-01-10T17:10:01+08:00">2021-01-10</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-01-11 12:42:57" itemprop="dateModified" datetime="2021-01-11T12:42:57+08:00">2021-01-11</time>
+      </span>
 
   
     <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -313,7 +323,11 @@
 <p>Given the following C++ program <code>test.cpp</code></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>* a = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</span><br><span class="line">    a[<span class="number">5</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (a[argc])</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;xx\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h5 id="1-查看LLVM-IR"><a href="#1-查看LLVM-IR" class="headerlink" title="1. 查看LLVM IR"></a>1. 查看LLVM IR</h5><p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
+<p><img src="https://i.loli.net/2021/01/10/zgxjUHub6L5v2Mc.png" alt="image-20210110202244680"></p>
+<h4 id="1-查看LLVM-IR"><a href="#1-查看LLVM-IR" class="headerlink" title="1. 查看LLVM IR"></a>1. 查看LLVM IR</h4><p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
+<p>LLVM编译过程的举例</p>
+<img src="https://i.loli.net/2021/01/10/UgErhFblvkR4dxY.jpg" alt="img" style="zoom:70%;" />
+
 <ol>
 <li>.c -&gt; AST</li>
 </ol>
@@ -333,10 +347,13 @@
 <p>A sample of LLVM IR</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.ll</span><br><span class="line">define i32 @mult(i32 %a, i32 %b) <span class="comment">#0 &#123;</span></span><br><span class="line">  %1 = mul nsw i32 %a, %b</span><br><span class="line">  ret i32 %1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>or generate LLVM IR from bitcode</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">llvm-dis test.bc <span class="comment"># test.ll</span></span><br></pre></td></tr></table></figure>
+
 <ol start="3">
 <li>LLVM -&gt; bitcode</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">llvm-as test.ll -o test.bc</span><br><span class="line">clang -emit-llvm -o test.bc -c test.cpp</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">llvm-as test.ll <span class="comment"># test.bc</span></span><br><span class="line">clang -c -emit-llvm test.cpp</span><br></pre></td></tr></table></figure>
 
 <p>The output is generated in the <code>test.bc</code> file, which is in bit stream format; so, when we want to have a look at output in text format, we get it as shown in the following screenshot:</p>
 <img src="https://i.loli.net/2021/01/10/qT4RmJiatWvuXHy.png" alt="image-20210110154054981" style="zoom:67%;" />
@@ -357,7 +374,8 @@
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clang++ test.s -o test.o</span><br><span class="line">clang++ test.bc -o test.o</span><br></pre></td></tr></table></figure>
 
-<h5 id="2-ASan工作原理"><a href="#2-ASan工作原理" class="headerlink" title="2. ASan工作原理"></a>2. ASan工作原理</h5><p>ASAN工具包含两大块：</p>
+<h4 id="2-ASan工作原理"><a href="#2-ASan工作原理" class="headerlink" title="2. ASan工作原理"></a>2. ASan工作原理</h4><p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers/wiki/AddressSanitizerAlgorithm">https://github.com/google/sanitizers/wiki/AddressSanitizerAlgorithm</a></p>
+<p>ASAN工具包含两大块：</p>
 <ul>
 <li>插桩模块(Instrumentation module)</li>
 <li>一个运行时库(Runtime library)</li>
@@ -375,22 +393,23 @@
 <li>hook free函数，将free掉的堆区域隔离(quarantine)一段时间，避免它立即被分配给其他人使用</li>
 <li>对错误情况进行输出，包括堆栈信息</li>
 </ol>
-<h5 id="3-Shadow-Memory"><a href="#3-Shadow-Memory" class="headerlink" title="3. Shadow Memory"></a>3. Shadow Memory</h5><p>Shadow memory是内存中的一块区域，其中的数据仅仅反应其他正常内存的状态信息，可以理解为正常内存的元数据，而正常内存中存储的才是程序真正需要的数据。</p>
+<h4 id="3-Shadow-Memory"><a href="#3-Shadow-Memory" class="headerlink" title="3. Shadow Memory"></a>3. Shadow Memory</h4><p>Shadow memory是内存中的一块区域，其中的数据仅仅反应其他正常内存的状态信息，可以理解为正常内存的元数据，而正常内存中存储的才是程序真正需要的数据。</p>
 <p>Malloc函数返回的地址通常是8字节对齐的，因此任意一个由（对齐的）8字节所组成的内存区域必然落在以下9种状态之中：最前面的k（0≤k≤8）字节是可寻址的，而剩下的8-k字节是不可寻址的。这9种状态便可以用shadow memory中的一个字节来进行编码。</p>
 <p>实际上，一个byte可以编码的状态总共有256（2^8）种，因此用在这里绰绰有余。</p>
 <img src="https://i.loli.net/2021/01/10/ezUOlgtBJKV6L9i.png" alt="image-20210110165523758" style="zoom: 50%;" />
 
 <p>Shadow memory和normal memory的映射关系如上图所示。一个byte的shadow memory反映8个byte normal memory的状态。如何根据normal memory的地址找到它对应的shadow memory呢？</p>
 <p>对于64位机器上的Android而言，二者的转换公式如下：</p>
-<p>Shadow memory address = (Normal memory address &gt;&gt; 3) + 0x100000000</p>
+<p>Shadow memory address = (Normal memory address &gt;&gt; 3) + 0x7fff8000 (for 64 bit)</p>
+<p>Shadow memory address = (Normal memory address &gt;&gt; 3) + 0x20000000 (for 32 bit)</p>
 <p>右移三位的目的是为了完成8=&gt;1的映射，而加一个offset是为了和Normal memory区分开来。最终内存空间种会存在如下的映射关系：</p>
 <img src="https://user-gold-cdn.xitu.io/2020/3/31/1713137c20d75aab?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img" style="zoom: 50%;" />
 
-<p>Bad代表的是shadow memory的shadow memory，因此其中数据没有意义，该内存区域不可使用。</p>
-<p>上文中提到，8字节组成的memory region共有9中状态：</p>
+<p>Bad代表的是shadow memory的shadow memory，因此其中数据没有意义，该内存区域不可使用。shadown内存的值有以下几种：</p>
 <ul>
-<li>8个字节都可寻址，shadow memory的值为0。</li>
-<li>0个字节可寻址，shadow memory的值为负数。</li>
+<li>8个字节都可寻址，shadow memory的值为0</li>
+<li>负数:所有byte都无效，全无效一般都是插入的内存，并且每种插入的内存对应的负数值不同</li>
+<li>k：表示前k个byte是有效，后8-k个无效，前提：malloc返回的地址内存对齐</li>
 </ul>
 <p>为什么0个字节可寻址的情况shadow memory不为0，而是负数呢？是因为0个字节可寻址其实可以继续分为多种情况，譬如：</p>
 <ul>
@@ -402,7 +421,7 @@
 <p>对所有0个字节可寻址的normal memory region的访问都是非法的，ASAN将会报错。而根据其shadow memory的值便可以具体判断是哪一种错。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Shadow byte legend (one shadow byte represents 8 application bytes):</span><br><span class="line">  Addressable:           00</span><br><span class="line">  Partially addressable: 01 02 03 04 05 06 07 </span><br><span class="line">  Heap left redzone:     fa (实际上Heap right redzone也是fa)</span><br><span class="line">  Freed Heap region:     fd  <span class="comment"># use-after-free</span></span><br><span class="line">  Stack left redzone:    f1</span><br><span class="line">  Stack mid redzone:     f2</span><br><span class="line">  Stack right redzone:   f3</span><br><span class="line">  Stack after <span class="built_in">return</span>:    f5</span><br><span class="line">  Stack use after scope: f8</span><br><span class="line">  Global redzone:        f9</span><br><span class="line">  Global init order:     f6</span><br><span class="line">  Poisoned by user:      f7</span><br><span class="line">  Container overflow:    <span class="built_in">fc</span></span><br><span class="line">  Array cookie:          ac</span><br><span class="line">  Intra object redzone:  bb</span><br><span class="line">  ASan internal:         fe</span><br><span class="line">  Left alloca redzone:   ca</span><br><span class="line">  Right alloca redzone:  cb</span><br><span class="line">  Shadow gap:            cc</span><br></pre></td></tr></table></figure>
 
-<h5 id="4-ASan-检验算法"><a href="#4-ASan-检验算法" class="headerlink" title="4. ASan 检验算法"></a>4. ASan 检验算法</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ShadowAddr = (Addr &gt;&gt; <span class="number">3</span>) + Offset; <span class="comment">// map from normal memory region to shadow memory</span></span><br><span class="line">k = *ShadowAddr;</span><br><span class="line"><span class="keyword">if</span> (k != <span class="number">0</span> &amp;&amp; ((Addr &amp; <span class="number">7</span>) + AccessSize &gt; k))</span><br><span class="line">	ReportAndCrash(Addr);</span><br></pre></td></tr></table></figure>
+<h4 id="4-ASan-检验算法"><a href="#4-ASan-检验算法" class="headerlink" title="4. ASan 检验算法"></a>4. ASan 检验算法</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ShadowAddr = (Addr &gt;&gt; <span class="number">3</span>) + Offset; <span class="comment">// map from normal memory region to shadow memory</span></span><br><span class="line">k = *ShadowAddr;</span><br><span class="line"><span class="keyword">if</span> (k != <span class="number">0</span> &amp;&amp; ((Addr &amp; <span class="number">7</span>) + AccessSize &gt; k))</span><br><span class="line">	ReportAndCrash(Addr);</span><br></pre></td></tr></table></figure>
 
 <p>在每次内存访问时，都会执行如上的伪代码，以判断此次内存访问是否合规。</p>
 <p>首先根据normal memory的地址找到对应shadow memory的地址，然后取出其中存取的byte值：k。</p>
@@ -413,7 +432,48 @@
 <li>(Addr&amp;7)+AccessSize &gt; k，则说明此次内存访问将会访问到不可寻址的字节。（具体可分为k大于0和小于0两种情况来分析）</li>
 </ul>
 <p>当此次内存访问可能会访问到不可寻址的字节时，ASAN会报错并结合shadow memory中具体的值明确错误类型。</p>
-<h4 id="5-缺陷"><a href="#5-缺陷" class="headerlink" title="5. 缺陷"></a>5. 缺陷</h4><ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before instrumentation</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span> a[<span class="number">8</span>];</span><br><span class="line">  ...</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// after instrumentation</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span> redzone1[<span class="number">32</span>];  <span class="comment">// 32-byte aligned</span></span><br><span class="line">  <span class="keyword">char</span> a[<span class="number">8</span>];          <span class="comment">// 32-byte aligned</span></span><br><span class="line">  <span class="keyword">char</span> redzone2[<span class="number">24</span>];</span><br><span class="line">  <span class="keyword">char</span> redzone3[<span class="number">32</span>];  <span class="comment">// 32-byte aligned</span></span><br><span class="line">  <span class="keyword">int</span>  *shadow_base = MemToShadow(redzone1);</span><br><span class="line">  shadow_base[<span class="number">0</span>] = <span class="number">0xffffffff</span>;  <span class="comment">// poison redzone1</span></span><br><span class="line">  shadow_base[<span class="number">1</span>] = <span class="number">0xffffff00</span>;  <span class="comment">// poison redzone2, unpoison &#x27;a&#x27;</span></span><br><span class="line">  shadow_base[<span class="number">2</span>] = <span class="number">0xffffffff</span>;  <span class="comment">// poison redzone3</span></span><br><span class="line">  ...</span><br><span class="line">  shadow_base[<span class="number">0</span>] = shadow_base[<span class="number">1</span>] = shadow_base[<span class="number">2</span>] = <span class="number">0</span>; <span class="comment">// unpoison all</span></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>检验算法的汇编举例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># int  load4(int *a)  &#123; return *a; &#125;</span><br><span class="line">0000000000000000 &lt;load4&gt;:</span><br><span class="line">   0:	48 89 f8             	mov    %rdi,%rax</span><br><span class="line">   3:	48 89 fa             	mov    %rdi,%rdx</span><br><span class="line">   6:	48 c1 e8 03          	shr    $0x3,%rax</span><br><span class="line">   a:	83 e2 07             	and    $0x7,%edx</span><br><span class="line">   d:	0f b6 80 00 80 ff 7f 	movzbl 0x7fff8000(%rax),%eax</span><br><span class="line">  14:	83 c2 03             	add    $0x3,%edx</span><br><span class="line">  17:	38 c2                	cmp    %al,%dl</span><br><span class="line">  19:	7d 03                	jge    1e &lt;load4+0x1e&gt;</span><br><span class="line">  1b:	8b 07                	mov    (%rdi),%eax    &lt;&lt;&lt;&lt;&lt;&lt; original load</span><br><span class="line">  1d:	c3                   	retq   </span><br><span class="line">  1e:	84 c0                	test   %al,%al</span><br><span class="line">  20:	74 f9                	je     1b &lt;load4+0x1b&gt;</span><br><span class="line">  22:	50                   	push   %rax</span><br><span class="line">  23:	e8 00 00 00 00       	callq  __asan_report_load4</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-ASAN代码解释"><a href="#5-ASAN代码解释" class="headerlink" title="5. ASAN代码解释"></a>5. ASAN代码解释</h4><p>How to read LLVM IR <a target="_blank" rel="noopener" href="https://llvm.org/docs/LangRef.html">https://llvm.org/docs/LangRef.html</a></p>
+<p>IR文件布局 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/66793637">https://zhuanlan.zhihu.com/p/66793637</a> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/66909226">https://zhuanlan.zhihu.com/p/66909226</a></p>
+<img src="https://i.loli.net/2021/01/10/cB8fOa2qsTdQkE5.jpg" alt="img" style="zoom:77%;" />
+
+<p>文件的开头是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">; ModuleID = <span class="string">&#x27;test.cpp&#x27;</span></span><br><span class="line">source_filename = <span class="string">&quot;test.cpp&quot;</span></span><br><span class="line">target datalayout = <span class="string">&quot;e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128&quot;</span></span><br><span class="line">target triple = <span class="string">&quot;x86_64-unknown-linux-gnu&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>;</code>后面的注释指明了module的标识，<code>source_filename</code>是表明这个module是从什么文件编译得到的（如果你打开<code>main.ll</code>会发现这里的值是<code>main.cpp</code>），如果该modules是通过链接得到的，这里的值就会是<code>llvm-link</code>。</p>
+<p>接下来是一个字符串的定义，llvm中的标识符分为两种类型：全局的和局部的。全局的标识符包括函数名和全局变量，会加一个<code>@</code>前缀，局部的标识符会加一个<code>%</code>前缀。一般地，可用标识符对应的正则表达式为<code>[%@][-a-zA-Z$._][-a-zA-Z$._0-9]*</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@.str &#x3D; private unnamed_addr constant [4 x i8] c&quot;xx\0A\00&quot;, align 1</span><br></pre></td></tr></table></figure>
+
+<p>然后是函数main的定义，<code>dso_local</code>是一个Runtime Preemption说明符，表明该函数会在同一个链接单元（即该函数所在的文件以及包含的头文件）内解析符号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">define dso_local i32 @main(i32 %0, i8** %1) #0 &#123;</span><br><span class="line">  %3 &#x3D; alloca i32, align 4</span><br><span class="line">  %4 &#x3D; alloca i32, align 4</span><br><span class="line">  %5 &#x3D; alloca i8**, align 8</span><br><span class="line">  %6 &#x3D; alloca i32*, align 8</span><br><span class="line">  store i32 0, i32* %3, align 4</span><br><span class="line">  store i32 %0, i32* %4, align 4</span><br><span class="line">  store i8** %1, i8*** %5, align 8</span><br><span class="line">  %7 &#x3D; call noalias nonnull i8* @_Znam(i64 40) #3</span><br><span class="line">  %8 &#x3D; bitcast i8* %7 to i32*</span><br><span class="line">  store i32* %8, i32** %6, align 8</span><br><span class="line">  %9 &#x3D; load i32*, i32** %6, align 8</span><br><span class="line">  %10 &#x3D; getelementptr inbounds i32, i32* %9, i64 5</span><br><span class="line">  store i32 0, i32* %10, align 4</span><br><span class="line">  %11 &#x3D; load i32*, i32** %6, align 8</span><br><span class="line">  %12 &#x3D; load i32, i32* %4, align 4</span><br><span class="line">  %13 &#x3D; sext i32 %12 to i64</span><br><span class="line">  %14 &#x3D; getelementptr inbounds i32, i32* %11, i64 %13</span><br><span class="line">  %15 &#x3D; load i32, i32* %14, align 4</span><br><span class="line">  %16 &#x3D; icmp ne i32 %15, 0</span><br><span class="line">  br i1 %16, label %17, label %19</span><br><span class="line"></span><br><span class="line">17:                                               ; preds &#x3D; %2</span><br><span class="line">  %18 &#x3D; call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i64 0, i64 0))</span><br><span class="line">  br label %19</span><br><span class="line"></span><br><span class="line">19:                                               ; preds &#x3D; %17, %2</span><br><span class="line">  ret i32 0</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在一对花括号里的就是函数体，函数体是由一系列basic blocks(BB)组成的，这些BB形成了函数的控制流图(Control Flow Graph, CFG)，该函数的含义如下所示：</p>
+<ul>
+<li>1: %0 是argc, %1是argv</li>
+<li>2-3: %3 %4 是i32</li>
+<li>4-5: %5 是i8*** %6是i32<em>\</em></li>
+<li>6-8: <em>(%3)=0；\</em>(%4)=%0； *(%5)=%1</li>
+<li>9-10: %8=(int *) new int[10]</li>
+<li>11: <em>(%6)=%8</em></li>
+<li>12-14: %10=%8+5；*(%10)=0；a[5]=0</li>
+<li>15-19:  %11=%8；%12=argc；%15=a[argc] </li>
+<li>20-21: if %15 != 0: br %17 else %19</li>
+</ul>
+<p><code>#0</code>指出了该函数的attribute group。在文件的下面，你会找到这样的代码，因为attribute group可能很包含很多attribute且复用到多个函数，所以我们IR使用attribute group ID(即<code>#0</code>)的形式指明函数的attribute，这样既简洁又清晰。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">attributes <span class="comment">#0 = &#123; noinline norecurse optnone uwtable &quot;correctly-rounded-divide-sqrt-fp-math&quot;=&quot;false&quot; &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;frame-pointer&quot;=&quot;all&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;min-legal-vector-width&quot;=&quot;0&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-jump-tables&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;true&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>LLVM的IR是一个强类型语言，每一条指令都显式地指出了实参的类型，例如<code>mul nsw i32 %call, 7</code>表明要将两个<code>i32</code>的数值相乘，<code>icmp eq i32 %mul, 42</code>表明要将两个i32的数据类型进行相等比较（这里<code>%mul</code>是一个变量，而<code>mul</code>是一条指令，可以看出IR加前缀的好处）。此外，我们还很容易推断出返回值的类型，比如<code>i32</code>的数相乘的返回值就是<code>i32</code>类型，比较两个数值的相等关系的返回值就是<code>i1</code>类型。</p>
+<p>可以使用如下命令生成控制流程图。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opt -analyze -dot-cfg-only test.cpp</span><br></pre></td></tr></table></figure>
+
+<img src="https://i.loli.net/2021/01/10/icTWFOy1l7Q9Emb.png" alt="image-20210110194638257" style="zoom: 50%;" />
+
+<p>在IR中，每个变量都在使用前都必须先定义，且每个变量只能被赋值一次，所以我们称IR是静态单一赋值的。</p>
+<h4 id="6-缺陷"><a href="#6-缺陷" class="headerlink" title="6. 缺陷"></a>6. 缺陷</h4><ol>
 <li>CPU和Memory资源的消耗</li>
 <li>UseAfterFree的检测依赖隔离区，而隔离时间是非永久的，跨越过隔离时间后再次访问是有限的，会导致漏检。</li>
 <li>Overflow的检测依赖安全区，而安全区是有大小的，大小是有限的，跨越安全区访问就有可能也不报错，这是另一个漏检的原因。</li>
