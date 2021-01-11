@@ -281,7 +281,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-11 12:42:57" itemprop="dateModified" datetime="2021-01-11T12:42:57+08:00">2021-01-11</time>
+        <time title="Modified: 2021-01-11 14:52:21" itemprop="dateModified" datetime="2021-01-11T14:52:21+08:00">2021-01-11</time>
       </span>
 
   
@@ -359,7 +359,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-10 19:02:09" itemprop="dateModified" datetime="2021-01-10T19:02:09+08:00">2021-01-10</time>
+        <time title="Modified: 2021-01-12 01:48:12" itemprop="dateModified" datetime="2021-01-12T01:48:12+08:00">2021-01-12</time>
       </span>
 
   
@@ -372,22 +372,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="1-Mac配置LLVM"><a href="#1-Mac配置LLVM" class="headerlink" title="1. Mac配置LLVM"></a>1. Mac配置LLVM</h4><p>下载<a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/llvm-11.0.0.src.tar.xz">LLVM</a>和<a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/clang-11.0.0.src.tar.xz">Clang</a>并解压，将Clang目录放置到llvm/tools目录下，llvm-10.0.0无法编译通过，选择llvm-11.0.0。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf llvm-11.0.0.src.tar.xz</span><br><span class="line">tar -xzvf clang-11.0.0.src.tar.xz</span><br></pre></td></tr></table></figure>
-
-<p>从官网下载<a target="_blank" rel="noopener" href="https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-macos-universal.dmg">.dmg</a>文件，安装cmake，配置环境变量。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$&gt; <span class="built_in">which</span> cmake</span><br><span class="line">/Applications/CMake.app/Contents/bin/cmake</span><br></pre></td></tr></table></figure>
-
-<p>进入llvm目录，新建build目录，进入build目录执行cmake生成配置文件。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">cmake -G Xcode CMAKE_BUILD_TYPE=<span class="string">&quot;Debug&quot;</span> ..</span><br></pre></td></tr></table></figure>
-
-<p>点击build目录下的LLVM.xcodeproj工程文件，提示是否自动创建schemes，点击manually manage schemes手动创建，并添加ALL_BUILD，如下图。</p>
-<img src="https://i.loli.net/2021/01/09/Y5XfyPxaQGcSgEu.png" alt="开发和调试第一个 LLVM Pass" style="zoom: 45%;" />
-
-<p>在Xcode中编译llvm，全程约半个小时。</p>
-<p><img src="https://i.loli.net/2021/01/09/ztK5RETxmkU71w4.png" alt="image-20210109165627072"></p>
-<p>Tips: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/LittleSec/p/12757964.html">macOS使用源码build的clang无法编译c/cpp的问题: fatal error: ‘stdio.h’ file not found</a></p>
-
+          <h4 id="1-查看LLVM-IR"><a href="#1-查看LLVM-IR" class="headerlink" title="1. 查看LLVM IR"></a>1. 查看LLVM IR</h4><p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
+<p>LLVM编译过程的举例</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2021/01/08/LLVM-Pass/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -521,7 +515,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-11 12:42:35" itemprop="dateModified" datetime="2021-01-11T12:42:35+08:00">2021-01-11</time>
+        <time title="Modified: 2021-01-12 01:48:22" itemprop="dateModified" datetime="2021-01-12T01:48:22+08:00">2021-01-12</time>
       </span>
 
   
