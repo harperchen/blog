@@ -281,7 +281,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-11 14:52:21" itemprop="dateModified" datetime="2021-01-11T14:52:21+08:00">2021-01-11</time>
+        <time title="Modified: 2021-01-12 11:48:48" itemprop="dateModified" datetime="2021-01-12T11:48:48+08:00">2021-01-12</time>
       </span>
 
   
@@ -359,7 +359,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-12 01:48:12" itemprop="dateModified" datetime="2021-01-12T01:48:12+08:00">2021-01-12</time>
+        <time title="Modified: 2021-01-12 13:01:47" itemprop="dateModified" datetime="2021-01-12T13:01:47+08:00">2021-01-12</time>
       </span>
 
   
@@ -373,7 +373,14 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="1-查看LLVM-IR"><a href="#1-查看LLVM-IR" class="headerlink" title="1. 查看LLVM IR"></a>1. 查看LLVM IR</h4><p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
-<p>LLVM编译过程的举例</p>
+<ul>
+<li><code>llvm-as</code>：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的<strong>不是</strong>目标平台的机器码。</li>
+<li><code>llvm-dis</code>：<code>llvm-as</code>的逆过程，即反汇编。 不过这里的反汇编的对象是LLVM IR的二进制格式，而不是机器码。</li>
+<li><code>opt</code>：优化LLVM IR。输出新的LLVM IR。</li>
+<li><code>llc</code>：把LLVM IR编译成汇编码。需要用<code>as</code>进一步得到机器码。</li>
+<li><code>lli</code>：解释执行LLVM IR</li>
+</ul>
+<p>LLVM编译过程的举例 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ccd467ff5209">https://www.jianshu.com/p/ccd467ff5209</a></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2021/01/08/LLVM-Pass/#more" rel="contents">
