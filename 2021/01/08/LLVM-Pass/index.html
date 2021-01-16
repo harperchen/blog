@@ -37,8 +37,8 @@
 <meta property="og:image" content="https://i.loli.net/2021/01/10/icTWFOy1l7Q9Emb.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/12/plSRyaQiH3MqIuV.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/12/YpbfTmGwciHNEk6.png">
-<meta property="og:image" content="https://harperchen.github.io/Users/harper/Library/Application%20Support/typora-user-images/image-20210112160638986.png">
-<meta property="og:image" content="https://harperchen.github.io/Users/harper/Library/Application%20Support/typora-user-images/image-20210112160859746.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/16/H57i1kxS4QaYhZy.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/16/JrHu61kifZCNsmO.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/09/Y5XfyPxaQGcSgEu.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/09/ztK5RETxmkU71w4.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/11/RgknqFWA9MYb1zo.png">
@@ -55,7 +55,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/01/12/qjnOP3yTfcxR2K4.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/11/V8QW1lRq9zHs3Ei.png">
 <meta property="article:published_time" content="2021-01-08T13:09:24.000Z">
-<meta property="article:modified_time" content="2021-01-16T12:33:19.892Z">
+<meta property="article:modified_time" content="2021-01-16T12:39:47.039Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2021/01/12/bSe35pXlxgEafwC.png">
@@ -309,7 +309,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-16 20:33:19" itemprop="dateModified" datetime="2021-01-16T20:33:19+08:00">2021-01-16</time>
+        <time title="Modified: 2021-01-16 20:39:47" itemprop="dateModified" datetime="2021-01-16T20:39:47+08:00">2021-01-16</time>
       </span>
 
   
@@ -347,7 +347,8 @@
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -Xclang -ast-dump -fsyntax-only test.cpp</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://i.loli.net/2021/01/11/nSwWy7EOp4ZF82P.png" alt="image-20210110151724272"></p>
+<img src="https://i.loli.net/2021/01/11/nSwWy7EOp4ZF82P.png" alt="image-20210110151724272" style="zoom: 67%;" />
+
 <p>or</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang++ -Xclang -ast-view test.cpp <span class="comment"># require the llvm to be compiled in Debug mode</span></span><br></pre></td></tr></table></figure>
 
@@ -427,7 +428,7 @@
 <p>可以使用如下命令生成控制流程图。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">opt -analyze -dot-cfg-only test.cpp</span><br><span class="line">opt -analyze -dot-cfg test.cpp</span><br></pre></td></tr></table></figure>
 
-<img src="https://i.loli.net/2021/01/10/icTWFOy1l7Q9Emb.png" alt="image-20210110194638257" style="zoom: 50%;" />
+<img src="https://i.loli.net/2021/01/10/icTWFOy1l7Q9Emb.png" alt="image-20210110194638257" style="zoom: 67%;" />
 
 <h5 id="2-3-Baisc-Block"><a href="#2-3-Baisc-Block" class="headerlink" title="2.3 Baisc Block"></a>2.3 Baisc Block</h5><p>BasicBlock，是 Function 中以List方式存放的，和Soot里的 BasicBlock概念很像，无法单独存在，必须是在某个Function里的，是真正存放可执行代码的容器。主要包含了大量的 Instruction ，前驱、后继的 BasicBlock，以及一些基本信息（例如名字什么的），相比 Function ，它的校验也更加严格，例如不可以凭空出现、不可以处于游离状态。</p>
 <p>BasicBlock由很多 Instruction组成，按照是否为 TerminatorInst 可以将指令分为两类，一类是普通的指令，一类是可以成为 TerminatorInst 的指令；因此 BasicBlock一定要以 TerminatorInst类的指令结尾，而且除了最后一个指令是 TerminatorInst，其他指令都是普通指令。常见的 TerminatorInst 有 BranchInst 、 IndirectBrInst 、 SwitchInst 和 Return ，C++里还有一些异常处理：（call不算terminator）</p>
@@ -447,11 +448,11 @@
 
 <h6 id="2-4-2-复杂数组"><a href="#2-4-2-复杂数组" class="headerlink" title="2.4.2 复杂数组"></a>2.4.2 复杂数组</h6><img src="https://i.loli.net/2021/01/12/YpbfTmGwciHNEk6.png" alt="image-20210112160447352" style="zoom:25%;" />
 
-<img src="/Users/harper/Library/Application%20Support/typora-user-images/image-20210112160638986.png" alt="image-20210112160638986" style="zoom:25%;" />
+<img src="https://i.loli.net/2021/01/16/H57i1kxS4QaYhZy.png" alt="image-20210112160638986" style="zoom:25%;" />
 
 <h6 id="2-4-3-结构体"><a href="#2-4-3-结构体" class="headerlink" title="2.4.3 结构体"></a>2.4.3 结构体</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%MyStruct &#x3D; type &#123; i8, i32, [3 x i32]&#125;</span><br></pre></td></tr></table></figure>
 
-<img src="/Users/harper/Library/Application%20Support/typora-user-images/image-20210112160859746.png" alt="image-20210112160859746" style="zoom:25%;" />
+<img src="https://i.loli.net/2021/01/16/JrHu61kifZCNsmO.png" alt="image-20210112160859746" style="zoom:25%;" />
 
 
 
