@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/01/17/7JCIjQiSMgtADdm.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/11/V8QW1lRq9zHs3Ei.png">
 <meta property="article:published_time" content="2021-01-08T13:09:24.000Z">
-<meta property="article:modified_time" content="2021-01-17T06:39:24.829Z">
+<meta property="article:modified_time" content="2021-01-17T06:45:54.281Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2021/01/12/bSe35pXlxgEafwC.png">
@@ -313,7 +313,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-17 14:39:24" itemprop="dateModified" datetime="2021-01-17T14:39:24+08:00">2021-01-17</time>
+        <time title="Modified: 2021-01-17 14:45:54" itemprop="dateModified" datetime="2021-01-17T14:45:54+08:00">2021-01-17</time>
       </span>
 
   
@@ -381,7 +381,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">llc test.bc -o test.s</span><br><span class="line">llc test.ll -o test.s</span><br></pre></td></tr></table></figure>
 
 <p>The output is generated in test.S file, which is the assembly code.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">	.text</span><br><span class="line">	.file	&quot;test.cpp&quot;</span><br><span class="line">	.globl	main                            # -- Begin function main</span><br><span class="line">	.p2align	4, 0x90</span><br><span class="line">	.type	main,@function</span><br><span class="line">main:                                   # @main</span><br><span class="line">	.cfi_startproc</span><br><span class="line"># %bb.0:</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	.cfi_def_cfa_offset 16</span><br><span class="line">	.cfi_offset %rbp, -16</span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	.cfi_def_cfa_register %rbp</span><br><span class="line">	subq	$32, %rsp</span><br><span class="line">	...</span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">	.text</span></span><br><span class="line"><span class="meta">	.file</span>	<span class="string">&quot;test.cpp&quot;</span></span><br><span class="line"><span class="meta">	.globl</span>	main                            # -- Begin function main</span><br><span class="line"><span class="meta">	.p2align</span>	<span class="number">4</span>, <span class="number">0x90</span></span><br><span class="line"><span class="meta">	.type</span>	main,@function</span><br><span class="line"><span class="symbol">main:</span>                                   # @main</span><br><span class="line"><span class="meta">	.cfi_startproc</span></span><br><span class="line"># %bb<span class="number">.0</span>:</span><br><span class="line">	pushq	%rbp</span><br><span class="line"><span class="meta">	.cfi_def_cfa_offset</span> <span class="number">16</span></span><br><span class="line"><span class="meta">	.cfi_offset</span> %rbp, -<span class="number">16</span></span><br><span class="line">	<span class="keyword">movq</span>	%rsp, %rbp</span><br><span class="line"><span class="meta">	.cfi_def_cfa_register</span> %rbp</span><br><span class="line">	subq	<span class="number">$32</span>, %rsp</span><br><span class="line">	...</span><br></pre></td></tr></table></figure>
 
 <p>or use clang to dump assembly code from the bitcode file format</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clang -S test.bc -o test.s</span><br><span class="line">clang++ -S test.cpp -o test.s </span><br></pre></td></tr></table></figure>
@@ -507,16 +507,17 @@
 <p>利用opt运行LLVM Pass如下，运行成功。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://www.cs.cornell.edu/~asampson/blog/clangpass.html</span></span><br><span class="line"><span class="comment">#include &quot;llvm/IR/LegacyPassManager.h&quot;</span></span><br><span class="line"><span class="comment">#include &quot;llvm/Transforms/IPO/PassManagerBuilder.h&quot;</span></span><br><span class="line">clang++ -gline-tables-only -flto -fsanitize=address -c test.cpp -o test.orig.bc -isysroot `xcrun --show-sdk-path`</span><br><span class="line"></span><br><span class="line">opt -load SRPass.dylib -dcc -o test.cov.o test.orig.bc</span><br><span class="line"></span><br><span class="line"><span class="comment"># clang++要和opt是一起编译出来的才行</span></span><br></pre></td></tr></table></figure>
 
-<img src="https://i.loli.net/2021/01/11/SmCxYaDPkpn3r85.png" alt="image-20210111234620100" style="zoom:37%;" />
+<img src="https://i.loli.net/2021/01/11/SmCxYaDPkpn3r85.png" alt="image-20210111234620100" style="zoom:47%;" />
 
 <h5 id="3-3-Xcode-调试-LLVM-Pass"><a href="#3-3-Xcode-调试-LLVM-Pass" class="headerlink" title="3.3 Xcode 调试 LLVM Pass"></a>3.3 Xcode 调试 LLVM Pass</h5><p>用opt为target来调试这个Pass，Xcode中添加opt的目标文件到scheme中。</p>
-<img src="https://i.loli.net/2021/01/11/MKa2EV48fY6kXFl.png" alt="image-20210111235014164" style="zoom:67%;" />
+<img src="https://i.loli.net/2021/01/11/MKa2EV48fY6kXFl.png" alt="image-20210111235014164" style="zoom:77%;" />
 
 <p>编辑scheme的启动参数，和命令行中的保持一致。</p>
-<img src="https://i.loli.net/2021/01/11/BX4GxdHpnb9zCuS.png" alt="image-20210111235127009" style="zoom:67%;" />
+<img src="https://i.loli.net/2021/01/11/BX4GxdHpnb9zCuS.png" alt="image-20210111235127009" style="zoom:77%;" />
 
 <p>command+r运行，在<code>DynamicCallCounter.cpp</code>的函数<code>runOnModule</code>中加入断点，就可以调试LLVM Pass了。</p>
-<p><img src="https://i.loli.net/2021/01/12/5klbasJQOiz6IAC.png" alt="image-20210112001157315"></p>
+<img src="https://i.loli.net/2021/01/12/5klbasJQOiz6IAC.png" alt="image-20210112001157315" style="zoom:67%;" />
+
 <p>为了在执行 opt 时能自动检测 Pass有没有被修改，若修改则重新编译，可以把 <code>SRPass</code> 加到 opt 的依赖里面，编辑 tools/opt/CMakeLists.txt如下：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">add_llvm_tool(opt</span><br><span class="line">  AnalysisWrappers.cpp</span><br><span class="line">  BreakpointPrinter.cpp</span><br><span class="line">  GraphPrinters.cpp</span><br><span class="line">  NewPMDriver.cpp</span><br><span class="line">  PassPrinters.cpp</span><br><span class="line">  PrintSCC.cpp</span><br><span class="line">  opt.cpp</span><br><span class="line"></span><br><span class="line">  DEPENDS</span><br><span class="line">  intrinsics_gen</span><br><span class="line">  SRPass</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
 
