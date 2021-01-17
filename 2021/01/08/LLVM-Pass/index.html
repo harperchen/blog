@@ -25,7 +25,7 @@
 
   <meta name="description" content="1. 查看LLVM IR使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (.ll)-&gt; LLVM Bitcode (.bc) -&gt; ASM -&gt; Native  llvm-as：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的不是目标平台的机器码。 llvm-dis：llvm-as的逆过程，即反汇编。 不过这里的反汇编的对象是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Wei&#39;s Blog">
+<meta property="og:title" content="LLVM Pass">
 <meta property="og:url" content="https://harperchen.github.io/blog/2021/01/08/LLVM-Pass/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
 <meta property="og:description" content="1. 查看LLVM IR使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (.ll)-&gt; LLVM Bitcode (.bc) -&gt; ASM -&gt; Native  llvm-as：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的不是目标平台的机器码。 llvm-dis：llvm-as的逆过程，即反汇编。 不过这里的反汇编的对象是">
@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/01/17/7JCIjQiSMgtADdm.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/11/V8QW1lRq9zHs3Ei.png">
 <meta property="article:published_time" content="2021-01-08T13:09:24.000Z">
-<meta property="article:modified_time" content="2021-01-17T06:36:23.145Z">
+<meta property="article:modified_time" content="2021-01-17T06:39:24.829Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2021/01/12/bSe35pXlxgEafwC.png">
@@ -78,7 +78,7 @@
   };
 </script>
 
-  <title> | Wei's Blog</title>
+  <title>LLVM Pass | Wei's Blog</title>
   
 
 
@@ -295,7 +295,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          LLVM Pass
         </h1>
 
         <div class="post-meta-container">
@@ -313,7 +313,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-17 14:36:23" itemprop="dateModified" datetime="2021-01-17T14:36:23+08:00">2021-01-17</time>
+        <time title="Modified: 2021-01-17 14:39:24" itemprop="dateModified" datetime="2021-01-17T14:39:24+08:00">2021-01-17</time>
       </span>
 
   
