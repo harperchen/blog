@@ -422,7 +422,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-17 14:46:50" itemprop="dateModified" datetime="2021-01-17T14:46:50+08:00">2021-01-17</time>
+        <time title="Modified: 2021-01-17 15:33:27" itemprop="dateModified" datetime="2021-01-17T15:33:27+08:00">2021-01-17</time>
       </span>
 
   
@@ -506,7 +506,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-10 14:43:51" itemprop="dateModified" datetime="2021-01-10T14:43:51+08:00">2021-01-10</time>
+        <time title="Modified: 2021-01-18 14:20:47" itemprop="dateModified" datetime="2021-01-18T14:20:47+08:00">2021-01-18</time>
       </span>
 
   
@@ -519,7 +519,44 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>IR is maple mplt</p>
+          <h4 id="1-查看Maple-IR"><a href="#1-查看Maple-IR" class="headerlink" title="1. 查看Maple IR"></a>1. 查看Maple IR</h4><h5 id="1-1-C-C-to-Maple"><a href="#1-1-C-C-to-Maple" class="headerlink" title="1.1 C/C++ to Maple"></a>1.1 C/C++ to Maple</h5><h5 id="1-2-Java-to-Maple"><a href="#1-2-Java-to-Maple" class="headerlink" title="1.2 Java to Maple"></a>1.2 Java to Maple</h5><p>给定如下Java程序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行如下命令对其进行编译</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .java -&gt; .s</span></span><br><span class="line">$ java2asm.sh HelloWorld.java</span><br><span class="line"><span class="comment"># .s -&gt; .so</span></span><br><span class="line">$ asm2so.sh HelloWorld.s</span><br></pre></td></tr></table></figure>
+
+<p>执行如下命令运行该程序</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ run-app.sh -classpath ./HelloWorld.so HelloWorld</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-Maple-IR-语法"><a href="#2-Maple-IR-语法" class="headerlink" title="2. Maple IR 语法"></a>2. Maple IR 语法</h4><p><a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler/OpenArkCompiler/blob/master/doc/en/MapleIRDesign.md">https://gitee.com/openarkcompiler/OpenArkCompiler/blob/master/doc/en/MapleIRDesign.md</a></p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler-incubator/mapleall/blob/dev/doc/maple_ir_spec.md">https://gitee.com/openarkcompiler-incubator/mapleall/blob/dev/doc/maple_ir_spec.md</a></p>
+<h4 id="3-Ubuntu配置OpenArk"><a href="#3-Ubuntu配置OpenArk" class="headerlink" title="3. Ubuntu配置OpenArk"></a>3. Ubuntu配置OpenArk</h4><h5 id="3-1-Maple-Engine"><a href="#3-1-Maple-Engine" class="headerlink" title="3.1 Maple Engine"></a>3.1 Maple Engine</h5><p>首先安装所需的软件包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install -y build-essential clang cmake libffi-dev libelf-dev libunwind-dev libssl-dev openjdk-8-jdk-headless unzip python-minimal python3 gdb bc</span><br></pre></td></tr></table></figure>
+
+<p>下载代码并设置Maple构建环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://gitee.com/openarkcompiler-incubator/maple_engine.git</span><br><span class="line">$ <span class="built_in">cd</span> maple_engine</span><br><span class="line">$ <span class="built_in">source</span> ./envsetup.sh</span><br></pre></td></tr></table></figure>
+
+<p>构建Maple编译器和Maple Engine</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./maple_build/tools/build-maple.sh</span><br></pre></td></tr></table></figure>
+
+<p>构建定制的OpenJDK8，将构建Java核心库libcore.so和运行用户Java程序所需的如下jar文件拷贝到<code>./maple_build/jar/</code>目录下。</p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler-incubator/maple_engine/blob/master/maple_build/doc/build_OpenJDK8.md">https://gitee.com/openarkcompiler-incubator/maple_engine/blob/master/maple_build/doc/build_OpenJDK8.md</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java 核心库</span></span><br><span class="line">rt.jar (customized)</span><br><span class="line">charsets.jar</span><br><span class="line">jce.jar</span><br><span class="line">jsse.jar</span><br></pre></td></tr></table></figure>
+
+<p>其中一个组件 rt.jar 是方舟引擎定制版. 要生成方舟引擎定制版的 rt.jar 文件, 需要修改 OpenJDK-8 的 Object.java ，然后从源代码构建OpenJDK-8。</p>
+<p>首先下载OpenJDK-8的源码，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ apt list openjdk-8-jre</span><br><span class="line">Listing... Done</span><br><span class="line">openjdk-8-jre/bionic-updates,bionic-security,now 8u275-b01-0ubuntu1~18.04 amd64 [installed]</span><br><span class="line">N: There is 1 additional version. Please use the <span class="string">&#x27;-a&#x27;</span> switch to see it</span><br><span class="line"><span class="comment"># 根据上述命令输出的版本号执行下述命令</span></span><br><span class="line">$ hg <span class="built_in">clone</span> http://hg.openjdk.java.net/jdk8u/jdk8u -r jdk8u275-b01 ~/my_openjdk8</span><br></pre></td></tr></table></figure>
+
+<p>并安装以下依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install mercurial build-essential cpio zip libx11-dev libxext-dev libxrender-dev \</span><br><span class="line">              libxtst-dev libxt-dev libcups2-dev libfreetype6-dev libasound2-dev libfontconfig1-dev</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">source</span> build/envsetup.<span class="keyword">sh</span> arm <span class="keyword">debug</span></span><br><span class="line"><span class="keyword">make</span> setup</span><br><span class="line"><span class="keyword">make</span></span><br><span class="line"><span class="keyword">make</span> libcore</span><br><span class="line"><span class="keyword">make</span> testall</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="4-Write-OpenArk-Phase"><a href="#4-Write-OpenArk-Phase" class="headerlink" title="4. Write OpenArk Phase"></a>4. Write OpenArk Phase</h4><p>IR is maple mplt</p>
 <p>HelloWorld.java</p>
           <!--noindex-->
             <div class="post-button">
