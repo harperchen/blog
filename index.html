@@ -506,7 +506,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-19 21:03:42" itemprop="dateModified" datetime="2021-01-19T21:03:42+08:00">2021-01-19</time>
+        <time title="Modified: 2021-01-19 21:05:35" itemprop="dateModified" datetime="2021-01-19T21:05:35+08:00">2021-01-19</time>
       </span>
 
   
@@ -519,152 +519,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="1-查看Maple-IR"><a href="#1-查看Maple-IR" class="headerlink" title="1. 查看Maple IR"></a>1. 查看Maple IR</h4><p>方舟编译器利用如下前端将不同语言转化为中间表示语言Maple：</p>
-<ul>
-<li>jbc2mpl<ul>
-<li>jbc =&gt; mpl ir</li>
-</ul>
-</li>
-<li>dex2mpl</li>
-<li>js2mpl</li>
-<li>ast2mpl<ul>
-<li>C和C++前端 clang =&gt; ast =&gt; mpl</li>
-</ul>
-</li>
-<li>mplfe<ul>
-<li>前端框架 多个前端开发作准备</li>
-</ul>
-</li>
-</ul>
-<h5 id="1-1-C-C-to-Maple"><a href="#1-1-C-C-to-Maple" class="headerlink" title="1.1 C/C++ to Maple"></a>1.1 C/C++ to Maple</h5><h5 id="1-2-Java-to-Maple"><a href="#1-2-Java-to-Maple" class="headerlink" title="1.2 Java to Maple"></a>1.2 Java to Maple</h5><h4 id="2-Maple-IR-语法"><a href="#2-Maple-IR-语法" class="headerlink" title="2. Maple IR 语法"></a>2. Maple IR 语法</h4><p><a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler/OpenArkCompiler/blob/master/doc/en/MapleIRDesign.md">https://gitee.com/openarkcompiler/OpenArkCompiler/blob/master/doc/en/MapleIRDesign.md</a></p>
-<p><a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler-incubator/mapleall/blob/dev/doc/maple_ir_spec.md">https://gitee.com/openarkcompiler-incubator/mapleall/blob/dev/doc/maple_ir_spec.md</a></p>
-<h4 id="3-Ubuntu配置OpenArk"><a href="#3-Ubuntu配置OpenArk" class="headerlink" title="3. Ubuntu配置OpenArk"></a>3. Ubuntu配置OpenArk</h4><p>首先配置两个孵化器项目mapleall和maple engine，分别用于运行C/C++和java程序，然后介绍如何配置方舟编译器。</p>
-<h5 id="3-1-Mapleall"><a href="#3-1-Mapleall" class="headerlink" title="3.1 Mapleall"></a>3.1 Mapleall</h5><p><a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler-incubator/mapleall">https://gitee.com/openarkcompiler-incubator/mapleall</a> 用来编译运行C/C++程序的项目</p>
-<p><code>bin/ast2mpl</code>是方舟编译器针对C的前端，用来将<code>clangAST</code>转化为方舟编译器的IR Maple，但是好像并没开源，是直接上传的二进制。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> mapleall</span><br><span class="line">make setup</span><br><span class="line"><span class="comment"># choose one of the following four options</span></span><br><span class="line"><span class="built_in">source</span> envsetup.sh arm release <span class="comment"># for aarch64 target.s</span></span><br><span class="line"><span class="built_in">source</span> envsetup.sh engine release <span class="comment"># for maple engine target.s</span></span><br><span class="line"><span class="built_in">source</span> envsetup.sh ark release <span class="comment"># the same as engine</span></span><br><span class="line"><span class="built_in">source</span> envsetup.sh riscv release <span class="comment"># for riscv target.s</span></span><br><span class="line"><span class="comment"># ---</span></span><br><span class="line">make </span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<p>生成的二进制文件在<code>bin</code>目录下，每种编译方式对应不同目录<code>aarch64-clang-release</code>或<code>ark-clang-release</code>：</p>
-<ul>
-<li>ast2mpl</li>
-<li>irbuild</li>
-<li>maple</li>
-<li>mplcg</li>
-</ul>
-<p>若要运行C程序，执行如下命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> envsetup.sh arm release <span class="comment"># for aarch64 target.s</span></span><br><span class="line">make </span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<p>进入<code>examples/C</code>目录，运行<code>maple_aarch64_with_ast2mpl.sh</code>运行例子C程序<code>printHuawei.c</code>，该编译过程使用华为的前端<code>ast2mpl</code>，将ClangAST变为Maple IR中间语言，编译过程为<code>.c -&gt; .mpl -&gt; .s -&gt; .out</code>，执行的命令如下。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mapleall/bin/ast2mpl printHuawei.c -I /usr/lib/gcc/x86_64-linux-gnu/8/include</span><br><span class="line">mapleall/bin/aarch64-clang-release/maple -exe=me,mplcg -option=<span class="string">&quot;-O2 --quiet:-O2 -quiet&quot;</span> printHuawei.mpl</span><br><span class="line">aarch64-linux-gnu-gcc -o printHuawei.out printHuawei.s</span><br><span class="line">qemu-aarch64 -L /usr/aarch64-linux-gnu/ printHuawei.out</span><br></pre></td></tr></table></figure>
-
-<p><img src="http://harperchen.qiniudn.com/image-20210118213627783.png" alt="image-20210118213627783"></p>
-<p>运行<code>maple_aarch64_with_whirl2mpl.sh</code>运行例子C程序<code>printHuawei.c</code>，该编译过程使用Open64的前端，将C程序变为Whirl IR中间语言。如果自己<code>aarch64-linux-gnu-gcc</code>的版本是7的话，需要修改<code>whirl2mpl</code>这个脚本里的<code>FLAGS</code>如下所示。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLAGS=<span class="string">&quot;-cc1 -emit-llvm -triple aarch64-linux-gnu -D__clang__ -D__BLOCKS__ -isystem /usr/aarch64-linux-gnu/include -isystem /usr/lib/gcc-cross/aarch64-linux-gnu/7/include&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>运行结果如图所示，编译过程为<code>.c -&gt; .B -&gt; .bpl -&gt; .s -&gt; .out</code>。</p>
-<p><img src="http://harperchen.qiniudn.com/image-20210118215951069.png" alt="image-20210118215951069"></p>
-<h5 id="3-2-Maple-Engine"><a href="#3-2-Maple-Engine" class="headerlink" title="3.2 Maple Engine"></a>3.2 Maple Engine</h5><p><a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler-incubator/maple_engine">https://gitee.com/openarkcompiler-incubator/maple_engine</a> 用来编译运行Java程序的项目，该项目会自动拉取编译上述mapleall项目。</p>
-<p>首先安装所需的软件包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y build-essential clang cmake libffi-dev libelf-dev libunwind-dev libssl-dev openjdk8-jdk openjdk-8-jdk-headless unzip python-minimal python3 gdb bc</span><br></pre></td></tr></table></figure>
-
-<p>下载代码并设置Maple构建环境</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://gitee.com/openarkcompiler-incubator/maple_engine.git</span><br><span class="line"><span class="built_in">cd</span> maple_engine</span><br><span class="line"><span class="built_in">source</span> ./envsetup.sh</span><br></pre></td></tr></table></figure>
-
-<p>构建Maple编译器和Maple Engine</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./maple_build/tools/build-maple.sh</span><br></pre></td></tr></table></figure>
-
-
-<p>在另一台电脑构建定制的OpenJDK8，将构建Java核心库libcore.so和运行用户Java程序所需的如下jar文件拷贝到构建maple_engine的./maple_build/jar/目录下。<a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler-incubator/maple_engine/blob/master/maple_build/doc/build_OpenJDK8.md">Official Document</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java 核心库</span></span><br><span class="line">rt.jar (customized)</span><br><span class="line">charsets.jar</span><br><span class="line">jce.jar</span><br><span class="line">jsse.jar</span><br></pre></td></tr></table></figure>
-<p>其中一个组件 rt.jar 是方舟引擎定制版. 要生成方舟引擎定制版的 rt.jar 文件, 需要修改 OpenJDK-8 的 Object.java ，然后从源代码构建OpenJDK-8。首先安装以下依赖，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install mercurial build-essential cpio zip libx11-dev libxext-dev libxrender-dev \</span><br><span class="line">      libxtst-dev libxt-dev libcups2-dev libfreetype6-dev libasound2-dev libfontconfig1-dev</span><br></pre></td></tr></table></figure>
-
-<p>下载OpenJDK-8的源码，在运行maple engine的电脑上查看安装的OpenJDK-8-JRE的修订版本号</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ apt list openjdk-8-jre</span><br><span class="line">Listing... Done</span><br><span class="line">openjdk-8-jre/bionic-updates,bionic-security,now 8u275-b01-0ubuntu1~18.04 amd64 [installed]</span><br><span class="line">N: There is 1 additional version. Please use the <span class="string">&#x27;-a&#x27;</span> switch to see it</span><br></pre></td></tr></table></figure>
-<p>根据上述命令输出的版本号在构建定制OpenJDK8的电脑上执行下述命令，下载源码</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hg <span class="built_in">clone</span> http://hg.openjdk.java.net/jdk8u/jdk8u -r jdk8u275-b01 ~/my_openjdk8</span><br><span class="line"><span class="built_in">cd</span> ~/my_openjdk8</span><br><span class="line">bash ./get_source.sh</span><br></pre></td></tr></table></figure>
-
-<p>修改<code> ~/my_openjdk8/jdk/src/share/classes/java/lang/Object.java</code>文件，插入如下字段声明：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Object</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> reserved_1; <span class="keyword">int</span> reserved_2; <span class="comment">// Add two extra fields here  在这添加两个额外字段</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">registerNatives</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p>构建定制的OpenJDK-8</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/my_openjdk8</span><br><span class="line">bash ./configure</span><br><span class="line"><span class="built_in">export</span> DISABLE_HOTSPOT_OS_VERSION_CHECK=ok</span><br><span class="line">make all</span><br></pre></td></tr></table></figure>
-
-<p>把如下的已经构建好的.jar文件复制到运行maple engine机器上的目录maple_build/jar/ 下：</p>
-<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">build/linux-x86_64-normal-server-release/images/<span class="class"><span class="keyword">lib</span>/<span class="title">rt</span>.<span class="title">jar</span></span></span><br><span class="line">build/linux-x86_64-normal-server-release/images/<span class="class"><span class="keyword">lib</span>/<span class="title">jce</span>.<span class="title">jar</span></span></span><br><span class="line">build/linux-x86_64-normal-server-release/images/<span class="class"><span class="keyword">lib</span>/<span class="title">jsse</span>.<span class="title">jar</span></span></span><br><span class="line">build/linux-x86_64-normal-server-release/images/<span class="class"><span class="keyword">lib</span>/<span class="title">charsets</span>.<span class="title">jar</span></span></span><br></pre></td></tr></table></figure>
-
-<p>修改<code>maple_build/tools/build-libcore.sh</code>中的<code>-bootclasspath</code>为<code> -sourcepath</code>，执行如下命令构建Java核心库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./maple_build/tools/build-libcore.sh</span><br></pre></td></tr></table></figure>
-
-<p>所有编译用户程序所需代码在目录maple_runtime/lib/x86_64目录下，主要就是<code>libcore.so</code>，另外还有几个工具用来编译运行java程序，在<code>maple_build/tools</code>目录下：</p>
-<ul>
-<li>java2asm.sh<ul>
-<li>javac: java to java bytecode</li>
-<li>jbc2mpl: java bytecode to maple</li>
-<li>maple: maple to assembly</li>
-</ul>
-</li>
-<li>asm2so.sh<ul>
-<li>g++: .s -&gt; .o -&gt; .so</li>
-</ul>
-</li>
-<li>run-app.sh</li>
-</ul>
-<p>给定如下Java程序</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>执行如下命令对其进行编译</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># MAPLE_BUILD_TOOLS = maple_build/tools</span></span><br><span class="line"><span class="built_in">cd</span> maple_build/examples/HelloWorld</span><br><span class="line"><span class="comment"># .java -&gt; .mpl -&gt; .s</span></span><br><span class="line"><span class="string">&quot;<span class="variable">$MAPLE_BUILD_TOOLS</span>&quot;</span>/java2asm.sh HelloWorld.java</span><br><span class="line"><span class="comment"># .s -&gt; .so</span></span><br><span class="line"><span class="string">&quot;<span class="variable">$MAPLE_BUILD_TOOLS</span>&quot;</span>/asm2so.sh HelloWorld.s</span><br></pre></td></tr></table></figure>
-
-<p>执行如下命令运行该程序</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;<span class="variable">$MAPLE_BUILD_TOOLS</span>&quot;</span>/run-app.sh -classpath ./HelloWorld.so HelloWorld</span><br></pre></td></tr></table></figure>
-
-<p><img src="C:%5CUsers%5Cwchen%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210118214301299.png" alt="image-20210118214301299"></p>
-<p>调试应用程序</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;<span class="variable">$MAPLE_BUILD_TOOLS</span>&quot;</span>/run-app.sh -gdb -classpath ./HelloWorld.so HelloWorld</span><br></pre></td></tr></table></figure>
-
-<h5 id="3-3-OpenArk-Compile"><a href="#3-3-OpenArk-Compile" class="headerlink" title="3.3 OpenArk Compile"></a>3.3 OpenArk Compile</h5><p>方舟编译器的总目录，上述项目maple属于FutureWei编译器分支，未来会合并到总目录这里。</p>
-<p>首先安装如下依赖</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get -y install openjdk-8-jdk git-core build-essential zlib1g-dev libc6-dev-i386 g++-multilib gcc-multilib linux-libc-dev gcc-5-aarch64-linux-gnu g++-5-aarch64-linux-gnu unzip tar curl python3-paramiko python-paramiko python-requests</span><br></pre></td></tr></table></figure>
-
-<p>运行如下命令编译项目</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> build/envsetup.sh arm debug</span><br><span class="line">make setup</span><br><span class="line">make</span><br><span class="line">make libcore</span><br><span class="line">make testall <span class="comment"># 该命令会失败</span></span><br></pre></td></tr></table></figure>
-
-<p>编译完成后，在<code>output/aarch64-clang-release/bin</code>目录下，可以看到编译出来的二进制文件，其中<code>dex2mpl/java2jar/jbc2mpl/maple</code>在编译前就已经在目录<code>src/mapleall/bin</code>下了。</p>
-<h6 id="3-3-1-java2jar"><a href="#3-3-1-java2jar" class="headerlink" title="3.3.1 java2jar"></a>3.3.1 java2jar</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">OUTPUT=<span class="variable">$1</span></span><br><span class="line">CORE_ALL_JAR=<span class="variable">$2</span></span><br><span class="line"><span class="built_in">shift</span> 2</span><br><span class="line">javac -g -d . -bootclasspath <span class="variable">$&#123;CORE_ALL_JAR&#125;</span> <span class="variable">$@</span></span><br><span class="line">jar -cvf <span class="variable">$&#123;OUTPUT&#125;</span> *.class</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p>dex2mpl</p>
-</li>
-<li><p>irbuild</p>
-</li>
-<li><p>java2d8</p>
-</li>
-<li><p>maple</p>
-</li>
-<li><p>jbc2mpl</p>
-</li>
-<li><p>maplegen</p>
-</li>
-</ul>
-<h4 id="4-Write-OpenArk-Phase"><a href="#4-Write-OpenArk-Phase" class="headerlink" title="4. Write OpenArk Phase"></a>4. Write OpenArk Phase</h4><p><a target="_blank" rel="noopener" href="https://gitee.com/openarkcompiler/OpenArkCompiler/blob/master/doc/cn/CompilerPhaseDescription.md">https://gitee.com/openarkcompiler/OpenArkCompiler/blob/master/doc/cn/CompilerPhaseDescription.md</a></p>
-<p>FEIR 前端IR 数据流和控制流独立分开</p>
-<img src="https://i.loli.net/2021/01/08/gXVmaCA1wectkUL.png" style="zoom:50%;" />
-
-<ol>
-<li><p>can we setup and run it?</p>
-</li>
-<li><p>what’s its IR format?</p>
-</li>
-<li><p>if we want to do instrumentation (e.g., write SanRazor-style passes), how to do that?</p>
-</li>
-</ol>
-<p>You can forward me a detailed report on my three questions in a week or two. Although we are NOT implementing exactly the same thing, but it’s a good reference</p>
-<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><p>知乎专栏 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/openarkcompiler">https://zhuanlan.zhihu.com/openarkcompiler</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/80624361">https://zhuanlan.zhihu.com/p/80624361</a></p>
-
+          <h4 id="1-查看Maple-IR"><a href="#1-查看Maple-IR" class="headerlink" title="1. 查看Maple IR"></a>1. 查看Maple IR</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2021/01/08/OpenArk-Compiler/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
