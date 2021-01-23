@@ -506,7 +506,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-19 21:05:35" itemprop="dateModified" datetime="2021-01-19T21:05:35+08:00">2021-01-19</time>
+        <time title="Modified: 2021-01-23 20:34:13" itemprop="dateModified" datetime="2021-01-23T20:34:13+08:00">2021-01-23</time>
       </span>
 
   
@@ -519,7 +519,14 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="1-查看Maple-IR"><a href="#1-查看Maple-IR" class="headerlink" title="1. 查看Maple IR"></a>1. 查看Maple IR</h4>
+          <h4 id="1-生成Maple-IR"><a href="#1-生成Maple-IR" class="headerlink" title="1. 生成Maple IR"></a>1. 生成Maple IR</h4><p>Maple IR是方舟编译器的中间表示语言，设计原则是尽可能多的保留源文件的信息，其中信息包括声明部分（符号表）和代码部分。Maple IR是平台无关的，不依赖任何处理器。Maple IR也有配套的Maple VM，可以直接运行Maple IR。可以利用不同的前端将C/C++，Java等不同的语言转化成Maple IR，也可以扩展支持别的语言。</p>
+<p>Maple IR支持所有已知的程序分析和优化操作，它支持在不同语义层面表示程序代码，也就是说，不同于LLVM IR的显示单层IR表示，方舟编译器的Maple IR提出多层中间表示：</p>
+<ul>
+<li>高层中间表示尽可能的保留源码内部的信息，适合language-specific的分析和优化；</li>
+<li>低层中间表示接近汇编指令，差不多和汇编指令有一对一的映射，可以进行通用general purpose的优化；</li>
+</ul>
+<p>越高层次的IR，支持的Opcode越多，越底层的IR，支持的Opcode越接近处理器的汇编；高层次的IR，程序结构是有层级的，低层次的IR，程序结构是扁平的，变成了序列化指令的形式；高层次的IR是与平台无关的，低层次的IR变得和平台有关。多层IR表示能够最大化在IR层的优化效果。（不知道能否显式表现出多层IR）</p>
+<p>Maple IR存储到文件的时候有两个格式，一个是mpl，一个是mplt。mplt是声明文件，mpl是定义文件。Maple IR的定位本身就是一种高级语言。mplt对应C++的<code>.h</code>，里面存放类的声明，mpt文件对应C++的<code>.cpp</code>文件，里面存放方法的实现。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2021/01/08/OpenArk-Compiler/#more" rel="contents">
