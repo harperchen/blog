@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <link rel="manifest" href="/blog/images/manifest.json">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+<meta name="description" content="CGroups Experiments including CPUSet, CPU, Memory usage limitation, etc.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CGroup Experiments">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/09/12/CGroup-Experiment/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="CGroups Experiments including CPUSet, CPU, Memory usage limitation, etc.">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/MkSH85IvOEonrV3.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/F7UEaIXWp2bLgH8.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/QdXqS3PuTOHyiLR.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/1ZgbxkhHAXBLqet.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/nNPXxfRrTGKVgC9.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/4cFrUnETQCkNtZl.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/jJRBuVcEov7QTts.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/6K91YRy8HrdLExu.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/kBqDgGyROiXfjZF.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/dXMcbVwFCutSzph.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/VOPMfyw5ToxgAY3.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/V2ghwftFK7J9m5z.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/EUkRcStm3Vx9nja.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/12/umYUjnaboCvRMEZ.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/SDMGnIzCkPEo8tU.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/CgWzjBvItwXyhrH.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/dknTaDC7RhNQJ31.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/LaSbo9ZpAGKihPR.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/08/xFiuS1sTLP27HpO.png">
+<meta property="article:published_time" content="2020-09-12T08:51:41.000Z">
+<meta property="article:modified_time" content="2021-01-10T06:37:20.434Z">
+<meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="CGroup">
+<meta property="article:tag" content="Container">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/12/MkSH85IvOEonrV3.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/09/12/CGroup-Experiment/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+<title>CGroup Experiments | Wei's Blog</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Wei's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+        <li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+        <li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-CGroup-Installation"><span class="nav-text">1. CGroup Installation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-CPUSet-Usage-Limitation"><span class="nav-text">2. CPUSet Usage Limitation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-CPU-Usgae-Limitation"><span class="nav-text">3. CPU Usgae Limitation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Memory-Usage-Limitation"><span class="nav-text">4. Memory Usage Limitation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-CGCreate"><span class="nav-text">5. CGCreate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Data-Synchronization"><span class="nav-text">6. Data Synchronization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-CGroupv1"><span class="nav-text">6.1 CGroupv1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-CGroupv2"><span class="nav-text">6.2 CGroupv2</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/12/CGroup-Experiment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CGroup Experiments
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-09-12 16:51:41" itemprop="dateCreated datePublished" datetime="2020-09-12T16:51:41+08:00">2020-09-12</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-01-10 14:37:20" itemprop="dateModified" datetime="2021-01-10T14:37:20+08:00">2021-01-10</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Container/" itemprop="url" rel="index"><span itemprop="name">Container</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">CGroups Experiments including CPUSet, CPU, Memory usage limitation, etc.</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>URL: <a target="_blank" rel="noopener" href="https://kernel.googlesource.com/pub/scm/linux/kernel/git/glommer/memcg/+/cpu_stat/Documentation/cgroups">https://kernel.googlesource.com/pub/scm/linux/kernel/git/glommer/memcg/+/cpu_stat/Documentation/cgroups</a></p>
+<h2 id="1-CGroup-Installation"><a href="#1-CGroup-Installation" class="headerlink" title="1. CGroup Installation"></a>1. CGroup Installation</h2><p>The first step, on Ubuntu, is to install the cgroups packages.</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install cgroup-tools cgroup-bin cgroup-lite libcgroup1 cgroupfs-mount</span><br><span class="line"><span class="comment"># add the following in /etc/default/grub</span></span><br><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">"quiet cgroup_enable=memory swapaccount=1"</span></span><br><span class="line">sudo update-grub</span><br></pre></td></tr></tbody></table></figure>
+<p>Several files are created at the same time.</p>
+<ul>
+<li><code>/sys/fs/cgroup</code> has a bunch of folders in a sort of virtual filesystem that “represents” cgroup.</li>
+<li><code>/etc/init/cgroup-lite.conf</code> creates the /sys/fs/cgroup directory</li>
+<li><code>/proc/cgroups</code> specifies what groups cgroup-lite should create.</li>
+</ul>
+<img src="https://i.loli.net/2020/09/12/MkSH85IvOEonrV3.png" style="zoom:45%;">
+
+<ul>
+<li>By accessing the cgroup filesystem directly.</li>
+<li>Using the cgm client (part of the cgmanager).</li>
+<li>Via cgcreate, cgexec and cgclassify (part of cgroup-tools).</li>
+<li>Via cgconfig.conf and cgrules.conf (also part of cgroup-tools).</li>
+</ul>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/init/cgroup-lite.conf</span></span><br><span class="line">description <span class="string">"mount available cgroup filesystems"</span></span><br><span class="line">author <span class="string">"Serge Hallyn &lt;serge.hallyn@canonical.com&gt;"</span></span><br><span class="line"></span><br><span class="line">start on mounted MOUNTPOINT=/sys/fs/cgroup</span><br><span class="line"></span><br><span class="line">pre-start script</span><br><span class="line">	<span class="built_in">test</span> -x /bin/cgroups-mount || { stop; <span class="built_in">exit</span> 0; }</span><br><span class="line">	<span class="built_in">test</span> -d /sys/fs/cgroup || { stop; <span class="built_in">exit</span> 0; }</span><br><span class="line">	/bin/cgroups-mount</span><br><span class="line">	cgconfigparser -l /etc/cgconfig.conf</span><br><span class="line">			cgrulesengd</span><br><span class="line">end script</span><br><span class="line"></span><br><span class="line">post-stop script</span><br><span class="line">	<span class="keyword">if</span> [ -x /bin/cgroups-umount ]</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		/bin/cgroups-umount</span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line">end script</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="2-CPUSet-Usage-Limitation"><a href="#2-CPUSet-Usage-Limitation" class="headerlink" title="2. CPUSet Usage Limitation"></a>2. CPUSet Usage Limitation</h2><p>Now the environment and tools are ready, we will define some roles in <code>/etc/cgconfig.conf</code></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">group wchenbt {</span><br><span class="line">    cpuset {</span><br><span class="line"><span class="comment">#       cat /proc/cpuinfo | grep "cpu cores" | uniq</span></span><br><span class="line">        cpuset.cpus = <span class="string">"1,2"</span>;</span><br><span class="line">        cpuset.mems = <span class="string">"0"</span>;</span><br><span class="line"><span class="comment">#       we need to specific memory node for cpuset </span></span><br><span class="line">    }</span><br><span class="line">	...</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>We will associate these “roles” and the applications in <code>/etc/cgrules.conf</code></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># &lt;user:process&gt;    &lt;subsystems&gt;           &lt;group&gt;</span></span><br><span class="line">harper:java         cpu,memory,cpuset      wchenbt</span><br></pre></td></tr></tbody></table></figure>
+<p>This will limit the process java of user harper to CPU Core 1, 2 and 1G of memory.</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/cgconfig.conf</span><br><span class="line">sudo vim /etc/cgrules.conf</span><br><span class="line"></span><br><span class="line">sudo cgconfigparser -l /etc/cgconfig.conf</span><br><span class="line">sudo cgrulesengd -d --logfile=/var/<span class="built_in">log</span>/cgrulesengd.log</span><br><span class="line"></span><br><span class="line">taskset -pc $(pidof java)</span><br><span class="line">cat /proc/$(pidof java)/cgroup</span><br><span class="line">sudo cgdelete cpuset:/wchenbt</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Based on the roles, we can check the debug information of cgrulesengd and also the cgroup information of java. The output of taskset shows that we have successfully setup the roles.<br><img src="https://i.loli.net/2020/09/12/F7UEaIXWp2bLgH8.png" style="zoom:45%;"></p>
+<img src="https://i.loli.net/2020/09/12/QdXqS3PuTOHyiLR.png" style="zoom:45%;">
+
+<h2 id="3-CPU-Usgae-Limitation"><a href="#3-CPU-Usgae-Limitation" class="headerlink" title="3. CPU Usgae Limitation"></a>3. CPU Usgae Limitation</h2><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">group wchenbt {</span><br><span class="line">	cpu {</span><br><span class="line">		<span class="comment"># cpu.shares = 300; # 30 %</span></span><br><span class="line">		cpu.cfs_quota_us=10000; <span class="comment"># 10 %</span></span><br><span class="line">		cpu.cfs_period_us=100000; <span class="comment"># default value</span></span><br><span class="line">	}</span><br><span class="line">	cpucct {</span><br><span class="line">		</span><br><span class="line">	}</span><br><span class="line">	...</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>cpu.shares: The weight of each group living in the same hierarchy, that translates into the amount of CPU it is expected to get. Upon cgroup creation, each group gets assigned a default of 1024. The percentage of CPU assigned to the cgroup is the value of shares divided by the sum of all shares in all cgroups in the same level.</li>
+<li>cpu.cfs_period_us: The duration in microseconds of each scheduler period, for bandwidth decisions. This defaults to 100000us or 100ms.</li>
+<li>cpu.cfs_quota_us: The maximum time in microseconds during each cfs_period_us in for the current group will be allowed to run. For instance, if it is set to half of cpu_period_us, the cgroup will only be able to peak run for 50 % of the time. One should note that this represents aggregate time over all CPUs in the system. Therefore, in order to allow full usage of two CPUs, for instance, one should set this value to twice the value of cfs_period_us.<img src="https://i.loli.net/2020/09/12/1ZgbxkhHAXBLqet.png" style="zoom:45%;">
+
+</li>
+</ul>
+<p>We use htop to check the cpu usage which is lower than 10%.<br><img src="https://i.loli.net/2020/09/12/nNPXxfRrTGKVgC9.png" style="zoom:45%;"></p>
+<h2 id="4-Memory-Usage-Limitation"><a href="#4-Memory-Usage-Limitation" class="headerlink" title="4. Memory Usage Limitation"></a>4. Memory Usage Limitation</h2><p>When not configure the memory limitation, we use stress process and check the memory usage is around 10%</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Stress https://www.cnblogs.com/sparkdev/p/10354947.html</span></span><br><span class="line">stress --vm-bytes 800m --vm-keep -m 1</span><br></pre></td></tr></tbody></table></figure>
+<img src="https://i.loli.net/2020/09/12/4cFrUnETQCkNtZl.png" style="zoom:45%;">
+
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># user su</span></span><br><span class="line">mkdir /sys/fs/cgroup/memory/testmem -p</span><br><span class="line"><span class="built_in">cd</span> /sys/fs/cgroup/memory/testmem</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> $$ &gt; tasks</span><br><span class="line"><span class="built_in">echo</span> 100m &gt; memory.limit_in_bytes</span><br><span class="line"></span><br><span class="line"><span class="comment"># delete cgroup</span></span><br><span class="line"><span class="built_in">cd</span> /sys/fs/cgroup/memory/</span><br><span class="line"><span class="built_in">echo</span> $$ &gt;&gt; tasks</span><br><span class="line">rmdir ./testm</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="5-CGCreate"><a href="#5-CGCreate" class="headerlink" title="5. CGCreate"></a>5. CGCreate</h2><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cgcreate -a root -t harper -g cpu,memory:<span class="built_in">test</span></span><br><span class="line">ls /sys/fs/cgroup/cpu/<span class="built_in">test</span></span><br><span class="line">ls /sys/fs/cgroup/memory/<span class="built_in">test</span></span><br><span class="line">head /sys/fs/cgroup/cpu/<span class="built_in">test</span>/cpu.shares</span><br><span class="line">head /sys/fs/cgroup/memory/<span class="built_in">test</span>/memory.limit_in_bytes</span><br><span class="line"><span class="built_in">echo</span> 300 &gt; /sys/fs/cgroup/cpu/<span class="built_in">test</span>/cpu.shares</span><br><span class="line"><span class="built_in">echo</span> 100m &gt; /sys/fs/cgroup/memory/<span class="built_in">test</span>/memory.limit_in_bytes</span><br><span class="line">cgexec -g cpu,memory:<span class="built_in">test</span> cat /dev/urandom &gt; /dev/null</span><br></pre></td></tr></tbody></table></figure>
+<img src="https://i.loli.net/2020/09/12/jJRBuVcEov7QTts.png" style="zoom:45%;">
+
+<p>You’ll get 1024 for your cpu.shares (the maximum &amp; default) and a huge number for your memory usage limit in bytes.<br><img src="https://i.loli.net/2020/09/12/6K91YRy8HrdLExu.png" style="zoom:45%;"></p>
+<h2 id="6-Data-Synchronization"><a href="#6-Data-Synchronization" class="headerlink" title="6. Data Synchronization"></a>6. Data Synchronization</h2><p><a target="_blank" rel="noopener" href="https://medium.com/@asishrs/docker-limit-resource-utilization-using-cgroup-parent-72a646651f9d">https://medium.com/@asishrs/docker-limit-resource-utilization-using-cgroup-parent-72a646651f9d</a><br><a target="_blank" rel="noopener" href="https://andrestc.com/post/cgroups-io/">https://andrestc.com/post/cgroups-io/</a></p>
+<h3 id="6-1-CGroupv1"><a href="#6-1-CGroupv1" class="headerlink" title="6.1 CGroupv1"></a>6.1 CGroupv1</h3><p>The script <code>/etc/init/cgroup-lite.conf</code> will automatically mount cgroup filesystem when rebooting.</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/init/cgroup-lite.conf</span></span><br><span class="line">description <span class="string">"mount available cgroup filesystems"</span></span><br><span class="line">author <span class="string">"Serge Hallyn &lt;serge.hallyn@canonical.com&gt;"</span></span><br><span class="line"></span><br><span class="line">start on mounted MOUNTPOINT=/sys/fs/cgroup</span><br><span class="line"></span><br><span class="line">pre-start script</span><br><span class="line">	<span class="built_in">test</span> -x /bin/cgroups-mount || { stop; <span class="built_in">exit</span> 0; }</span><br><span class="line">	<span class="built_in">test</span> -d /sys/fs/cgroup || { stop; <span class="built_in">exit</span> 0; }</span><br><span class="line">	/bin/cgroups-mount</span><br><span class="line">	cgconfigparser -l /etc/cgconfig.conf</span><br><span class="line">		cgrulesengd</span><br><span class="line">end script</span><br><span class="line"></span><br><span class="line">post-stop script</span><br><span class="line">	<span class="keyword">if</span> [ -x /bin/cgroups-umount ]</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		/bin/cgroups-umount</span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line">end script</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Also, we need add the following to <code>/etc/default/grub</code> and update</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">"quiet cgroup_enable=memory swapaccount=1"</span></span><br><span class="line">sudo update-grub</span><br></pre></td></tr></tbody></table></figure>
+
+<p>So let’s start to limit I/O with cgroups v1. For I/O read, cgroups works, shown as follow.</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 消耗io</span></span><br><span class="line">dd <span class="keyword">if</span>=/dev/sda of=/dev/null</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Before configuration, we can use iostat to check the I/O read that is close to 200M/s.<br><img src="https://i.loli.net/2020/09/12/kBqDgGyROiXfjZF.png" style="zoom:45%;"></p>
+<p>To limit the I/O read, we need to create a cgroup <code>test</code> in the <code>blkio</code> controller. Then we are going to set our read limit using <code>blkio.throttle.read_bps_device</code> file. This requires us to specify limits by device, so we must find out our device major and minor version:<br><img src="https://i.loli.net/2020/09/12/dXMcbVwFCutSzph.png" style="zoom:45%;"></p>
+<p>Let’s limit the read bytes per second to 10485760 (10M/s) on the sda device (8: 0).</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/fs/cgroup/blkio/</span><br><span class="line">mkdir /sys/fs/cgroup/blkio/<span class="built_in">test</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'8:0 10485760'</span> &gt; /sys/fs/cgroup/blkio/<span class="built_in">test</span>/blkio.throttle.read_bps_device</span><br><span class="line"><span class="comment"># process id</span></span><br><span class="line"><span class="built_in">echo</span> 2660 &gt; /sys/fs/cgroup/blkio/<span class="built_in">test</span>/tasks</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Then we place the shell into cgroup test by writing its pid 2660 into <code>tasks</code> file and re-run the workload. The command we start in this shell will run in this cgroup, so the read bytes per second now become around 10M/s when watching the I/O workload using iostat.<br><img src="https://i.loli.net/2020/09/12/VOPMfyw5ToxgAY3.png" style="zoom:45%;"></p>
+<p>For I/O write, this is not the case. We use the following command to generate I/O workload and monitor the I/O usage. The write bytes per second on the nvme0n1 device now is close to 150M/s.</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=/dev/zero of=/tmp/file1</span><br></pre></td></tr></tbody></table></figure>
+<img src="https://i.loli.net/2020/09/12/V2ghwftFK7J9m5z.png" style="zoom:45%;">
+
+<p>Then we limit the I/O usage using <code>blkio.throttle.write_bps_device</code> file, now the device major and minor version is 292: 0. </p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'292:0 10485760'</span> &gt; blkio.throttle.write_bps_device</span><br></pre></td></tr></tbody></table></figure>
+
+<p>However, we are still able to write 128 MB/s, so the limitation doesn’t work.<br><img src="https://i.loli.net/2020/09/12/EUkRcStm3Vx9nja.png" style="zoom:45%;"></p>
+<p>If we try the same command but opening the file with <code>O_DIRECT</code> flag (passing <code>oflag=direct</code> to <code>dd</code>), the write bytes per second now is around 10M/s.<br><img src="https://i.loli.net/2020/09/12/umYUjnaboCvRMEZ.png" style="zoom:45%;"></p>
+<p>Basically, when we write to a file (opened without any special flags), the data travels across a bunch of buffers and caches before it is effectively written to the disk. Opening a file with O_DIRECT (available since Linux 2.4.10), means file I/O is done directly to/from user-space buffers.</p>
+<p>On traditional cgroup hierarchies, relationships between different controllers cannot be established making it impossible for writeback to operate accounting for cgroup resource restrictions and all writeback IOs are attributed to the root cgroup. </p>
+<p>It’s important to notice that this was added when cgroups v2 were already a reality (but still experimental). So the “traditional cgroup hierarchies” means cgroups v1. Since in cgroups v1, different resources/controllers (memory, blkio) live in different hierarchies on the filesystem, even when those cgroups have the same name, they are completely independent. So, when the memory page is finally being flushed to disk, there is no way that the memory controller can know what blkio cgroup wrote that page. That means it is going to use the root cgroup for the blkio controller.</p>
+<h3 id="6-2-CGroupv2"><a href="#6-2-CGroupv2" class="headerlink" title="6.2 CGroupv2"></a>6.2 CGroupv2</h3><p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/Documentation/cgroup-v2.txt">https://www.kernel.org/doc/Documentation/cgroup-v2.txt</a></p>
+<p>We need add the following to <code>/etc/default/grub</code> and update.</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">"cgroup_no_v1=all"</span></span><br><span class="line">sudo update-grub</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Also, we need delete <code>/etc/init/cgroup-lite.conf</code> and reboot to unmount and disable cgroup v1.</p>
+<img src="https://i.loli.net/2021/01/08/SDMGnIzCkPEo8tU.png" alt="image-20210108151437090" style="zoom:67%;">
+
+<p>First, we mount cgroup v2 filesystem in /mnt/cgroup2</p>
+<img src="https://i.loli.net/2021/01/08/CgWzjBvItwXyhrH.png" alt="image-20210108151457165" style="zoom:50%;">
+
+<p>Now, we create a new cgroup called cg2 by creating a directory under the mounted file system. To be able to edit the I/O limits using the the I/O controller on the newly created cgroup, we need to write “+io” to the <code>cgroup.subtree_control</code> file in the parent (in this case, root) cgroup, and check the <code>cgroup.controllers</code> file for the cg2 cgroup, we see that the io controller is enabled.</p>
+<img src="https://i.loli.net/2021/01/08/dknTaDC7RhNQJ31.png" alt="image-20210108151520405" style="zoom:50%;">
+
+
+<p>To limit I/O to 10MB/s, as done previously, we write into the io.max file and use <code>dd</code> to generate some IO workload.</p>
+<img src="https://i.loli.net/2021/01/08/LaSbo9ZpAGKihPR.png" alt="image-20210108151532020" style="zoom:50%;">
+
+<p>The write bytes per second is around 700M/s. Let’s add our bash session to the cg2 cgroup, by writing its PID to <code>cgroup.procs</code> file. At the same time, we get this output from iostat (redacted).</p>
+<img src="https://i.loli.net/2021/01/08/xFiuS1sTLP27HpO.png" alt="image-20210108151542108" style="zoom:50%;">
+
+<p>So, even relying on the writeback kernel cache we are able to limit the I/O on the disk with cgroup v2.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/CGroup/" rel="tag"># CGroup</a>
+              <a href="/blog/tags/Container/" rel="tag"># Container</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/09/12/How-to-config-MTE-using-Qemu/" rel="prev" title="How to config MTE using Qemu">
+                  <i class="fa fa-chevron-left"></i> How to config MTE using Qemu
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/" rel="next" title="How to enable MTE in ArmStudio">
+                  How to enable MTE in ArmStudio <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+<script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script><script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    <div class="pjax">
+
+
+    </div>
+</body>
+</html>
