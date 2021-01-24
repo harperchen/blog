@@ -287,7 +287,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="1-Race-Bug"><a href="#1-Race-Bug" class="headerlink" title="1. Race Bug"></a>1. Race Bug</h3><p>两个访问内存区域的线程，当下面三个条件同时满足时，即可认定是Race bug。</p>
+          <h3 id="1-Race-Bug"><a class="header-anchor" href="#1-Race-Bug">¶</a>1. Race Bug</h3>
+<p>两个访问内存区域的线程，当下面三个条件同时满足时，即可认定是Race bug。</p>
 <ol>
 <li>访问的内存区域地址相同</li>
 <li>其中一个内存访问是写操作</li>
@@ -379,7 +380,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes and often wreak havoc on the users, causing inconsistent states or data losses. Prior fuzzing practices on file systems have been effective in uncovering hundreds of bugs, but they mostly focus on the sequential aspect of file system execution and do not comprehensively explore the concurrency dimension and hence, forgo the opportunity to catch data races.</p>
+          <h3 id="Abstract"><a class="header-anchor" href="#Abstract">¶</a>Abstract</h3>
+<p>Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes and often wreak havoc on the users, causing inconsistent states or data losses. Prior fuzzing practices on file systems have been effective in uncovering hundreds of bugs, but they mostly focus on the sequential aspect of file system execution and do not comprehensively explore the concurrency dimension and hence, forgo the opportunity to catch data races.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/#more" rel="contents">
@@ -466,7 +468,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>A data race in a kernel is an important class of bugs, critically impacting the reliability and security of the associated system. As a result of a race, the kernel may become unresponsive. Even worse, an attacker may launch a privilege escalation attack to acquire root privileges.</p>
+          <h3 id="Abstract"><a class="header-anchor" href="#Abstract">¶</a>Abstract</h3>
+<p>A data race in a kernel is an important class of bugs, critically impacting the reliability and security of the associated system. As a result of a race, the kernel may become unresponsive. Even worse, an attacker may launch a privilege escalation attack to acquire root privileges.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/12/24/S-P-19-RAZZER-Finding-Kernel-Race-Bugs-through-Fuzzing/#more" rel="contents">
@@ -553,7 +556,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Device drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge of new hardware, particularly on mobile devices, introduces an explosive growth of device drivers in system kernels. Many such drivers are provided by third-party developers, which are susceptible to se- curity vulnerabilities and lack proper vetting. Unfortunately, the complex input data structures for device drivers render traditional analysis tools, such as fuzz testing, less effective, and so far, research on kernel driver security is comparatively sparse.</p>
+          <h3 id="Abstract"><a class="header-anchor" href="#Abstract">¶</a>Abstract</h3>
+<p>Device drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge of new hardware, particularly on mobile devices, introduces an explosive growth of device drivers in system kernels. Many such drivers are provided by third-party developers, which are susceptible to se- curity vulnerabilities and lack proper vetting. Unfortunately, the complex input data structures for device drivers render traditional analysis tools, such as fuzz testing, less effective, and so far, research on kernel driver security is comparatively sparse.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/#more" rel="contents">
@@ -640,7 +644,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Discovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug information. Concolic testing, which generates all feasible inputs of a program by using symbolic execution and tests the program with the generated inputs, is one of the most promising approaches to solve this problem. Unfortunately, the state-of-the-art concolic testing tools do not scale well for testing COTS OSes because of state explosion. Indeed, they often fail to find a single bug (or crash) in COTS OSes despite their long execution time.</p>
+          <h3 id="Abstract"><a class="header-anchor" href="#Abstract">¶</a>Abstract</h3>
+<p>Discovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug information. Concolic testing, which generates all feasible inputs of a program by using symbolic execution and tests the program with the generated inputs, is one of the most promising approaches to solve this problem. Unfortunately, the state-of-the-art concolic testing tools do not scale well for testing COTS OSes because of state explosion. Indeed, they often fail to find a single bug (or crash) in COTS OSes despite their long execution time.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/#more" rel="contents">
@@ -727,7 +732,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Many kinds of memory safety vulnerabilities have been endangering software systems for decades. Amongst other approaches, fuzzing is a promising technique to unveil various software faults. Recently, feedback-guided fuzzing demonstrated its power, pro- ducing a steady stream of security-critical software bugs. Most fuzzing efforts—especially feedback fuzzing—are limited to user space components of an operating system (OS), although bugs in kernel components are more severe, because they allow an attacker to gain access to a system with full privileges. Unfortunately, kernel components are difficult to fuzz as feedback mechanisms (i.e., guided code coverage) cannot be easily applied. Additionally, non-determinism due to interrupts, kernel threads, statefulness, and similar mechanisms poses problems. Furthermore, if a process fuzzes its own kernel, a kernel crash highly impacts the performance of the fuzzer as the OS needs to reboot.</p>
+          <h3 id="Abstract"><a class="header-anchor" href="#Abstract">¶</a>Abstract</h3>
+<p>Many kinds of memory safety vulnerabilities have been endangering software systems for decades. Amongst other approaches, fuzzing is a promising technique to unveil various software faults. Recently, feedback-guided fuzzing demonstrated its power, pro- ducing a steady stream of security-critical software bugs. Most fuzzing efforts—especially feedback fuzzing—are limited to user space components of an operating system (OS), although bugs in kernel components are more severe, because they allow an attacker to gain access to a system with full privileges. Unfortunately, kernel components are difficult to fuzz as feedback mechanisms (i.e., guided code coverage) cannot be easily applied. Additionally, non-determinism due to interrupts, kernel threads, statefulness, and similar mechanisms poses problems. Furthermore, if a process fuzzes its own kernel, a kernel crash highly impacts the performance of the fuzzer as the OS needs to reboot.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/#more" rel="contents">
@@ -814,14 +820,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="Several-Cases"><a href="#Several-Cases" class="headerlink" title="Several Cases"></a>Several Cases</h4><p>The following cases are concluded by the inspection of summaries/specifications generated by several tools.</p>
+          <h4 id="Several-Cases"><a class="header-anchor" href="#Several-Cases">¶</a>Several Cases</h4>
+<p>The following cases are concluded by the inspection of summaries/specifications generated by several tools.</p>
 <ul>
 <li>Android and Java Summaries: StubDroid, Modelgen, Apposcopy</li>
 <li>Javascript Summaries: Taser</li>
 </ul>
 <ol>
-<li><p><strong>How to decide Input and Output</strong></p>
-<p>Basically, the inputs and outputs of a method are not only the parameters and return values, especially for those methods that take function callback as parameters. </p></li></ol>
+<li>
+<p><strong>How to decide Input and Output</strong></p>
+<p>Basically, the inputs and outputs of a method are not only the parameters and return values, especially for those methods that take function callback as parameters.</p></li></ol>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/09/30/Taint-Specifications/#more" rel="contents">
@@ -988,9 +996,13 @@
     <div class="post-body" itemprop="articleBody">
           <p><strong>Taint Analysis Classification</strong></p>
 <ol>
-<li><p>Explicit Analysis<br>How taint propagates based on the data dependencies between variables.</p>
+<li>
+<p>Explicit Analysis<br>
+How taint propagates based on the data dependencies between variables.</p>
 </li>
-<li><p>Implicit Analysis<br>How taint propogates through condition instructions based on the control dependencies between variables.</p>
+<li>
+<p>Implicit Analysis<br>
+How taint propogates through condition instructions based on the control dependencies between variables.</p>
 </li>
 </ol>
           <!--noindex-->
@@ -1079,8 +1091,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="1-Tool-Categories"><a href="#1-Tool-Categories" class="headerlink" title="1. Tool Categories"></a>1. Tool Categories</h4><p>Existing taint analysis tools can be divided into three categories. </p>
-<h5 id="a-Dynamic-Taint-Analysis"><a href="#a-Dynamic-Taint-Analysis" class="headerlink" title="a. Dynamic Taint Analysis"></a>a. Dynamic Taint Analysis</h5><p>The first category of tools track the information flow from taint source to taint sink at runtime following the execution trace. Most of these dynamic analysis tools are built on the top of dynamic binary instrumentation (DBI) framework such as Pin and Valgrind. These tools dynamically insert analysis code into the target executable while the executable is running. Some other tools like PolyTracker work as an LLVM Pass that instruments taint tracking logic into the programs during compilation to perform taint analysis with lower overhead. Such tools always ship with their own compiler, for example, <code>polybuild</code> and <code>polybuild++</code> of Tool PolyTracker. Given a specific input, the dynamic analysis tools will track how the taint is propagated along the executed path.</p>
+          <h4 id="1-Tool-Categories"><a class="header-anchor" href="#1-Tool-Categories">¶</a>1. Tool Categories</h4>
+<p>Existing taint analysis tools can be divided into three categories.</p>
+<h5 id="a-Dynamic-Taint-Analysis"><a class="header-anchor" href="#a-Dynamic-Taint-Analysis">¶</a>a. Dynamic Taint Analysis</h5>
+<p>The first category of tools track the information flow from taint source to taint sink at runtime following the execution trace. Most of these dynamic analysis tools are built on the top of dynamic binary instrumentation (DBI) framework such as Pin and Valgrind. These tools dynamically insert analysis code into the target executable while the executable is running. Some other tools like PolyTracker work as an LLVM Pass that instruments taint tracking logic into the programs during compilation to perform taint analysis with lower overhead. Such tools always ship with their own compiler, for example, <code>polybuild</code> and <code>polybuild++</code> of Tool PolyTracker. Given a specific input, the dynamic analysis tools will track how the taint is propagated along the executed path.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/09/15/Taint-Benchmark/#more" rel="contents">

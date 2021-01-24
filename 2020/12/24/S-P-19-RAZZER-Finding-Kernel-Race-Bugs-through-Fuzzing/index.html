@@ -24,12 +24,12 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="AbstractA data race in a kernel is an important class of bugs, critically impacting the reliability and security of the associated system. As a result of a race, the kernel may become unresponsive. Ev">
+<meta name="description" content="¶Abstract A data race in a kernel is an important class of bugs, critically impacting the reliability and security of the associated system. As a result of a race, the kernel may become unresponsive.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[S&amp;P&#39;19] RAZZER: Finding Kernel Race Bugs through Fuzzing">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/24/S-P-19-RAZZER-Finding-Kernel-Race-Bugs-through-Fuzzing/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="AbstractA data race in a kernel is an important class of bugs, critically impacting the reliability and security of the associated system. As a result of a race, the kernel may become unresponsive. Ev">
+<meta property="og:description" content="¶Abstract A data race in a kernel is an important class of bugs, critically impacting the reliability and security of the associated system. As a result of a race, the kernel may become unresponsive.">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T04:40:46.000Z">
 <meta property="article:modified_time" content="2020-12-27T08:26:46.768Z">
@@ -301,13 +301,17 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>A data race in a kernel is an important class of bugs, critically impacting the reliability and security of the associated system. As a result of a race, the kernel may become unresponsive. Even worse, an attacker may launch a privilege escalation attack to acquire root privileges.</p>
+        <h3 id="Abstract"><a class="header-anchor" href="#Abstract">¶</a>Abstract</h3>
+<p>A data race in a kernel is an important class of bugs, critically impacting the reliability and security of the associated system. As a result of a race, the kernel may become unresponsive. Even worse, an attacker may launch a privilege escalation attack to acquire root privileges.</p>
 <a id="more"></a>
 <p>In this paper, we propose RAZZER, a tool to find race bugs in kernels. The core of RAZZER is in guiding fuzz testing towards potential data race spots in the kernel. RAZZER employs two techniques to find races efficiently: a static analysis and a deterministic thread interleaving technique. Using a static analysis, RAZZER identifies over-approximated potential data race spots, guiding the fuzzer to search for data races in the kernel more efficiently. Using the deterministic thread interleav- ing technique implemented at the hypervisor, RAZZER tames the non-deterministic behavior of the kernel such that it can deterministically trigger a race. We implemented a prototype of RAZZER and ran the latest Linux kernel (from v4.16-rc3 to v4.18- rc3) using RAZZER. As a result, RAZZER discovered 30 new races in the kernel, with 16 subsequently confirmed and accordingly patched by kernel developers after they were reported.</p>
-<h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
+<h3 id="Outline"><a class="header-anchor" href="#Outline">¶</a>Outline</h3>
+<ul>
 <li>Target Problem: Find data race bugs in kernel, guiding fuzz testing towards potential data race spots</li>
-<li>What is data race (memory access bugs) （这咋感觉和syscall implicit dependencies很像呢）<ul>
-<li>Two threads fail to use proper synchronization <ul>
+<li>What is data race (memory access bugs) （这咋感觉和syscall implicit dependencies很像呢）
+<ul>
+<li>Two threads fail to use proper synchronization
+<ul>
 <li>Two threads access same memory address</li>
 <li>At least one thread is a memory write instruction</li>
 <li>They are issued from different contexts and executed concurrently</li>
@@ -316,53 +320,67 @@
 <li>Cause inconsistent states or data losses</li>
 </ul>
 </li>
-<li>Existing approaches to find race bug<ul>
-<li>R1: Traditional Fuzz testing – Syzkaller<ul>
+<li>Existing approaches to find race bug
+<ul>
+<li>R1: Traditional Fuzz testing – Syzkaller
+<ul>
 <li>Focus on finding an input program executes RacePair<sub>cand</sub></li>
 </ul>
 </li>
-<li>R2: Random Thread interleaving – SKI or PCT algorihtm<ul>
+<li>R2: Random Thread interleaving – SKI or PCT algorihtm
+<ul>
 <li>explore all possible thread interleaving cases for a specific input program</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Difficulties of data racing bug:<ul>
+<li>Difficulties of data racing bug:
+<ul>
 <li>Non-deterministic behavior of kernel</li>
-<li>Data race often leads to silent failures, do not raise visible signals in short term <ul>
+<li>Data race often leads to silent failures, do not raise visible signals in short term
+<ul>
 <li>Need proper post-race harmful behaviors (这个估计可以做点什么)</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Why this paper is accepted:<ul>
+<li>Why this paper is accepted:
+<ul>
 <li>A specifically designed fuzz testing mechanism for race bug in kernel</li>
-<li>Usefulness<ul>
+<li>Usefulness
+<ul>
 <li>More faster than Syzkaller (meet R1)</li>
 <li>More efficient than SKI (meet R2)</li>
-<li>No need to modify the kernel<ul>
+<li>No need to modify the kernel
+<ul>
 <li>static analysis is performed offline</li>
 <li>using a tailored hypervisor (transparent)</li>
 </ul>
 </li>
-<li>Facilitate easy, low-cost patching for data races<ul>
+<li>Facilitate easy, low-cost patching for data races
+<ul>
 <li>Detailed analysis report consisting of race location (memory access instruction) and call stacks that assist developers to determine the root cause of the race and fix a reported race quickly</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Novelty<ul>
+<li>Novelty
+<ul>
 <li>Making the race behavior deterministic leveraging a tailored hypervisor</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>How it works:<ul>
-<li>Carry out static analysis first (LLVM Pass and SVF)<ul>
+<li>How it works:
+<ul>
+<li>Carry out static analysis first (LLVM Pass and SVF)
+<ul>
 <li>RacePair<sub>benign</sub> and RacePair<sub>harm</sub> equals to RacePair<sub>true</sub> belongs to RacePair<sub>cand</sub></li>
 <li>Obtain potential data race points (over-approximated) using point-to analysis</li>
-<li>How to overcome the false positive and performance problem of point-to analysis<ul>
-<li>Accuracy: Allow over-approximate the race pair<ul>
+<li>How to overcome the false positive and performance problem of point-to analysis
+<ul>
+<li>Accuracy: Allow over-approximate the race pair
+<ul>
 <li>Context-insensitive, flow insensitive but field sensitive and exclude must-not case (different member variables)</li>
 </ul>
 </li>
@@ -371,17 +389,22 @@
 </li>
 </ul>
 </li>
-<li>Perform dynamic fuzz testing <ul>
-<li>Single thread fuzz testing <ul>
+<li>Perform dynamic fuzz testing
+<ul>
+<li>Single thread fuzz testing
+<ul>
 <li>finding a single-thread input program that executes potential race points</li>
 </ul>
 </li>
-<li>Multi thread interleaving<ul>
+<li>Multi thread interleaving
+<ul>
 <li>Find a thread interleaving for the input program P<sub>st</sub></li>
-<li>implemented  at hypervisor to render the race behavior deterministic P<sub>mt</sub><ul>
-<li>Stall the execution at potential data race points<ul>
+<li>implemented  at hypervisor to render the race behavior deterministic P<sub>mt</sub>
+<ul>
+<li>Stall the execution at potential data race points
+<ul>
 <li>Set up breakpoint per CPU core: Virualized debug register, VT-x and VMI</li>
-<li>Resume the execution of kernel threads after hitting breakpoint for concurrent execution with specified order </li>
+<li>Resume the execution of kernel threads after hitting breakpoint for concurrent execution with specified order</li>
 <li>Check if a race occurs (How to check): same memory address ?</li>
 </ul>
 </li>
@@ -395,27 +418,32 @@
 </li>
 </ul>
 </li>
-<li>Evalution<ul>
+<li>Evalution
+<ul>
 <li>30 new races in kernel running 7 weeks</li>
 <li>Effectiveness of static analysis</li>
 <li>Performance overhead of hypervisor</li>
-<li>Compare with Syzkaller and SKI<ul>
-<li>Compared with Syzkaller: Fuzzing throughput and # of execution needed to find a harmful race bug </li>
+<li>Compare with Syzkaller and SKI
+<ul>
+<li>Compared with Syzkaller: Fuzzing throughput and # of execution needed to find a harmful race bug</li>
 <li>Compared with random thread interleaving: # of execution needed to trigger previously known race</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Reflection<ul>
+<li>Reflection
+<ul>
 <li>Syzkaller也有自己的线程交织吗 whereas Syzkaller spawns multiple worker threads to identify data races.</li>
-<li>Static analysis does not consider synchronization primitives in the kernel<ul>
+<li>Static analysis does not consider synchronization primitives in the kernel
+<ul>
 <li>Synchronization information helps to determine memory pairs that must not race so that reduces the false positive rate (implemented by Paper Krace’s happens before analysis)</li>
 </ul>
 </li>
 <li>Need proper post-race harmful behaviors, just randomly generated for this paper</li>
 </ul>
 </li>
-<li>How to improve this work<ul>
+<li>How to improve this work
+<ul>
 <li>Thread scheduling coverage?</li>
 </ul>
 </li>
