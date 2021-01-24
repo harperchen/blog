@@ -24,12 +24,12 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="¶Abstract Device drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge">
+<meta name="description" content="Abstract Device drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[CCS&#39;17] DIFUZE: Interface Aware Fuzzing for Kernel Drivers ">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="¶Abstract Device drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge">
+<meta property="og:description" content="Abstract Device drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-21T10:54:50.000Z">
 <meta property="article:modified_time" content="2020-12-24T04:59:17.919Z">
@@ -302,11 +302,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="Abstract"><a class="header-anchor" href="#Abstract">¶</a>Abstract</h3>
+        <h3 id="Abstract">Abstract</h3>
 <p>Device drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge of new hardware, particularly on mobile devices, introduces an explosive growth of device drivers in system kernels. Many such drivers are provided by third-party developers, which are susceptible to se- curity vulnerabilities and lack proper vetting. Unfortunately, the complex input data structures for device drivers render traditional analysis tools, such as fuzz testing, less effective, and so far, research on kernel driver security is comparatively sparse.</p>
 <a id="more"></a>
 <p>In this paper, we present DIFUZE, an interface-aware fuzzing tool to automatically generate valid inputs and trigger the execu- tion of the kernel drivers. We leverage static analysis to compose correctly-structured input in the userspace to explore kernel dri- vers. DIFUZE is fully automatic, ranging from identifying driver handlers, to mapping to device file names, to constructing complex argument instances. We evaluate our approach on seven modern Android smartphones. The results show that DIFUZE can effectively identify kernel driver bugs, and reports 32 previously unknown vul- nerabilities, including flaws that lead to arbitrary code execution.</p>
-<h3 id="Outline"><a class="header-anchor" href="#Outline">¶</a>Outline</h3>
+<h3 id="Outline">Outline</h3>
 <ul>
 <li>Difficulties of kernel driver fuzzing
 <ul>

@@ -24,12 +24,12 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="¶Abstract Mobile systems, such as smartphones and tablets, incorporate a diverse set of I&#x2F;O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diverse">
+<meta name="description" content="Abstract Mobile systems, such as smartphones and tablets, incorporate a diverse set of I&#x2F;O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diverse a">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[USENIX&#39;18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="¶Abstract Mobile systems, such as smartphones and tablets, incorporate a diverse set of I&#x2F;O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diverse">
+<meta property="og:description" content="Abstract Mobile systems, such as smartphones and tablets, incorporate a diverse set of I&#x2F;O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diverse a">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/12/29/g1VuLHYwJytkmX4.png">
 <meta property="article:published_time" content="2020-12-29T05:13:22.000Z">
@@ -302,12 +302,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h4 id="Abstract"><a class="header-anchor" href="#Abstract">¶</a>Abstract</h4>
+        <h4 id="Abstract">Abstract</h4>
 <p>Mobile systems, such as smartphones and tablets, incorporate a diverse set of I/O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diverse and customized device drivers running in the operating system kernel of mobile systems. These device drivers contain various bugs and vulnerabilities, making them a top target for kernel exploits. Unfortunately, security analysts face important challenges in analyzing these device drivers in order to find, understand, and patch vulnerabilities. More specifically, using the state-of-the-art dynamic analysis techniques such as interactive debugging, fuzzing, and record-and-replay for analysis of these drivers is difficult, inefficient, or even completely inaccessible depending on the analysis.</p>
 <a id="more"></a>
 <p>In this paper, we present Charm1, a system solution that facilitates dynamic analysis of device drivers of mo- bile systems. Charm’s key technique is <em>remote device driver execution</em>, which enables the device driver to ex- ecute in a virtual machine on a workstation. Charm makes this possible by using the actual mobile system only for servicing the low-level and infrequent I/O operations through a low-latency and customized USB channel. Charm does not require any specialized hardware and is immediately available to analysts. We show that it is feasible to apply Charm to various device drivers, including camera, audio, GPU, and IMU sensor drivers, in different mobile systems, including LG Nexus 5X, Huawei Nexus 6P, and Samsung Galaxy S7. In an extensive evaluation, we show that Charm enhances the usability of fuzzing of device drivers, enables record-and- replay of driver’s execution, and facilitates detailed vulnerability analysis. Altogether, these capabilities have enabled us to find 25 bugs in device drivers, analyze 3 existing ones, and even build an arbitrary-code-execution kernel exploit using one of them.</p>
 <p><img src="https://i.loli.net/2020/12/29/g1VuLHYwJytkmX4.png" alt="image-20201229181646372"></p>
-<h4 id="Outline"><a class="header-anchor" href="#Outline">¶</a>Outline</h4>
+<h4 id="Outline">Outline</h4>
 <ul>
 <li>Target Problem
 <ul>

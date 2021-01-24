@@ -24,12 +24,12 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="¶TSAN https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
+<meta name="description" content="TSAN https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Thread Safety">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/30/Thread-Safety/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="¶TSAN https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
+<meta property="og:description" content="TSAN https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png">
@@ -292,11 +292,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="TSAN"><a class="header-anchor" href="#TSAN">¶</a>TSAN</h3>
+        <h3 id="TSAN">TSAN</h3>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers">https://github.com/google/sanitizers</a></p>
 <p><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/ThreadSafetyAnalysis.html">https://clang.llvm.org/docs/ThreadSafetyAnalysis.html</a></p>
 <a id="more"></a>
-<h5 id="1-Paper-Skelton"><a class="header-anchor" href="#1-Paper-Skelton">¶</a>1. Paper Skelton</h5>
+<h5 id="1-Paper-Skelton">1. Paper Skelton</h5>
 <ul>
 <li>
 <p>Data Race</p>
@@ -369,23 +369,23 @@
 </ul>
 </li>
 </ul>
-<h5 id="2-初步探索"><a class="header-anchor" href="#2-初步探索">¶</a>2. 初步探索</h5>
+<h5 id="2-初步探索">2. 初步探索</h5>
 <p><code>ThreadSanitizer</code> (aka TSan) is a data race detector for C/C++. Data races are one of the most common and hardest to debug types of bugs in concurrent systems. A data race occurs when two threads access the same variable concurrently and at least one of the accesses is write. <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/C%2B%2B11">C++11</a> standard officially bans data races as <em>undefined behavior</em>.</p>
 <p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892"></p>
 <p>The cost of race detection varies by program, but for a typical program, memory usage may increase by 5-10x and execution time by 2-20x</p>
-<h5 id="2-SPEC-CPU-2006"><a class="header-anchor" href="#2-SPEC-CPU-2006">¶</a>2. SPEC CPU 2006</h5>
+<h5 id="2-SPEC-CPU-2006">2. SPEC CPU 2006</h5>
 <p>our study on SPEC CPU2006 benchmarks [25] shows that the geometric mean overheads in- duced by AddressSanitizer (ASan) [23] and UndefinedBehaviorSanitizer (UBSan) [6] are, respectively, 73.8% and 160.1% (see Sec. 6)</p>
 <p>19 C/C++ programs, in which 11 benchmarks can be compiled with clang and with ASan and UBSan enabled</p>
 <p>Each SPEC benchmark is shipped with a training workload, a testing workload, and a reference workload.  Following the convention, we use the training workload to profile these programs and obtain the dynamic patterns of sanitizer checks.</p>
 <p>Memory Overhead; CPU overhead;</p>
-<h4 id="KTSAN"><a class="header-anchor" href="#KTSAN">¶</a>KTSAN</h4>
+<h4 id="KTSAN">KTSAN</h4>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan">https://github.com/google/ktsan</a></p>
 <p><a target="_blank" rel="noopener" href="https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf">https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf</a></p>
-<h4 id="KCSAN-Kernel-Concurrent-Sanitizer"><a class="header-anchor" href="#KCSAN-Kernel-Concurrent-Sanitizer">¶</a>KCSAN (Kernel Concurrent Sanitizer)</h4>
+<h4 id="KCSAN-Kernel-Concurrent-Sanitizer">KCSAN (Kernel Concurrent Sanitizer)</h4>
 <p>• KCSAN, developed by Google 2019, found more than 300 race bugs.</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan/wiki/KCSAN">https://github.com/google/ktsan/wiki/KCSAN</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html">https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html</a></p>
-<h4 id="SANRAZOR"><a class="header-anchor" href="#SANRAZOR">¶</a>SANRAZOR</h4>
+<h4 id="SANRAZOR">SANRAZOR</h4>
 <p><img src="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png" alt="image-20210102211000993"></p>
 <ul>
 <li>Target problem: reduce redundant sanitizer check, specially, ASAN and UBSAN</li>

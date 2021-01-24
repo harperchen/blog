@@ -24,12 +24,12 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="¶Abstract Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes">
+<meta name="description" content="Abstract Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[S&amp;P&#39;20] KRACE: Data Race Fuzzing for Kernel File Systems">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="¶Abstract Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes">
+<meta property="og:description" content="Abstract Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T04:42:43.000Z">
 <meta property="article:modified_time" content="2020-12-27T10:01:21.606Z">
@@ -302,11 +302,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="Abstract"><a class="header-anchor" href="#Abstract">¶</a>Abstract</h3>
+        <h3 id="Abstract">Abstract</h3>
 <p>Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes and often wreak havoc on the users, causing inconsistent states or data losses. Prior fuzzing practices on file systems have been effective in uncovering hundreds of bugs, but they mostly focus on the sequential aspect of file system execution and do not comprehensively explore the concurrency dimension and hence, forgo the opportunity to catch data races.</p>
 <a id="more"></a>
 <p>In this paper, we bring coverage-guided fuzzing to the concur- rency dimension with three new constructs: 1) a new coverage tracking metric, alias coverage, specially designed to capture the exploration progress in the concurrency dimension; 2) an evolution algorithm for generating, mutating, and merging multi- threaded syscall sequences as inputs for concurrency fuzzing; and 3) a comprehensive lockset and happens-before modeling for kernel synchronization primitives for precise data race detection. These components are integrated into KRACE, an end-to-end fuzzing framework that has discovered 23 data races in ext4, btrfs, and the VFS layer so far, and 9 are confirmed to be harmful.</p>
-<h3 id="Outline"><a class="header-anchor" href="#Outline">¶</a>Outline</h3>
+<h3 id="Outline">Outline</h3>
 <ul>
 <li>What is data race (memory access bugs)
 <ul>
