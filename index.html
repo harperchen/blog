@@ -270,7 +270,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Hybrid fuzzing, combining symbolic execution and fuzzing, is a promising approach for vulnerability discovery because each approach can complement the other. However, we observe that applying hybrid fuzzing to kernel testing is challenging because the following unique characteristics of the kernel make a naive adoption of hybrid fuzzing inefficient: 1) having indirect control transfers determined by system call arguments, 2) controlling and matching internal system state via system calls, and 3) inferring nested argument type for invoking system calls. Failure to handling such challenges will render both fuzzing and symbolic execution inefficient, and thereby, will result in an inefficient hybrid fuzzing. Although these challenges are essential to both fuzzing and symbolic execution, to the best of our knowledge, existing kernel testing approaches either naively use each technique separately without handling such challenges or imprecisely handle a part of challenges only by static analysis.</p>
+          <h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
+<p>Hybrid fuzzing, combining symbolic execution and fuzzing, is a promising approach for vulnerability discovery because each approach can complement the other. However, we observe that applying hybrid fuzzing to kernel testing is challenging because the following unique characteristics of the kernel make a naive adoption of hybrid fuzzing inefficient: 1) having indirect control transfers determined by system call arguments, 2) controlling and matching internal system state via system calls, and 3) inferring nested argument type for invoking system calls. Failure to handling such challenges will render both fuzzing and symbolic execution inefficient, and thereby, will result in an inefficient hybrid fuzzing. Although these challenges are essential to both fuzzing and symbolic execution, to the best of our knowledge, existing kernel testing approaches either naively use each technique separately without handling such challenges or imprecisely handle a part of challenges only by static analysis.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2021/01/24/NDSS-20-HFL-Hybrid-Fuzzing-on-the-Linux-Kernel/#more" rel="contents">
@@ -412,7 +413,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="1-ASAN"><a href="#1-ASAN" class="headerlink" title="1. ASAN"></a>1. ASAN</h3><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904111570157575">https://juejin.cn/post/6844904111570157575</a></p>
+          <h3 id="1-asan"><a class="markdownIt-Anchor" href="#1-asan"></a> 1. ASAN</h3>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904111570157575">https://juejin.cn/post/6844904111570157575</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf">https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf</a></p>
           <!--noindex-->
             <div class="post-button">
@@ -491,7 +493,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="1-查看LLVM-IR"><a href="#1-查看LLVM-IR" class="headerlink" title="1. 查看LLVM IR"></a>1. 查看LLVM IR</h4><p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
+          <h4 id="1-查看llvm-ir"><a class="markdownIt-Anchor" href="#1-查看llvm-ir"></a> 1. 查看LLVM IR</h4>
+<p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
 <ul>
 <li><code>llvm-as</code>：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的<strong>不是</strong>目标平台的机器码。</li>
 <li><code>llvm-dis</code>：<code>llvm-as</code>的逆过程，即反汇编。 不过这里的反汇编的对象是LLVM IR的二进制格式，而不是机器码。</li>
@@ -576,7 +579,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="1-Maple-IR前端"><a href="#1-Maple-IR前端" class="headerlink" title="1. Maple IR前端"></a>1. Maple IR前端</h4><p>Maple IR是方舟编译器的中间表示语言，设计原则是尽可能多的保留源文件的信息，其中信息包括声明部分（符号表）和代码部分。Maple IR是平台无关的，不依赖任何处理器。Maple IR也有配套的Maple VM，可以直接运行Maple IR。可以利用不同的前端将C/C++，Java等不同的语言转化成Maple IR，也可以扩展支持别的语言。</p>
+          <h4 id="1-maple-ir前端"><a class="markdownIt-Anchor" href="#1-maple-ir前端"></a> 1. Maple IR前端</h4>
+<p>Maple IR是方舟编译器的中间表示语言，设计原则是尽可能多的保留源文件的信息，其中信息包括声明部分（符号表）和代码部分。Maple IR是平台无关的，不依赖任何处理器。Maple IR也有配套的Maple VM，可以直接运行Maple IR。可以利用不同的前端将C/C++，Java等不同的语言转化成Maple IR，也可以扩展支持别的语言。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2021/01/08/OpenArk-Compiler/#more" rel="contents">
@@ -654,7 +658,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="TSAN"><a href="#TSAN" class="headerlink" title="TSAN"></a>TSAN</h3><p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers">https://github.com/google/sanitizers</a></p>
+          <h3 id="tsan"><a class="markdownIt-Anchor" href="#tsan"></a> TSAN</h3>
+<p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers">https://github.com/google/sanitizers</a></p>
 <p><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/ThreadSafetyAnalysis.html">https://clang.llvm.org/docs/ThreadSafetyAnalysis.html</a></p>
           <!--noindex-->
             <div class="post-button">
@@ -742,7 +747,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><p>File systems, a basic building block of an OS, are too big and too complex to be bug free. Nevertheless, file systems rely on regular stress-testing tools and formal checkers to find bugs, which are limited due to the ever-increasing complexity of both file systems and OSes. Thus, fuzzing, proven to be an effective and a practical approach, becomes a preferable choice, as it does not need much knowledge about a target. However, three main challenges exist in fuzzing file systems: mutating a large image blob that degrades overall performance, generating image-dependent file operations, and reproducing found bugs, which is difficult for existing OS fuzzers.</p>
+          <h4 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h4>
+<p>File systems, a basic building block of an OS, are too big and too complex to be bug free. Nevertheless, file systems rely on regular stress-testing tools and formal checkers to find bugs, which are limited due to the ever-increasing complexity of both file systems and OSes. Thus, fuzzing, proven to be an effective and a practical approach, becomes a preferable choice, as it does not need much knowledge about a target. However, three main challenges exist in fuzzing file systems: mutating a large image blob that degrades overall performance, generating image-dependent file operations, and reproducing found bugs, which is difficult for existing OS fuzzers.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/12/30/S-P-19-Fuzzing-File-Systems-via-Two-Dimensional-Input-Space-Exploration/#more" rel="contents">
@@ -829,7 +835,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><p>Mobile systems, such as smartphones and tablets, incorporate a diverse set of I/O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diverse and customized device drivers running in the operating system kernel of mobile systems. These device drivers contain various bugs and vulnerabilities, making them a top target for kernel exploits. Unfortunately, security analysts face important challenges in analyzing these device drivers in order to find, understand, and patch vulnerabilities. More specifically, using the state-of-the-art dynamic analysis techniques such as interactive debugging, fuzzing, and record-and-replay for analysis of these drivers is difficult, inefficient, or even completely inaccessible depending on the analysis.</p>
+          <h4 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h4>
+<p>Mobile systems, such as smartphones and tablets, incorporate a diverse set of I/O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diverse and customized device drivers running in the operating system kernel of mobile systems. These device drivers contain various bugs and vulnerabilities, making them a top target for kernel exploits. Unfortunately, security analysts face important challenges in analyzing these device drivers in order to find, understand, and patch vulnerabilities. More specifically, using the state-of-the-art dynamic analysis techniques such as interactive debugging, fuzzing, and record-and-replay for analysis of these drivers is difficult, inefficient, or even completely inaccessible depending on the analysis.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/#more" rel="contents">
@@ -1010,7 +1017,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>The ability to execute and analyze code makes many security tasks such as exploit development, reverse engineering, and vulnerability detection much easier. However, on embedded devices such as Android smartphones, executing code in-vivo, on the device, for analysis is limited by the need to acquire such devices, the speed of the device, and in some cases the need to flash custom code onto the devices. The other option is to execute the code ex-vivo, off the device, but this approach either requires porting or complex hardware emulation.</p>
+          <h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
+<p>The ability to execute and analyze code makes many security tasks such as exploit development, reverse engineering, and vulnerability detection much easier. However, on embedded devices such as Android smartphones, executing code in-vivo, on the device, for analysis is limited by the need to acquire such devices, the speed of the device, and in some cases the need to flash custom code onto the devices. The other option is to execute the code ex-vivo, off the device, but this approach either requires porting or complex hardware emulation.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/#more" rel="contents">

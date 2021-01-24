@@ -24,12 +24,12 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="TSANhttps:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
+<meta name="description" content="TSAN https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Thread Safety">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/30/Thread-Safety/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="TSANhttps:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
+<meta property="og:description" content="TSAN https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png">
@@ -162,7 +162,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TSAN"><span class="nav-text">TSAN</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Paper-Skelton"><span class="nav-text">1. Paper Skelton</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%88%9D%E6%AD%A5%E6%8E%A2%E7%B4%A2"><span class="nav-text">2. 初步探索</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-SPEC-CPU-2006"><span class="nav-text">2. SPEC CPU 2006</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KTSAN"><span class="nav-text">KTSAN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KCSAN-Kernel-Concurrent-Sanitizer"><span class="nav-text">KCSAN (Kernel Concurrent Sanitizer)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SANRAZOR"><span class="nav-text">SANRAZOR</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#tsan"><span class="nav-text"> TSAN</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-paper-skelton"><span class="nav-text"> 1. Paper Skelton</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%88%9D%E6%AD%A5%E6%8E%A2%E7%B4%A2"><span class="nav-text"> 2. 初步探索</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-spec-cpu-2006"><span class="nav-text"> 2. SPEC CPU 2006</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ktsan"><span class="nav-text"> KTSAN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kcsan-kernel-concurrent-sanitizer"><span class="nav-text"> KCSAN (Kernel Concurrent Sanitizer)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sanrazor"><span class="nav-text"> SANRAZOR</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -290,53 +290,64 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="TSAN"><a href="#TSAN" class="headerlink" title="TSAN"></a>TSAN</h3><p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers">https://github.com/google/sanitizers</a></p>
+        <h3 id="tsan"><a class="markdownIt-Anchor" href="#tsan"></a> TSAN</h3>
+<p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers">https://github.com/google/sanitizers</a></p>
 <p><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/ThreadSafetyAnalysis.html">https://clang.llvm.org/docs/ThreadSafetyAnalysis.html</a></p>
 <a id="more"></a>
-
-<h5 id="1-Paper-Skelton"><a href="#1-Paper-Skelton" class="headerlink" title="1. Paper Skelton"></a>1. Paper Skelton</h5><ul>
-<li><p>Data Race</p>
+<h5 id="1-paper-skelton"><a class="markdownIt-Anchor" href="#1-paper-skelton"></a> 1. Paper Skelton</h5>
+<ul>
+<li>
+<p>Data Race</p>
 <ul>
 <li>Concurrently access a shared memory location</li>
 <li>At least one of the access is write</li>
 </ul>
 </li>
-<li><p>Difficulties to detect</p>
+<li>
+<p>Difficulties to detect</p>
 <ul>
 <li>Happens only under very specific circumstances =&gt; Hard to reproduce</li>
 <li>Pass of all tests doesn’t guarantee the absence of data races in code</li>
 </ul>
 </li>
-<li><p>Existing work</p>
+<li>
+<p>Existing work</p>
 <ul>
 <li>Static: unlikely for complex and large code; too expensive to add annotation for static detector</li>
-<li>Dynamic: Happens-before, lockset or hybrid type<ul>
+<li>Dynamic: Happens-before, lockset or hybrid type
+<ul>
 <li>On-the-fly: process program execution in parallel with execution</li>
 <li>Postmortem: analyze the program execution offline</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>How it work</p>
+<li>
+<p>How it work</p>
 <ul>
-<li>Tsan Global state </li>
-<li>Per-ID state (Per-memory location state): dynamically updated during execution<ul>
+<li>Tsan Global state</li>
+<li>Per-ID state (Per-memory location state): dynamically updated during execution
+<ul>
 <li>Writer segment set: writes to ID</li>
 <li>Reader segment set: read from ID</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>Implementation</p>
+<li>
+<p>Implementation</p>
 <ul>
-<li>Valgind: provide execution trace at the same time<ul>
-<li>memory access events:<ul>
-<li>Read </li>
+<li>Valgind: provide execution trace at the same time
+<ul>
+<li>memory access events:
+<ul>
+<li>Read</li>
 <li>Write</li>
 </ul>
 </li>
-<li>synchronization events:<ul>
-<li>Locking: WRLock; RDLock; WRUnlock; RDUnlock </li>
+<li>synchronization events:
+<ul>
+<li>Locking: WRLock; RDLock; WRUnlock; RDUnlock</li>
 <li>Happens-before: Signal and Wait</li>
 </ul>
 </li>
@@ -344,9 +355,11 @@
 </li>
 </ul>
 </li>
-<li><p>Performance: Google unit test</p>
+<li>
+<p>Performance: Google unit test</p>
 <ul>
-<li>CPU consumption: on average 20-50 times slow down <ul>
+<li>CPU consumption: on average 20-50 times slow down
+<ul>
 <li>intercepting and analyzing memory access</li>
 </ul>
 </li>
@@ -354,26 +367,33 @@
 </ul>
 </li>
 </ul>
-<h5 id="2-初步探索"><a href="#2-初步探索" class="headerlink" title="2. 初步探索"></a>2. 初步探索</h5><p><code>ThreadSanitizer</code> (aka TSan) is a data race detector for C/C++. Data races are one of the most common and hardest to debug types of bugs in concurrent systems. A data race occurs when two threads access the same variable concurrently and at least one of the accesses is write. <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/C%2B%2B11">C++11</a> standard officially bans data races as <em>undefined behavior</em>.</p>
-<p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892"></p>
+<h5 id="2-初步探索"><a class="markdownIt-Anchor" href="#2-初步探索"></a> 2. 初步探索</h5>
+<p><code>ThreadSanitizer</code> (aka TSan) is a data race detector for C/C++. Data races are one of the most common and hardest to debug types of bugs in concurrent systems. A data race occurs when two threads access the same variable concurrently and at least one of the accesses is write. <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/C%2B%2B11">C++11</a> standard officially bans data races as <em>undefined behavior</em>.</p>
+<p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892" /></p>
 <p>The cost of race detection varies by program, but for a typical program, memory usage may increase by 5-10x and execution time by 2-20x</p>
-<h5 id="2-SPEC-CPU-2006"><a href="#2-SPEC-CPU-2006" class="headerlink" title="2. SPEC CPU 2006"></a>2. SPEC CPU 2006</h5><p>our study on SPEC CPU2006 benchmarks [25] shows that the geometric mean overheads in- duced by AddressSanitizer (ASan) [23] and UndefinedBehaviorSanitizer (UBSan) [6] are, respectively, 73.8% and 160.1% (see Sec. 6)</p>
+<h5 id="2-spec-cpu-2006"><a class="markdownIt-Anchor" href="#2-spec-cpu-2006"></a> 2. SPEC CPU 2006</h5>
+<p>our study on SPEC CPU2006 benchmarks [25] shows that the geometric mean overheads in- duced by AddressSanitizer (ASan) [23] and UndefinedBehaviorSanitizer (UBSan) [6] are, respectively, 73.8% and 160.1% (see Sec. 6)</p>
 <p>19 C/C++ programs, in which 11 benchmarks can be compiled with clang and with ASan and UBSan enabled</p>
 <p>Each SPEC benchmark is shipped with a training workload, a testing workload, and a reference workload.  Following the convention, we use the training workload to profile these programs and obtain the dynamic patterns of sanitizer checks.</p>
 <p>Memory Overhead; CPU overhead;</p>
-<h4 id="KTSAN"><a href="#KTSAN" class="headerlink" title="KTSAN"></a>KTSAN</h4><p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan">https://github.com/google/ktsan</a></p>
+<h4 id="ktsan"><a class="markdownIt-Anchor" href="#ktsan"></a> KTSAN</h4>
+<p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan">https://github.com/google/ktsan</a></p>
 <p><a target="_blank" rel="noopener" href="https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf">https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf</a></p>
-<h4 id="KCSAN-Kernel-Concurrent-Sanitizer"><a href="#KCSAN-Kernel-Concurrent-Sanitizer" class="headerlink" title="KCSAN (Kernel Concurrent Sanitizer)"></a>KCSAN (Kernel Concurrent Sanitizer)</h4><p>• KCSAN, developed by Google 2019, found more than 300 race bugs.</p>
+<h4 id="kcsan-kernel-concurrent-sanitizer"><a class="markdownIt-Anchor" href="#kcsan-kernel-concurrent-sanitizer"></a> KCSAN (Kernel Concurrent Sanitizer)</h4>
+<p>• KCSAN, developed by Google 2019, found more than 300 race bugs.</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan/wiki/KCSAN">https://github.com/google/ktsan/wiki/KCSAN</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html">https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html</a></p>
-<h4 id="SANRAZOR"><a href="#SANRAZOR" class="headerlink" title="SANRAZOR"></a>SANRAZOR</h4><p><img src="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png" alt="image-20210102211000993"></p>
+<h4 id="sanrazor"><a class="markdownIt-Anchor" href="#sanrazor"></a> SANRAZOR</h4>
+<p><img src="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png" alt="image-20210102211000993" /></p>
 <ul>
 <li>Target problem: reduce redundant sanitizer check, specially, ASAN and UBSAN</li>
-<li>What is sanitizer<ul>
+<li>What is sanitizer
+<ul>
 <li>Detect software bugs and vulnerabilities at runtime</li>
 <li>Insert additional checks into program during compilation</li>
 <li>Terminate program if it detects unsafe actions or states</li>
-<li>c checks whether property P holds with regard to v<ul>
+<li>c checks whether property P holds with regard to v
+<ul>
 <li>v can be critical program information such as code pointer</li>
 <li>P can be null pointer deference</li>
 <li>c can be either abort program execution or alert the user</li>
@@ -381,40 +401,49 @@
 </li>
 </ul>
 </li>
-<li>Problems of sanitizer<ul>
+<li>Problems of sanitizer
+<ul>
 <li>High runtime overhead: Asan 73.8% UBSAN 160.1%</li>
 </ul>
 </li>
-<li>Drawbacks of previous work<ul>
-<li>Some approaches remove array bounds checks by checking whether the value range of an array index falls within the array size<ul>
+<li>Drawbacks of previous work
+<ul>
+<li>Some approaches remove array bounds checks by checking whether the value range of an array index falls within the array size
+<ul>
 <li>Heavyweight static analysis</li>
 <li>Aims to flag useless checks with dedicated program analysis (not scalable)</li>
 </ul>
 </li>
-<li>ASAP elides sanitizer checks deemed the most costly based on a user-provided overhead budget<ul>
+<li>ASAP elides sanitizer checks deemed the most costly based on a user-provided overhead budget
+<ul>
 <li>Irrespective of importance of sanitizer</li>
 <li>Over-optimistically remove sanitizer</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Why this paper is accepted<ul>
+<li>Why this paper is accepted
+<ul>
 <li>Propose a general sanitizer reduction approach</li>
-<li>Usefulness<ul>
+<li>Usefulness
+<ul>
 <li>Maybe unsound but evaluation shows it maintains the sanitizer’s effectiveness in discovering defects</li>
-<li>Reduce runtime overhead </li>
+<li>Reduce runtime overhead</li>
 <li>Not depends on particular sanitizer implementation, thus can be used to reduce checks of different sanitizer</li>
 </ul>
 </li>
-<li>Novelty<ul>
+<li>Novelty
+<ul>
 <li>Sanitizer check redundancies: same program property could be repeatedly validated by multiple checks</li>
 <li>Introduce new approach to reduce the performance overhead incurred by sanitizer</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>ASAN: Address Sanitizer<ul>
-<li>Instrumentation module<ul>
+<li>ASAN: Address Sanitizer
+<ul>
+<li>Instrumentation module
+<ul>
 <li>Allocates shadow memory regions for each memory address</li>
 <li>Instrument each memory load and store operation</li>
 <li>When memory address a is used to access memory, a will be mapped to shadow memory address sa</li>
@@ -422,22 +451,26 @@
 <li>Directly using shadow memory address will be redirected to bad region, further leads to page protection violation</li>
 </ul>
 </li>
-<li>Runtime library<ul>
+<li>Runtime library
+<ul>
 <li>Hook malloc function to create poisoned readzones next to allocated memories to detect memory access error</li>
 <li>Hook free function to put the entire deallocated memory region into redzone</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>UBSAN: Undefined behaviors<ul>
-<li>detect a large set of common undefined behaviors<ul>
+<li>UBSAN: Undefined behaviors
+<ul>
+<li>detect a large set of common undefined behaviors
+<ul>
 <li>Out-of-bounds access</li>
 <li>Integer overflow</li>
 <li>divided by zero</li>
 <li>Invalid shift</li>
 </ul>
 </li>
-<li>For out-of-bounds array access<ul>
+<li>For out-of-bounds array access
+<ul>
 <li>Put extra if condition to compare array index with array size before loop</li>
 </ul>
 </li>
@@ -445,37 +478,45 @@
 </li>
 <li>Input: LLVM IR with sanitizer checks</li>
 <li>Output: LLVM IR with reduced sanitizer checks</li>
-<li>Motivation: Identify likely redundant sanitizer checks<ul>
+<li>Motivation: Identify likely redundant sanitizer checks
+<ul>
 <li>For example, repeatedly validate same array index</li>
 <li>If check c that detect bug B in program p is removed, B still can be detected</li>
 <li>Identify redundant sanitizer checks is difficult, approximation version “likely ~” is proposed</li>
 </ul>
 </li>
-<li>How it works<ul>
+<li>How it works
+<ul>
 <li>Identify sanitizer checks from user checks</li>
-<li>Dynamic: code coverage patterns<ul>
+<li>Dynamic: code coverage patterns
+<ul>
 <li>How many times each check is executed</li>
 <li>How many times the true and false branches are taken</li>
 </ul>
 </li>
-<li>Static: static input dependency patterns<ul>
+<li>Static: static input dependency patterns
+<ul>
 <li>Data-flow information from operands of each icmp statement</li>
 <li>Backward-dependency analysis to construct data dependency graph</li>
 </ul>
 </li>
-<li>Correlation analysis regarding dynamic and static patterns<ul>
+<li>Correlation analysis regarding dynamic and static patterns
+<ul>
 <li>Decide if one check is redundant to the other</li>
-<li>Dynamic: sanitizer check =?= user check<ul>
+<li>Dynamic: sanitizer check =?= user check
+<ul>
 <li>sb = ub and (stb = utb or stb = ufb)</li>
 <li>sb = utb and (sb = stb or sb = sfb)</li>
-<li>sb = ufb and (sb = stb or sb = sfb) </li>
+<li>sb = ufb and (sb = stb or sb = sfb)</li>
 </ul>
 </li>
-<li>Dynamic: sanitizer check =?= sanitizer check <ul>
+<li>Dynamic: sanitizer check =?= sanitizer check
+<ul>
 <li>sb_i = sb_j and (stb_i = stb_j or stb_i = sfb_j)</li>
 </ul>
 </li>
-<li>Static: convert constructed value dependency tree to sets and compare if they are identical<ul>
+<li>Static: convert constructed value dependency tree to sets and compare if they are identical
+<ul>
 <li>L0: all leaf nodes</li>
 <li>L1: all leaf nodes without constant except for constant operands used by icmp</li>
 <li>L2: all leaf nodes without all constants</li>
@@ -485,25 +526,30 @@
 </li>
 </ul>
 </li>
-<li>Evaluation<ul>
+<li>Evaluation
+<ul>
 <li>Benchmark: SPEC CPU2006 benchmarks</li>
-<li>Cost evaluation: Geometric mean runtime overhead reduction<ul>
+<li>Cost evaluation: Geometric mean runtime overhead reduction
+<ul>
 <li>ASan: 73.8% -&gt; 28.0%-62.0%</li>
 <li>UBSAN: 160.1% -&gt; 36.6%-124.4%</li>
 </ul>
 </li>
-<li>Reduction accuracy<ul>
+<li>Reduction accuracy
+<ul>
 <li>33 out of 38 known CVEs can be still discovered after removing redundant sanitizer</li>
 <li>more CVEs discovered than ASAP</li>
 </ul>
 </li>
-<li>Combine SANRAZOR with ASAP<ul>
+<li>Combine SANRAZOR with ASAP
+<ul>
 <li>runtime cost is reduced to 7.0%</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Reflection<ul>
+<li>Reflection
+<ul>
 <li>Only appliable to single threaded program</li>
 </ul>
 </li>
