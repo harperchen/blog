@@ -24,18 +24,22 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wei&#39;s Blog">
-<meta property="og:url" content="https://harperchen.github.io/blog/tags/Kernel/index.html">
+<meta name="description" content="AbstractHybrid fuzzing, combining symbolic execution and fuzzing, is a promising approach for vulnerability discovery because each approach can complement the other. However, we observe that applying">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[NDSS&#39;20] HFL: Hybrid Fuzzing on the Linux Kernel">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/01/24/NDSS-20-HFL-Hybrid-Fuzzing-on-the-Linux-Kernel/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
+<meta property="og:description" content="AbstractHybrid fuzzing, combining symbolic execution and fuzzing, is a promising approach for vulnerability discovery because each approach can complement the other. However, we observe that applying">
 <meta property="og:locale">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/1f605.png?v8">
+<meta property="article:published_time" content="2021-01-24T06:02:50.000Z">
+<meta property="article:modified_time" content="2021-01-24T08:21:40.992Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.githubassets.com/images/icons/emoji/unicode/1f605.png?v8">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/tags/Kernel/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/01/24/NDSS-20-HFL-Hybrid-Fuzzing-on-the-Linux-Kernel/">
 
 
 <script data-pjax class="page-configurations">
@@ -43,11 +47,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
-<title>Tag: Kernel | Wei's Blog</title>
+<title>[NDSS'20] HFL: Hybrid Fuzzing on the Linux Kernel | Wei's Blog</title>
   
 
 
@@ -146,7 +150,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -159,6 +163,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-text">Outline</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -224,230 +229,149 @@
 </noscript>
 
 
-    <div class="main-inner tag posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h2 class="collection-header">Kernel
-          <small>Tag</small>
-        </h2>
-      </div>
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/24/NDSS-20-HFL-Hybrid-Fuzzing-on-the-Linux-Kernel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [NDSS'20] HFL: Hybrid Fuzzing on the Linux Kernel
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+
+      <time title="Created: 2021-01-24 14:02:50 / Modified: 16:21:40" itemprop="dateCreated datePublished" datetime="2021-01-24T14:02:50+08:00">2021-01-24</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Hybrid fuzzing, combining symbolic execution and fuzzing, is a promising approach for vulnerability discovery because each approach can complement the other. However, we observe that applying hybrid fuzzing to kernel testing is challenging because the following unique characteristics of the kernel make a naive adoption of hybrid fuzzing inefficient: 1) having indirect control transfers determined by system call arguments, 2) controlling and matching internal system state via system calls, and 3) inferring nested argument type for invoking system calls. Failure to handling such challenges will render both fuzzing and symbolic execution inefficient, and thereby, will result in an inefficient hybrid fuzzing. Although these challenges are essential to both fuzzing and symbolic execution, to the best of our knowledge, existing kernel testing approaches either naively use each technique separately without handling such challenges or imprecisely handle a part of challenges only by static analysis.</p>
+<a id="more"></a>
+
+<p>To this end, this paper proposes HFL, which not only combines fuzzing with symbolic execution for hybrid fuzzing but also addresses kernel-specific fuzzing challenges via three distinct features: 1) converting indirect control transfers to direct transfers, 2) inferring system call sequence to build a consistent system state, and 3) identifying nested arguments types of system calls. As a result, HFL found 24 previously unknown vulnera- bilities in recent Linux kernels. Additionally, HFL achieves 15% and 26% higher code coverage than Moonshine and Syzkaller, respectively, and over kAFL/S2E/TriforceAFL, achieving even four times better coverage, using the same amount of resources (CPU, time, etc.). Regarding vulnerability discovery performance, HFL found 13 known vulnerabilities more than three times faster than Syzkaller.</p>
+<h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
+<li>Difficulties of performing hybrid fuzzing on kernel<ul>
+<li>Having indirect control transfers determined by system call arguments</li>
+<li>Controlling and matching internal system state via system calls</li>
+<li>Inferring nested argument type for invoking system calls</li>
+</ul>
+</li>
+<li>Drawbacks of previous work<ul>
+<li>either naively use fuzzing/symbolic execution separately by not handling such challenges<ul>
+<li>Razzer (Fuzzing)</li>
+<li>Digtool</li>
+<li>kAFL (Fuzzing)</li>
+<li>Periscope (Fuzzing)</li>
+<li>perf fuzzer</li>
+</ul>
+</li>
+<li>or  imprecisely handle a part of challenges only by static analysis <ul>
+<li>Difuze (infer the structure of arguments of ioctl)</li>
+<li>IMF (analyze trace of macOS)</li>
+<li>Moonshine (analyze trace of linux)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Why this paper is accepted<ul>
+<li>Apply Hybird fuzzing approach to test the linux kernel</li>
+<li>Achieve significant coverage improvement</li>
+<li>Uncover multiple previously unknown vulnerabilities</li>
+</ul>
+</li>
+<li>Inputs:</li>
+<li>How it works<ul>
+<li>converting indirect control transfers to direct transfers</li>
+<li>inferring system call sequence to build a consistent system state<ul>
+<li>performs static points-to analysis beforehand such that it can selectively symbolize data variables involved in system states</li>
+</ul>
+</li>
+<li>identifying nested arguments types of system calls<ul>
+<li>retrieves nested syscall arguments at runtime by exploiting the domain knowledge copy_from_user on how the kernel handles the arguments (same as EASIER <span class="github-emoji"><span>😅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f605.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Technique details<ul>
+<li>Fuzzing: Syzkaller</li>
+<li>Symbolic Execution: S2E</li>
+</ul>
+</li>
+<li>Evaluation<ul>
+<li>24 previously unknown vulnera- bilities in recent Linux kernels</li>
+<li>HFL achieves 15% and 26% higher code coverage than Moonshine and Syzkaller</li>
+<li>HFL found 13 known vulnerabilities more than three times faster than Syzkaller.</li>
+</ul>
+</li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-30T14:08:25+08:00"
-              content="2020-12-30">
-          12-30
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/30/S-P-19-Fuzzing-File-Systems-via-Two-Dimensional-Input-Space-Exploration/" itemprop="url">
-            <span itemprop="name">[S&P'19] Fuzzing File Systems via Two-Dimensional Input Space Exploration</span>
-          </a>
-      </div>
+    <footer class="post-footer">
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/01/13/Metamorphic-Testing/" rel="prev" title="Metamorphic Testing">
+                  <i class="fa fa-chevron-left"></i> Metamorphic Testing
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
   </article>
+</div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-29T13:13:22+08:00"
-              content="2020-12-29">
-          12-29
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/" itemprop="url">
-            <span itemprop="name">[USENIX'18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems</span>
-          </a>
-      </div>
 
-      
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-27T20:47:53+08:00"
-              content="2020-12-27">
-          12-27
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/27/Overview-of-Linux-kernel/" itemprop="url">
-            <span itemprop="name">Overview of Linux kernel</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-27T19:06:47+08:00"
-              content="2020-12-27">
-          12-27
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/" itemprop="url">
-            <span itemprop="name">[S&P'20] Ex-vivo dynamic analysis framework for Android device drivers</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-24T15:21:02+08:00"
-              content="2020-12-24">
-          12-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/24/Difficultise-to-find-race-bugs-and-how-existing-work-solove-them/" itemprop="url">
-            <span itemprop="name">Difficultise to find race bugs and how existing work solve them</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-24T12:42:43+08:00"
-              content="2020-12-24">
-          12-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/" itemprop="url">
-            <span itemprop="name">[S&P'20] KRACE: Data Race Fuzzing for Kernel File Systems</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-24T12:40:46+08:00"
-              content="2020-12-24">
-          12-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/24/S-P-19-RAZZER-Finding-Kernel-Race-Bugs-through-Fuzzing/" itemprop="url">
-            <span itemprop="name">[S&P'19] RAZZER: Finding Kernel Race Bugs through Fuzzing</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-21T18:54:50+08:00"
-              content="2020-12-21">
-          12-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/" itemprop="url">
-            <span itemprop="name">[CCS'17] DIFUZE: Interface Aware Fuzzing for Kernel Drivers </span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-20T21:31:34+08:00"
-              content="2020-12-20">
-          12-20
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/" itemprop="url">
-            <span itemprop="name">[USENIX ATC'17] CAB-FUZZ: Practical Concolic Testing Techniques for COTS Operating Systems </span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-18T15:02:13+08:00"
-              content="2020-12-18">
-          12-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/18/USENIX-17-kAFL-Hardware-Assisted-Feedback-Fuzzing-for-OS-Kernels/" itemprop="url">
-            <span itemprop="name">[USENIX'17] kAFL: Hardware-Assisted Feedback Fuzzing for OS Kernels</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-    </div>
-  </div>
-  
-  
-  
 
 
 <script>

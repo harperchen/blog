@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.1.1">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
@@ -15,15 +17,14 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-
-  <meta name="description" content="Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 http:&#x2F;&#x2F;seclab.cs.sunysb.edu&#x2F;sekar&#x2F;papers&#x2F;syscallclassif.htm  进程管理模块 内存管理模块 文件系统模块 设备控制模块 网络模块">
+<meta name="description" content="Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 http:&#x2F;&#x2F;seclab.cs.sunysb.edu&#x2F;sekar&#x2F;papers&#x2F;syscallclassif.htm  进程管理模块 内存管理模块 文件系统模块 设备控制模块 网络模块">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Overview of Linux kernel">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/27/Overview-of-Linux-kernel/index.html">
@@ -51,11 +52,8 @@
     lang   : 'zh-Hans'
   };
 </script>
-
-  <title>Overview of Linux kernel | Wei's Blog</title>
+<title>Overview of Linux kernel | Wei's Blog</title>
   
-
-
 
 
 
@@ -95,6 +93,8 @@
   </style>
 </noscript>
 
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -104,7 +104,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
@@ -130,26 +130,10 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
-
-  </li>
+        <li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+        <li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+        <li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
   </ul>
 </nav>
 
@@ -159,7 +143,7 @@
 </div>
         
   
-  <div class="toggle sidebar-toggle">
+  <div class="toggle sidebar-toggle" role="button">
     <span class="toggle-line"></span>
     <span class="toggle-line"></span>
     <span class="toggle-line"></span>
@@ -177,25 +161,26 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#File-Access"><span class="nav-text">File Access</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Setup"><span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#File-Attributes"><span class="nav-text">File Attributes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Read-Write"><span class="nav-text">Read&#x2F;Write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Directory-Operations"><span class="nav-text">Directory Operations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Miscellaneous"><span class="nav-text">Miscellaneous</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Network-Access"><span class="nav-text">Network Access</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Setup-1"><span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Send-Receive"><span class="nav-text">Send&#x2F;Receive</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Naming"><span class="nav-text">Naming</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Message-Queues"><span class="nav-text">Message Queues</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shared-Memory"><span class="nav-text">Shared Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#File-Descriptor-Operations"><span class="nav-text">File Descriptor Operations</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Setup-2"><span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Read-Write-1"><span class="nav-text">Read&#x2F;Write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#File-Descriptor-Control"><span class="nav-text">File Descriptor Control</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Time-Related"><span class="nav-text">Time-Related</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Process-Control"><span class="nav-text">Process Control</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-Creation-and-Termination"><span class="nav-text">Process Creation and Termination</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Signals"><span class="nav-text">Signals</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Synchronization"><span class="nav-text">Synchronization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#User-Group-Id"><span class="nav-text">User&#x2F;Group Id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Resource-Control"><span class="nav-text">Resource Control</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Virtual-Memory"><span class="nav-text">Virtual Memory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Miscellaneous-1"><span class="nav-text">Miscellaneous</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#System-Wide"><span class="nav-text">System-Wide</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Unprivileged-%E2%80%93-Filesystem"><span class="nav-text">Unprivileged – Filesystem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Unprivileged-%E2%80%93-Miscellaneous"><span class="nav-text">Unprivileged – Miscellaneous</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Privileged-%E2%80%93-Filesystem"><span class="nav-text">Privileged – Filesystem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-Scheduling"><span class="nav-text">Process Scheduling</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Privileged-%E2%80%93-Time"><span class="nav-text">Privileged – Time</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Loadable-Modules"><span class="nav-text">Loadable Modules</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Accounting-and-Quota"><span class="nav-text">Accounting and Quota</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Privileged-%E2%80%93-Miscellaneous"><span class="nav-text">Privileged – Miscellaneous</span></a></li></ol></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#File-Access"><span class="nav-text">File Access</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Setup"><span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#File-Attributes"><span class="nav-text">File Attributes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Read-Write"><span class="nav-text">Read&#x2F;Write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Directory-Operations"><span class="nav-text">Directory Operations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Miscellaneous"><span class="nav-text">Miscellaneous</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Network-Access"><span class="nav-text">Network Access</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Setup-1"><span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Send-Receive"><span class="nav-text">Send&#x2F;Receive</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Naming"><span class="nav-text">Naming</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Message-Queues"><span class="nav-text">Message Queues</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shared-Memory"><span class="nav-text">Shared Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#File-Descriptor-Operations"><span class="nav-text">File Descriptor Operations</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Setup-2"><span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Read-Write-1"><span class="nav-text">Read&#x2F;Write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#File-Descriptor-Control"><span class="nav-text">File Descriptor Control</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Time-Related"><span class="nav-text">Time-Related</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Process-Control"><span class="nav-text">Process Control</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-Creation-and-Termination"><span class="nav-text">Process Creation and Termination</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Signals"><span class="nav-text">Signals</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Synchronization"><span class="nav-text">Synchronization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#User-Group-Id"><span class="nav-text">User&#x2F;Group Id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Resource-Control"><span class="nav-text">Resource Control</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Virtual-Memory"><span class="nav-text">Virtual Memory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Miscellaneous-1"><span class="nav-text">Miscellaneous</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#System-Wide"><span class="nav-text">System-Wide</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Unprivileged-%E2%80%93-Filesystem"><span class="nav-text">Unprivileged – Filesystem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Unprivileged-%E2%80%93-Miscellaneous"><span class="nav-text">Unprivileged – Miscellaneous</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Privileged-%E2%80%93-Filesystem"><span class="nav-text">Privileged – Filesystem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-Scheduling"><span class="nav-text">Process Scheduling</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Privileged-%E2%80%93-Time"><span class="nav-text">Privileged – Time</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Loadable-Modules"><span class="nav-text">Loadable Modules</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Accounting-and-Quota"><span class="nav-text">Accounting and Quota</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Privileged-%E2%80%93-Miscellaneous"><span class="nav-text">Privileged – Miscellaneous</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Wei CHEN"
       src="/blog/images/avatar.png">
   <p class="site-author-name" itemprop="name">Wei CHEN</p>
   <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
 </div>
-<div class="site-state-wrap animated">
+<div class="site-state-wrap site-overview-item animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -213,7 +198,7 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author animated">
+  <div class="links-of-author site-overview-item animated">
       <span class="links-of-author-item">
         <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
@@ -224,8 +209,9 @@
 
 
 
-      </section>
-        <div class="back-to-top animated">
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button">
           <i class="fa fa-arrow-up"></i>
           <span>0%</span>
         </div>
@@ -245,14 +231,16 @@
 
 
     <div class="main-inner post posts-expand">
-      
 
-      
 
-    
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/27/Overview-of-Linux-kernel/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -264,9 +252,6 @@
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Wei's Blog">
     </span>
-
-    
-    
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           Overview of Linux kernel
@@ -326,7 +311,7 @@
 </ol>
 <a id="more"></a>
 
-<img src="https://i.loli.net/2020/12/27/mgGj6SIcwTAOnxk.png" alt="image-20201227204911819" style="zoom:60%;" />
+<img src="https://i.loli.net/2020/12/27/mgGj6SIcwTAOnxk.png" alt="image-20201227204911819" style="zoom:60%;">
 
 <h3 id="File-Access"><a href="#File-Access" class="headerlink" title="File Access"></a>File Access</h3><h4 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h4><p>WriteOpen (path) - open and possibly create a file for write = { open(path, flags) | (flags &amp; (O_WRONLY | O_APPEND | O_TRUNC)), open(path, flags, mode) | (flags &amp; (O_WRONLY | O_APPEND | O_TRUNC)), creat(path, mode); }</p>
 <p>ReadOpen(path) - open a file for read = { open(path,flags) | (flags &amp; O_RONLY), open(path,flags,mode) | (flags &amp; O_RONLY), }</p>
@@ -576,13 +561,13 @@
           </div>
     </footer>
   </article>
-  
-  
-  
+</div>
 
 
 
-      
+
+
+
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -605,18 +590,14 @@
     });
   }
 </script>
-
-    </div>
+</div>
   </main>
 
   <footer class="footer">
     <div class="footer-inner">
-      
 
-      
 
 <div class="copyright">
-  
   &copy; 
   <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
@@ -647,10 +628,9 @@
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
-<script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
-  <script>
+<script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script><script>
 var pjax = new Pjax({
   selectors: [
     'head title',
@@ -692,32 +672,13 @@ document.addEventListener('pjax:success', () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
   
   <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 
-
-
-
-
-
     <div class="pjax">
-  
 
-  
 
     </div>
 </body>
