@@ -24,12 +24,12 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="Abstract Discovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug">
+<meta name="description" content="AbstractDiscovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug i">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[USENIX ATC&#39;17] CAB-FUZZ: Practical Concolic Testing Techniques for COTS Operating Systems ">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Abstract Discovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug">
+<meta property="og:description" content="AbstractDiscovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug i">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-20T13:31:34.000Z">
 <meta property="article:modified_time" content="2021-01-24T06:31:02.373Z">
@@ -93,6 +93,8 @@
   </style>
 </noscript>
 
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -162,7 +164,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#abstract"><span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outline"><span class="nav-text"> Outline</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-text">Outline</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -299,70 +301,57 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
-<p>Discovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug information. Concolic testing, which generates all feasible inputs of a program by using symbolic execution and tests the program with the generated inputs, is one of the most promising approaches to solve this problem. Unfortunately, the state-of-the-art concolic testing tools do not scale well for testing COTS OSes because of state explosion. Indeed, they often fail to find a single bug (or crash) in COTS OSes despite their long execution time.</p>
+        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Discovering the security vulnerabilities of commercial off-the-shelf (COTS) operating systems (OSes) is chal- lenging because they not only are huge and complex, but also lack detailed debug information. Concolic testing, which generates all feasible inputs of a program by using symbolic execution and tests the program with the generated inputs, is one of the most promising approaches to solve this problem. Unfortunately, the state-of-the-art concolic testing tools do not scale well for testing COTS OSes because of state explosion. Indeed, they often fail to find a single bug (or crash) in COTS OSes despite their long execution time.</p>
 <a id="more"></a>
+
 <p>In this paper, we propose CAB-FUZZ (Context-Aware and Boundary-focused), a practical concolic testing tool to quickly explore interesting paths that are highly likely triggering real bugs without debug information. First, CAB-FUZZ prioritizes the boundary states of arrays and loops, inspired by the fact that many vulnerabilities originate from a lack of proper boundary checks. Second, CAB-FUZZ exploits real programs interacting with COTS OSes to construct proper contexts to explore deep and complex kernel states without debug information. We applied CAB-FUZZ to Windows 7 and Windows Server 2008 and found 21 undisclosed unique crashes, includ- ing two local privilege escalation vulnerabilities (CVE- 2015-6098 and CVE-2016-0040) and one information disclosure vulnerability in a cryptography driver (CVE- 2016-7219). CAB-FUZZ found vulnerabilities that are non-trivial to discover; five vulnerabilities have existed for 14 years, and we could trigger them even in the initial version of Windows XP (August 2001).</p>
-<h3 id="outline"><a class="markdownIt-Anchor" href="#outline"></a> Outline</h3>
-<ul>
-<li>Difficulties of testing COTS OSes using concolic execution
-<ul>
+<h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
+<li>Difficulties of testing COTS OSes using concolic execution<ul>
 <li>COTS OS is huge and complex, lack debug information</li>
 <li>Cannot explore program states  with pre-context</li>
 <li>State explosion, fundamental scalability limitation of symbolic execution</li>
 <li>Always closed-source, lack detailed documentation and test suites</li>
 </ul>
 </li>
-<li>Drawbacks of previous work
-<ul>
+<li>Drawbacks of previous work<ul>
 <li>No work to compare</li>
 </ul>
 </li>
-<li>Why this paper is accepted
-<ul>
-<li>The first approach detects vulnerabilities in COTS OSes based on  concolic testing</li>
-<li>Usefulness
-<ul>
-<li>Practical system
-<ul>
+<li>Why this paper is accepted<ul>
+<li>The first approach detects vulnerabilities in COTS OSes based on  concolic testing </li>
+<li>Usefulness<ul>
+<li>Practical system<ul>
 <li>overcomes scalability limitation of concolic testing</li>
 <li>overcome the problem of lacking  execution contexts</li>
 </ul>
 </li>
-<li>Discover 21 unique crashes on drivers in Win 7 and Win Server 2008</li>
+<li>Discover 21 unique crashes on drivers in Win 7 and Win Server 2008 </li>
 <li>Portable, OS independent, work for closed-source OS</li>
 </ul>
 </li>
-<li>Novelty
-<ul>
+<li>Novelty<ul>
 <li>Show the possibility of performing concolic testing on COTS OSes with acceptable scalability by sacrificing completeness</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>How it works
-<ul>
+<li>How it works<ul>
 <li>Inputs: disk image of COTS OS, e.g., Windows</li>
-<li>Synthetic symbolization
-<ul>
+<li>Synthetic symbolization<ul>
 <li>Synthesize program to symbolize from scratch</li>
 <li>Use previously built user-space program</li>
-<li>Prioritize boundary states which likely have vulnerabilities
-<ul>
-<li>Avoid state explosion (Scalability)
-<ul>
+<li>Prioritize boundary states which likely have vulnerabilities <ul>
+<li>Avoid state explosion (Scalability)<ul>
 <li>Bugs mainly originate from a lack of  boundary checks</li>
 </ul>
 </li>
-<li>Array-boundary prioritization using KLEE’s getRange method
-<ul>
+<li>Array-boundary prioritization using KLEE’s getRange method<ul>
 <li>Lowest memory address</li>
 <li>Highest memory address</li>
 <li>Arbitrary memory address between highest and lowest</li>
 </ul>
 </li>
-<li>Loop-boundary prioritization using repeatedly fork and kill
-<ul>
+<li>Loop-boundary prioritization using repeatedly fork and kill<ul>
 <li>No loop execution</li>
 <li>A single loop execution</li>
 <li>largest number of loop executions</li>
@@ -372,11 +361,9 @@
 </li>
 </ul>
 </li>
-<li>On-the-fly symbolization
-<ul>
+<li>On-the-fly symbolization<ul>
 <li>16 existing programs targeting 15 different drivers</li>
-<li>Exploits real programs as concolic execution template
-<ul>
+<li>Exploits real programs as concolic execution template<ul>
 <li>No need prior knowledge such as annotation</li>
 <li>Construct proper contexts to explore deep kernel states</li>
 <li>Symbolize part of the inputs of a target function</li>
@@ -387,11 +374,9 @@
 </li>
 </ul>
 </li>
-<li>Evaluation
-<ul>
+<li>Evaluation<ul>
 <li>Apply CAB-Fuzz to Win7 and Win Server 2008</li>
-<li>Synthetic symbolization: Mainly for the effectiveness of boundary prioritization
-<ul>
+<li>Synthetic symbolization: Mainly for the effectiveness of boundary prioritization<ul>
 <li>Apply boundary prioritization technique to known vulnerability</li>
 <li>Discover new crashes in Windows and manually check the crashes</li>
 </ul>

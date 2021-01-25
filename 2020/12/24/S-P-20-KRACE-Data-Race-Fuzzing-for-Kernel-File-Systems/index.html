@@ -24,12 +24,12 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="Abstract Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes">
+<meta name="description" content="AbstractData races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes a">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[S&amp;P&#39;20] KRACE: Data Race Fuzzing for Kernel File Systems">
 <meta property="og:url" content="https://harperchen.github.io/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Abstract Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes">
+<meta property="og:description" content="AbstractData races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes a">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-12-24T04:42:43.000Z">
 <meta property="article:modified_time" content="2020-12-27T10:01:21.606Z">
@@ -94,6 +94,8 @@
   </style>
 </noscript>
 
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -163,7 +165,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#abstract"><span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outline"><span class="nav-text"> Outline</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-text">Outline</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -300,30 +302,24 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
-<p>Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes and often wreak havoc on the users, causing inconsistent states or data losses. Prior fuzzing practices on file systems have been effective in uncovering hundreds of bugs, but they mostly focus on the sequential aspect of file system execution and do not comprehensively explore the concurrency dimension and hence, forgo the opportunity to catch data races.</p>
+        <h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Data races occur when two threads fail to use proper synchronization when accessing shared data. In kernel file systems, which are highly concurrent by design, data races are common mistakes and often wreak havoc on the users, causing inconsistent states or data losses. Prior fuzzing practices on file systems have been effective in uncovering hundreds of bugs, but they mostly focus on the sequential aspect of file system execution and do not comprehensively explore the concurrency dimension and hence, forgo the opportunity to catch data races.</p>
 <a id="more"></a>
 <p>In this paper, we bring coverage-guided fuzzing to the concur- rency dimension with three new constructs: 1) a new coverage tracking metric, alias coverage, specially designed to capture the exploration progress in the concurrency dimension; 2) an evolution algorithm for generating, mutating, and merging multi- threaded syscall sequences as inputs for concurrency fuzzing; and 3) a comprehensive lockset and happens-before modeling for kernel synchronization primitives for precise data race detection. These components are integrated into KRACE, an end-to-end fuzzing framework that has discovered 23 data races in ext4, btrfs, and the VFS layer so far, and 9 are confirmed to be harmful.</p>
-<h3 id="outline"><a class="markdownIt-Anchor" href="#outline"></a> Outline</h3>
-<ul>
-<li>What is data race (memory access bugs)
-<ul>
-<li>Two threads fail to use proper synchronization
-<ul>
+<h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><ul>
+<li>What is data race (memory access bugs)<ul>
+<li>Two threads fail to use proper synchronization <ul>
 <li>Two threads access same memory address</li>
 <li>At least one thread is a memory write</li>
-<li>They are issued from different contexts</li>
+<li>They are issued from different contexts </li>
 </ul>
 </li>
 <li>Cause inconsistent states or data losses</li>
 </ul>
 </li>
-<li>Drawbacks of previous work
-<ul>
+<li>Drawbacks of previous work<ul>
 <li>Stress testing relies on handwritten test suites that are not sufficient to cover enormous states</li>
-<li>Existing file system fuzzing focus on sequential view of program execution
-<ul>
-<li>Effective in single-threaded syscall sequences generation/mutation</li>
+<li>Existing file system fuzzing focus on sequential view of program execution<ul>
+<li>Effective in single-threaded syscall sequences generation/mutation </li>
 <li>Not suitable for multi-threaded scenarios</li>
 <li>No existing work to synthesize multi-threaded sequences to maximize thread interleaving coverage</li>
 <li>Different thread interleaving can result in same branch coverage</li>
@@ -331,47 +327,38 @@
 </li>
 </ul>
 </li>
-<li>Difficulties of data race fuzzing
-<ul>
+<li>Difficulties of data race fuzzing<ul>
 <li>Hard to detect and diagnose due to non-determinism in thread interleaving</li>
 <li>Only a small fraction of interleavings may trigger a data race</li>
 <li>Thread schedule consists of both user threads and kernel threads</li>
 <li>Data race often leads to silent failures, do not raise visible signals in short term</li>
 </ul>
 </li>
-<li>Why this paper is accepted
-<ul>
-<li>Usefulness
-<ul>
+<li>Why this paper is accepted<ul>
+<li>Usefulness<ul>
 <li>Bring coverage-guided fuzzing to concurrency dimension</li>
 </ul>
 </li>
-<li>Novelty
-<ul>
-<li>A novel coverage tracking metric–alias instruction pair coverage</li>
-<li>An evolution algorithm for generate/mutate/merge-ing multi-threaded syscall sequences for concurrency fuzzing</li>
-<li>A comprehensive lockset and happens-before modeling for precise data race detection</li>
+<li>Novelty<ul>
+<li> A novel coverage tracking metric–alias instruction pair coverage</li>
+<li> An evolution algorithm for generate/mutate/merge-ing multi-threaded syscall sequences for concurrency fuzzing</li>
+<li> A comprehensive lockset and happens-before modeling for precise data race detection </li>
 </ul>
 </li>
 </ul>
 </li>
-<li>How it works
-<ul>
-<li>Coverage Tracking (LLVM Instrumentation Pass)
-<ul>
+<li>How it works<ul>
+<li>Coverage Tracking (LLVM Instrumentation Pass)<ul>
 <li>Branch coverage for sequential dimension</li>
-<li>Alias coverage for concurrency dimension
-<ul>
+<li>Alias coverage for concurrency dimension<ul>
 <li>How many pairs of memory access instructions that may interleave against with each other have been covered</li>
 <li>Tracking online, a new metrics to decide whether current fuzzing seed should be further mutated</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Input generation  (Python)
-<ul>
-<li>Evolve and merge multi-threaded seeds (3 threads in total) to induce new interleaving
-<ul>
+<li>Input generation  (Python)<ul>
+<li>Evolve and merge multi-threaded seeds (3 threads in total) to induce new interleaving<ul>
 <li>syscall specification, inter-dependencies among syscalls</li>
 <li>mutation/addition/deletion/shuffling/<font color="#dd0000">merge</font> two seeds/primitive collection</li>
 </ul>
@@ -379,15 +366,11 @@
 <li>Thread delay schedules: delays each memory access a random number of time</li>
 </ul>
 </li>
-<li>Bug manifestation
-<ul>
-<li>Detect data race given an execution trace by hooking memory access (Python)
-<ul>
-<li>How to confirm whether a data race is a true race
-<ul>
+<li>Bug manifestation<ul>
+<li>Detect data race given an execution trace by hooking memory access (Python)<ul>
+<li>How to confirm whether a data race is a true race<ul>
 <li>lockset: no locks are held by both contexts</li>
-<li>happens-before: no ordering between two contexts  is guaranteed
-<ul>
+<li>happens-before: no ordering between two contexts  is guaranteed<ul>
 <li>fork-style relations</li>
 <li>join-style relationship</li>
 <li>publisher-subscriber model</li>
@@ -397,8 +380,7 @@
 </li>
 </ul>
 </li>
-<li>A comprehensive framework of synchronization mechanisms
-<ul>
+<li>A comprehensive framework of synchronization mechanisms<ul>
 <li>locking primitives modeling for lockset analysis</li>
 <li>thread ordering primitive annotations for happens-before analysis</li>
 </ul>
@@ -408,18 +390,14 @@
 <li>Clean kernel state after each execution for trackability and debuggability</li>
 </ul>
 </li>
-<li>Evaluation
-<ul>
-<li>23 data races in ext4 and btrfs
-<ul>
+<li>Evaluation<ul>
+<li>23 data races in ext4 and btrfs<ul>
 <li>9 harmful and 11 benign (2 months)</li>
 </ul>
 </li>
 <li>Throughput: at least 7 seconds for each execution</li>
-<li>Fuzzing Characteristics
-<ul>
-<li>Branch coverage and alias coverage grow in synchronization (感觉怎么突破coverage的瓶颈是个合理的方向)
-<ul>
+<li>Fuzzing Characteristics<ul>
+<li>Branch coverage and alias coverage grow in synchronization (感觉怎么突破coverage的瓶颈是个合理的方向)<ul>
 <li>Branch coverage increase =&gt; Alias coverage increase</li>
 <li>Branch coverage saturates =&gt; Alias coverage still increase</li>
 </ul>
@@ -428,24 +406,21 @@
 <li>Data race detection overhead</li>
 </ul>
 </li>
-<li>Component Evaluation
-<ul>
+<li>Component Evaluation<ul>
 <li>Alias coverage increase =&gt; Branch Coverage increase: codes handling contention</li>
 <li>Delay injection effectiveness</li>
 <li>Seed merging effectiveness</li>
 <li>Components in data race checker</li>
 </ul>
 </li>
-<li>Compare with other fuzzers
-<ul>
+<li>Compare with other fuzzers<ul>
 <li>Compare with Syzkaller with respect to coverage (merging operation is effective)</li>
 <li>Compare with Razzer with respect to data race bugs</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Reflection
-<ul>
+<li>Reflection<ul>
 <li>Fuzzing distributed file systems that involve not only thread interleavings but also network event ordering, which requires completely new coverage metrics to capture.</li>
 </ul>
 </li>

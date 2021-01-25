@@ -113,6 +113,8 @@
   </style>
 </noscript>
 
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -321,99 +323,109 @@
     <div class="post-body" itemprop="articleBody">
         <p><strong>Prerequisites:</strong></p>
 <ol>
-<li>
-<p>Download and install Arm Development Studio for either <a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Linux?lang=en">Linux</a> or <a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Windows?lang=en">Windows</a>. Obtain a 30-day evaluation license so that the project can be built successfully.</p>
+<li><p>Download and install Arm Development Studio for either <a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Linux?lang=en">Linux</a> or <a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Windows?lang=en">Windows</a>. Obtain a 30-day evaluation license so that the project can be built successfully.</p>
 </li>
-<li>
-<p>Download and install Armv8-A Base RevC AEM FVP (Fixed Virtual Platform) that supports Memory Tagging Extension for <a target="_blank" rel="noopener" href="https://silver.arm.com/download/download.tm?pv=4799001&amp;p=3042387">Linux</a> (No windows version online, need to be compiled by ourselves).</p>
+<li><p>Download and install Armv8-A Base RevC AEM FVP (Fixed Virtual Platform) that supports Memory Tagging Extension for <a target="_blank" rel="noopener" href="https://silver.arm.com/download/download.tm?pv=4799001&amp;p=3042387">Linux</a> (No windows version online, need to be compiled by ourselves).</p>
 </li>
 </ol>
 <p><strong>Procedure</strong></p>
 <ol>
 <li>Create a new C project, select: File &gt; New &gt; Project.</li>
 </ol>
-<img src="https://i.loli.net/2021/01/08/UFo7AisZ5atbpTN.png" style="zoom:30%;" />
+<img src="https://i.loli.net/2021/01/08/UFo7AisZ5atbpTN.png" style="zoom:30%;">
+
 <ol start="2">
 <li>Expand C/C++ menu, and select C project, then click Next.</li>
 <li>Give the project a name, select project type as Executable &gt; Empty Project, then select Arm Compiler 6 Toolchains.</li>
-<li>Add asm and src directory, create main.c file under src directory. The asm directory is organized as follows.</li>
+<li>Add asm and src directory, create main.c file under src directory. The asm directory is organized as follows. </li>
 </ol>
-<img src="https://i.loli.net/2021/01/08/5ZnDHcfzp7g2Ete.png" style="zoom:30%;" />
+<img src="https://i.loli.net/2021/01/08/5ZnDHcfzp7g2Ete.png" style="zoom:30%;">
+
 <p>The FVP is a bare metal so startup.S is the startup code used to setup cache, MMU, stak and enable hardware floating point, etc. Without the startup code, even the simplest printf function cannot be executed. The startup code setups environment, then jumps to C library init code __main to execute the real function. We need to specify the entry point as start64 to run startup code at first.</p>
-<img src="https://i.loli.net/2021/01/08/1ZYN6OHr72yK5mD.png" style="zoom:35%;" />
+<img src="https://i.loli.net/2021/01/08/1ZYN6OHr72yK5mD.png" style="zoom:35%;">
+
 <ol start="5">
-<li>
-<p><strong>Right-click the project and select Properties to configure the project for further build.</strong></p>
-<p>a. In the Tool Settings tab, select All Tools Settings &gt; Target to specify the Target CPU. Here I select Cortex-A76 AArch64 (The target CPU may be not 100% consistent to the real FVP, but it should be OK.)</p>
- <img src="https://i.loli.net/2021/01/09/ienoAZRtrlGN81q.png" style="zoom:30%;" />
-<p>b. Select Arm C Compiler 6 &gt; Target, enable tool specific settings. We need to add <strong>+memtag</strong> feature in -mcpu option to provide hardware support for memory tagging, for more detailed information, please refer to <a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_chr1392632801932.htm">armclang_ref</a>.</p>
- <img src="https://i.loli.net/2021/01/08/GSuYmN56f7HU4Tc.png" style="zoom:30%;" />
-<p>c. Select Arm C Compiler 6 &gt; Miscellaneous, add flag <strong>-fsanitize=memtag</strong> so that the compiler will use memory tagging instructions (IRG, ADDG, SUBG…) during code generation to protect the memory allocations on the stack. For more detailed information, please refer to <a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_lnk1549304794624.htm">armclang_ref</a>.</p>
- <img src="https://i.loli.net/2021/01/09/cQ1n6FT2BWSkrNu.png" style="zoom:30%;" />
-<p>d. Select Arm Linker 6 &gt; Image Layout, specify the <strong>entry point as start64</strong>, then browse the scatter file.</p>
- <img src="https://i.loli.net/2021/01/09/9g2iLuIcX5F1Mw3.png" style="zoom:30%;" />
-<p>e. Scatter file set up the RO base address (run the code from memory 0x80000000), etc.</p>
- <img src="https://i.loli.net/2021/01/09/9tuxMpL24WYkTbD.png" style="zoom:30%;" />
-<p>f. Select Arm Linker 6 &gt; Miscellaneous, add flag <strong>–library_security=v8.5a</strong>. This flag lets the armlink link the code with the library that compiled with memory tagging extension to provide full memory tagging stack protection. For more detailed information, please refer to <a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_snk1537815692994.htm">armclang_ref</a>.</p>
- <img src="https://i.loli.net/2021/01/09/yOPKiXlDL2MdwWv.png" style="zoom:30%;" />
-<p>v8.5 not only provides memory tagging protection of the stack used by the library code, but also branch protection using Branch Target Identification (BTI) and Pointer Authentication Code (PAC).<br />
-To enable heap protection with memory tagging (malloc, realloc, free…), we need to add code __asm(&quot;.global __use_memtag_heap\n\t&quot;) in C file.</p>
+<li><p><strong>Right-click the project and select Properties to configure the project for further build.</strong></p>
+<p> a. In the Tool Settings tab, select All Tools Settings &gt; Target to specify the Target CPU. Here I select Cortex-A76 AArch64 (The target CPU may be not 100% consistent to the real FVP, but it should be OK.)</p>
+ <img src="https://i.loli.net/2021/01/09/ienoAZRtrlGN81q.png" style="zoom:30%;">
+
+<p> b. Select Arm C Compiler 6 &gt; Target, enable tool specific settings. We need to add <strong>+memtag</strong> feature in -mcpu option to provide hardware support for memory tagging, for more detailed information, please refer to <a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_chr1392632801932.htm">armclang_ref</a>.</p>
+ <img src="https://i.loli.net/2021/01/08/GSuYmN56f7HU4Tc.png" style="zoom:30%;">
+
+<p> c. Select Arm C Compiler 6 &gt; Miscellaneous, add flag <strong>-fsanitize=memtag</strong> so that the compiler will use memory tagging instructions (IRG, ADDG, SUBG…) during code generation to protect the memory allocations on the stack. For more detailed information, please refer to <a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_lnk1549304794624.htm">armclang_ref</a>.</p>
+ <img src="https://i.loli.net/2021/01/09/cQ1n6FT2BWSkrNu.png" style="zoom:30%;">
+
+<p> d. Select Arm Linker 6 &gt; Image Layout, specify the <strong>entry point as start64</strong>, then browse the scatter file.</p>
+ <img src="https://i.loli.net/2021/01/09/9g2iLuIcX5F1Mw3.png" style="zoom:30%;">
+
+<p> e. Scatter file set up the RO base address (run the code from memory 0x80000000), etc.</p>
+ <img src="https://i.loli.net/2021/01/09/9tuxMpL24WYkTbD.png" style="zoom:30%;">
+
+<p> f. Select Arm Linker 6 &gt; Miscellaneous, add flag <strong>–library_security=v8.5a</strong>. This flag lets the armlink link the code with the library that compiled with memory tagging extension to provide full memory tagging stack protection. For more detailed information, please refer to <a target="_blank" rel="noopener" href="https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_snk1537815692994.htm">armclang_ref</a>.</p>
+ <img src="https://i.loli.net/2021/01/09/yOPKiXlDL2MdwWv.png" style="zoom:30%;">
+
+<p> v8.5 not only provides memory tagging protection of the stack used by the library code, but also branch protection using Branch Target Identification (BTI) and Pointer Authentication Code (PAC).<br> To enable heap protection with memory tagging (malloc, realloc, free..), we need to add code __asm(“.global __use_memtag_heap\n\t”) in C file.</p>
 </li>
-<li>
-<p>Build the project, the Debug directory will be generated. When the project has built, in the Project Explorer view, under Debug, locate the HelloWorld.axf file. The .axf file contains the object code and debug symbols that enable Arm Debugger to perform source-level debugging.</p>
+<li><p>Build the project, the Debug directory will be generated. When the project has built, in the Project Explorer view, under Debug, locate the HelloWorld.axf file. The .axf file contains the object code and debug symbols that enable Arm Debugger to perform source-level debugging.</p>
 </li>
-<li>
-<p><strong>Configure a debugging session to launch the FVP and connect to it.</strong></p>
+<li><p><strong>Configure a debugging session to launch the FVP and connect to it.</strong></p>
 </li>
 </ol>
 <ul>
 <li>Create a use_model_semihostting.ds script to disable semihosting by Arm Debugger.</li>
 </ul>
-<img src="https://i.loli.net/2021/01/08/cx59vKWUawRXgmq.png" style="zoom:30%;" />
+<img src="https://i.loli.net/2021/01/08/cx59vKWUawRXgmq.png" style="zoom:30%;">
+
 <ul>
 <li>Select File &gt; New &gt; Model Connection, give the connection a name and associate debug connection with an existing project.</li>
 </ul>
-<img src="https://i.loli.net/2021/01/08/xuUp61mEygM8wIZ.png" style="zoom:30%;" />
+<img src="https://i.loli.net/2021/01/08/xuUp61mEygM8wIZ.png" style="zoom:30%;">
+
 <ul>
 <li>The FVP Armv8-A Base RevC AEM is not involved by default so we need to add it. Select the model from file system, the path is where you install Armv8-A Base RevC AEM.</li>
 </ul>
-<img src="https://i.loli.net/2021/01/08/qM589KRpbtOY471.png" style="zoom:30%;" />
+<img src="https://i.loli.net/2021/01/08/qM589KRpbtOY471.png" style="zoom:30%;">
+
 <ul>
-<li>Once added, we need to edit the debug configuration. In the Connection tab, select Bare Metal Debug/ARMAEMv8-A_MPx4 SMP Cluster 0.</li>
+<li>Once added, we need to edit the debug configuration. In the Connection tab, select Bare Metal Debug/ARMAEMv8-A_MPx4 SMP Cluster 0. </li>
 </ul>
-<img src="https://i.loli.net/2021/01/08/4uRYwUbH9WLcXiE.png" style="zoom:30%;" />
+<img src="https://i.loli.net/2021/01/08/4uRYwUbH9WLcXiE.png" style="zoom:30%;">
+
 <p>Add the model parameters as follows to enable MTE support.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cluster0.has_arm_v8-5=1 implements the Armv8.5 extension.</span></span><br><span class="line"><span class="comment"># cluster0.memory_tagging_support_level=2 specifies the memory tagging extension support level, 2 means supported at EL0 only.</span></span><br><span class="line"><span class="comment"># bp.dram_metadata.is_enabled=1 lets the memory system to support storing MTE tags.</span></span><br><span class="line"><span class="comment"># bp.secure_memory=false disables the TZC-400 TrustZone memory controller included in the Base_A53x1 FVP. By default, the memory controller refuses all accesses to DRAM memory.</span></span><br><span class="line">\-C cluster0.has_arm_v8-5=1 -C cluster0.memory_tagging_support_level=2 -C bp.dram_metadata.is_enabled=1 -C bp.secure_memory=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<img src="https://i.loli.net/2021/01/08/EBrboUiMlPXp1dC.png" style="zoom:30%;" />
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cluster0.has_arm_v8-5=1 implements the Armv8.5 extension.</span></span><br><span class="line"><span class="comment"># cluster0.memory_tagging_support_level=2 specifies the memory tagging extension support level, 2 means supported at EL0 only.</span></span><br><span class="line"><span class="comment"># bp.dram_metadata.is_enabled=1 lets the memory system to support storing MTE tags.</span></span><br><span class="line"><span class="comment"># bp.secure_memory=false disables the TZC-400 TrustZone memory controller included in the Base_A53x1 FVP. By default, the memory controller refuses all accesses to DRAM memory.</span></span><br><span class="line">\-C cluster0.has_arm_v8-5=1 -C cluster0.memory_tagging_support_level=2 -C bp.dram_metadata.is_enabled=1 -C bp.secure_memory=<span class="literal">false</span></span><br></pre></td></tr></tbody></table></figure>
+
+<img src="https://i.loli.net/2021/01/08/EBrboUiMlPXp1dC.png" style="zoom:30%;">
+
 <ul>
 <li>In the Files tab, select .axf file under Debug directory from workspace.</li>
 </ul>
-<img src="https://i.loli.net/2021/01/08/t8Q9qLOFH4exJjS.png" style="zoom:30%;" />
+<img src="https://i.loli.net/2021/01/08/t8Q9qLOFH4exJjS.png" style="zoom:30%;">
+
 <ul>
 <li>In the Debuger tab, select Debug from entry point start64, enable run target initialization debugger script and select .ds script from workspace.</li>
 </ul>
-<img src="https://i.loli.net/2021/01/08/zYnjXhFoC2BkfyZ.png" style="zoom:30%;" />
+<img src="https://i.loli.net/2021/01/08/zYnjXhFoC2BkfyZ.png" style="zoom:30%;">
+
 <ol start="8">
 <li>Click Debug to load the application on the target, and load the debug information into the debugger. The application stops at the entry point start64.</li>
 </ol>
-<img src="https://i.loli.net/2021/01/08/l7Odx8M9kNcTIBY.png" style="zoom:30%;" />
+<img src="https://i.loli.net/2021/01/08/l7Odx8M9kNcTIBY.png" style="zoom:30%;">
+
 <ol start="9">
 <li>In the disassembly view, we search main to get the assembly instructions of main. The presence of IRG, ADDG shows the code is generated using memory tagging instructions. We set a breakpoint at ADDG instruction, let the program stop at this breakpoint.</li>
 </ol>
-<p><img src="https://i.loli.net/2021/01/09/6YwZzt5bysAkiTe.png" style="zoom:30%;" /><img src="https://i.loli.net/2021/01/08/Pjwoi7bypYxdD5r.png" style="zoom:30%;" /></p>
+<p><img src="https://i.loli.net/2021/01/09/6YwZzt5bysAkiTe.png" style="zoom:30%;"><img src="https://i.loli.net/2021/01/08/Pjwoi7bypYxdD5r.png" style="zoom:30%;"></p>
 <p>Let the program continue to execute and finally we can see “Hello world!” from target console.</p>
-<img src="https://i.loli.net/2021/01/08/Oa4c6rYB7fZoFLR.png" style="zoom:45%;" />
+<img src="https://i.loli.net/2021/01/08/Oa4c6rYB7fZoFLR.png" style="zoom:45%;">
+
 <p><strong>Use-after-free</strong></p>
 <p><strong>Reference:</strong></p>
 <ol>
-<li>
-<p>Armv8.5-A Memory Tagging Extension White Paper <a target="_blank" rel="noopener" href="https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Arm_Memory_Tagging_Extension_Whitepaper.pdf">https://developer.arm.com/-/media/Arm Developer Community/PDF/Arm_Memory_Tagging_Extension_Whitepaper.pdf</a></p>
+<li><p>Armv8.5-A Memory Tagging Extension White Paper <a target="_blank" rel="noopener" href="https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Arm_Memory_Tagging_Extension_Whitepaper.pdf">https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Arm_Memory_Tagging_Extension_Whitepaper.pdf</a></p>
 </li>
-<li>
-<p>Arm Architecture Registers Manual for Armv8-A Architecture Profile. <a target="_blank" rel="noopener" href="http://harperchen.qiniudn.com/SysReg_xml_v86A-2020-06.pdf">http://harperchen.qiniudn.com/SysReg_xml_v86A-2020-06.pdf</a></p>
+<li><p>Arm Architecture Registers Manual for Armv8-A Architecture Profile. <a target="_blank" rel="noopener" href="http://harperchen.qiniudn.com/SysReg_xml_v86A-2020-06.pdf">http://harperchen.qiniudn.com/SysReg_xml_v86A-2020-06.pdf</a></p>
 </li>
-<li>
-<p>Arm A64 Instruction Set Architecture Manual for Armv8-A Architecture Profile. <a target="_blank" rel="noopener" href="http://harperchen.qiniudn.com/ISA_A64_xml_v86A-2020-06_OPT.pdf">http://harperchen.qiniudn.com/ISA_A64_xml_v86A-2020-06_OPT.pdf</a></p>
+<li><p>Arm A64 Instruction Set Architecture Manual for Armv8-A Architecture Profile. <a target="_blank" rel="noopener" href="http://harperchen.qiniudn.com/ISA_A64_xml_v86A-2020-06_OPT.pdf">http://harperchen.qiniudn.com/ISA_A64_xml_v86A-2020-06_OPT.pdf</a></p>
 </li>
 </ol>
 
