@@ -1,8 +1,8 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Thread Safety · Wei's Blog</title><meta name="description" content="Thread Safety - Wei CHEN"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/blog/favicon.png"><link rel="stylesheet" href="/blog/css/hermes.css"><link rel="search" type="application/opensearchdescription+xml" href="https://harperchen.github.io/blog/atom.xml" title="Wei's Blog"><meta name="generator" content="Hexo 5.1.1"></head><body><div class="wrap"><header><a class="logo-link" href="/blog/"><img src="/blog/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/blog/" target="_self">BLOG</a></li><li class="nav-list-item"><a class="nav-list-link" href="https://github.com/claymcleod" target="_blank">GITHUB</a></li><li class="nav-list-item"><a class="nav-list-link" href="/blog/archives/" target="_self">ARCHIVE</a></li><li class="nav-list-item"><a class="nav-list-link" href="/blog/atom.xml" target="_self">FEED</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Thread Safety</h1><div class="post-info">Dec 30, 2020</div><div class="post-content"><h3 id="TSAN">TSAN</h3>
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Thread Safety · Wei's Blog</title><meta name="description" content="Thread Safety - Wei CHEN"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/blog/favicon.png"><link rel="stylesheet" href="/blog/css/hermes.css"><link rel="search" type="application/opensearchdescription+xml" href="https://harperchen.github.io/blog/atom.xml" title="Wei's Blog"><meta name="generator" content="Hexo 5.1.1"></head><body><div class="wrap"><header><a class="logo-link" href="/blog/"><img src="/blog/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/blog/" target="_self">BLOG</a></li><li class="nav-list-item"><a class="nav-list-link" href="https://github.com/harperchen" target="_blank">GITHUB</a></li><li class="nav-list-item"><a class="nav-list-link" href="/blog/archives/" target="_self">ARCHIVE</a></li><li class="nav-list-item"><a class="nav-list-link" href="/blog/atom.xml" target="_self">FEED</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Thread Safety</h1><div class="post-info">Dec 30, 2020</div><div class="post-content"><h3 id="tsan"><a class="markdownIt-Anchor" href="#tsan"></a> TSAN</h3>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers">https://github.com/google/sanitizers</a></p>
 <p><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/ThreadSafetyAnalysis.html">https://clang.llvm.org/docs/ThreadSafetyAnalysis.html</a></p>
 <a id="more"></a>
-<h5 id="1-Paper-Skelton">1. Paper Skelton</h5>
+<h5 id="1-paper-skelton"><a class="markdownIt-Anchor" href="#1-paper-skelton"></a> 1. Paper Skelton</h5>
 <ul>
 <li>
 <p>Data Race</p>
@@ -75,24 +75,24 @@
 </ul>
 </li>
 </ul>
-<h5 id="2-初步探索">2. 初步探索</h5>
+<h5 id="2-初步探索"><a class="markdownIt-Anchor" href="#2-初步探索"></a> 2. 初步探索</h5>
 <p><code>ThreadSanitizer</code> (aka TSan) is a data race detector for C/C++. Data races are one of the most common and hardest to debug types of bugs in concurrent systems. A data race occurs when two threads access the same variable concurrently and at least one of the accesses is write. <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/C%2B%2B11">C++11</a> standard officially bans data races as <em>undefined behavior</em>.</p>
-<p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892"></p>
+<p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892" /></p>
 <p>The cost of race detection varies by program, but for a typical program, memory usage may increase by 5-10x and execution time by 2-20x</p>
-<h5 id="2-SPEC-CPU-2006">2. SPEC CPU 2006</h5>
+<h5 id="2-spec-cpu-2006"><a class="markdownIt-Anchor" href="#2-spec-cpu-2006"></a> 2. SPEC CPU 2006</h5>
 <p>our study on SPEC CPU2006 benchmarks [25] shows that the geometric mean overheads in- duced by AddressSanitizer (ASan) [23] and UndefinedBehaviorSanitizer (UBSan) [6] are, respectively, 73.8% and 160.1% (see Sec. 6)</p>
 <p>19 C/C++ programs, in which 11 benchmarks can be compiled with clang and with ASan and UBSan enabled</p>
 <p>Each SPEC benchmark is shipped with a training workload, a testing workload, and a reference workload.  Following the convention, we use the training workload to profile these programs and obtain the dynamic patterns of sanitizer checks.</p>
 <p>Memory Overhead; CPU overhead;</p>
-<h4 id="KTSAN">KTSAN</h4>
+<h4 id="ktsan"><a class="markdownIt-Anchor" href="#ktsan"></a> KTSAN</h4>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan">https://github.com/google/ktsan</a></p>
 <p><a target="_blank" rel="noopener" href="https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf">https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf</a></p>
-<h4 id="KCSAN-Kernel-Concurrent-Sanitizer">KCSAN (Kernel Concurrent Sanitizer)</h4>
+<h4 id="kcsan-kernel-concurrent-sanitizer"><a class="markdownIt-Anchor" href="#kcsan-kernel-concurrent-sanitizer"></a> KCSAN (Kernel Concurrent Sanitizer)</h4>
 <p>• KCSAN, developed by Google 2019, found more than 300 race bugs.</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan/wiki/KCSAN">https://github.com/google/ktsan/wiki/KCSAN</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html">https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html</a></p>
-<h4 id="SANRAZOR">SANRAZOR</h4>
-<p><img src="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png" alt="image-20210102211000993"></p>
+<h4 id="sanrazor"><a class="markdownIt-Anchor" href="#sanrazor"></a> SANRAZOR</h4>
+<p><img src="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png" alt="image-20210102211000993" /></p>
 <ul>
 <li>Target problem: reduce redundant sanitizer check, specially, ASAN and UBSAN</li>
 <li>What is sanitizer
@@ -262,4 +262,4 @@
 </ul>
 </li>
 </ul>
-</div></article></div></main><footer><div class="paginator"><a class="prev" href="/blog/2021/01/08/OpenArk-Compiler/">上一篇</a><a class="next" href="/blog/2020/12/30/S-P-19-Fuzzing-File-Systems-via-Two-Dimensional-Input-Space-Exploration/">下一篇</a></div><div class="copyright"><p>© 2019 - 2021 <a href="https://harperchen.github.io/blog">Wei CHEN</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/claymcleod/hexo-theme-hermes" target="_blank">hexo-theme-hermes</a>. </p><p>Logo made by <a target="_blank" rel="noopener" href="https://www.flaticon.com/authors/freepik">Freepik</a> from <a target="_blank" rel="noopener" href="https://flaticon.com">www.flaticon.com</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
+</div></article></div></main><footer><div class="paginator"><a class="prev" href="/blog/2021/01/08/OpenArk-Compiler/">PREV</a><a class="next" href="/blog/2020/12/30/S-P-19-Fuzzing-File-Systems-via-Two-Dimensional-Input-Space-Exploration/">NEXT</a></div><div class="copyright"><p>© 2019 - 2021 <a href="https://harperchen.github.io/blog">Wei CHEN</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/claymcleod/hexo-theme-hermes" target="_blank">hexo-theme-hermes</a>. </p><p>Logo made by <a target="_blank" rel="noopener" href="https://www.flaticon.com/authors/freepik">Freepik</a> from <a target="_blank" rel="noopener" href="https://flaticon.com">www.flaticon.com</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
