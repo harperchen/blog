@@ -2,6 +2,7 @@
 <h2 id="1-cgroup-installation"><a class="markdownIt-Anchor" href="#1-cgroup-installation"></a> 1. CGroup Installation</h2>
 <p>The first step, on Ubuntu, is to install the cgroups packages.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install cgroup-tools cgroup-bin cgroup-lite libcgroup1 cgroupfs-mount</span><br><span class="line"><span class="comment"># add the following in /etc/default/grub</span></span><br><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">&quot;quiet cgroup_enable=memory swapaccount=1&quot;</span></span><br><span class="line">sudo update-grub</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>Several files are created at the same time.</p>
 <ul>
 <li><code>/sys/fs/cgroup</code> has a bunch of folders in a sort of virtual filesystem that “represents” cgroup.</li>
@@ -91,4 +92,4 @@
 <p>The write bytes per second is around 700M/s. Let’s add our bash session to the cg2 cgroup, by writing its PID to <code>cgroup.procs</code> file. At the same time, we get this output from iostat (redacted).</p>
 <img src="https://i.loli.net/2021/01/08/xFiuS1sTLP27HpO.png" alt="image-20210108151542108" style="zoom:50%;" />
 <p>So, even relying on the writeback kernel cache we are able to limit the I/O on the disk with cgroup v2.</p>
-</div></article></div></main><footer><div class="paginator"><a class="prev" href="/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/">PREV</a><a class="next" href="/blog/2020/09/12/How-to-config-MTE-using-Qemu/">NEXT</a></div><div class="copyright"><p>© 2019 - 2021 <a href="https://harperchen.github.io/blog">Wei CHEN</a>. </p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
+</div></article></div></main><footer><div class="paginator"><a class="prev" href="/blog/2020/09/12/How-to-enable-MTE-in-ArmStudio/">上一篇</a><a class="next" href="/blog/2020/09/12/How-to-config-MTE-using-Qemu/">下一篇</a></div><div class="copyright"><p>© 2019 - 2021 <a href="https://harperchen.github.io/blog">Wei CHEN</a>. </p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
