@@ -1,4 +1,323 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> LLVM Pass · Wei's Blog</title><meta name="description" content="LLVM Pass - Wei CHEN"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/blog/favicon.png"><link rel="stylesheet" href="/blog/css/hermes.css"><link rel="search" type="application/opensearchdescription+xml" href="https://harperchen.github.io/blog/atom.xml" title="Wei's Blog"><meta name="generator" content="Hexo 5.1.1"></head><body><div class="wrap"><header><a class="logo-link" href="/blog/"><img src="/blog/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/blog/" target="_self">BLOG</a></li><li class="nav-list-item"><a class="nav-list-link" href="https://github.com/harperchen" target="_blank">GITHUB</a></li><li class="nav-list-item"><a class="nav-list-link" href="/blog/archives/" target="_self">ARCHIVE</a></li><li class="nav-list-item"><a class="nav-list-link" href="/blog/atom.xml" target="_self">FEED</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">LLVM Pass</h1><div class="post-info">Jan 8, 2021</div><div class="post-content"><h3 id="1-查看llvm-ir"><a class="markdownIt-Anchor" href="#1-查看llvm-ir"></a> 1. 查看LLVM IR</h3>
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <link rel="manifest" href="/blog/images/manifest.json">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+<meta name="description" content="1. 查看LLVM IR 使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (.ll)-&gt; LLVM Bitcode (.bc) -&gt; ASM -&gt; Native  llvm-as：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的不是目标平台的机器码。 llvm-dis：llvm-as的逆过程，即反汇编。 不过这里的反汇编的对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLVM Pass">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/01/08/LLVM-Pass/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="1. 查看LLVM IR 使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (.ll)-&gt; LLVM Bitcode (.bc) -&gt; ASM -&gt; Native  llvm-as：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的不是目标平台的机器码。 llvm-dis：llvm-as的逆过程，即反汇编。 不过这里的反汇编的对">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.loli.net/2021/01/12/bSe35pXlxgEafwC.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/nSwWy7EOp4ZF82P.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/10/4q7FotgY5MdRAN6.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/12/fO1rKVMFdHAp8xW.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/10/icTWFOy1l7Q9Emb.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/12/plSRyaQiH3MqIuV.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/12/YpbfTmGwciHNEk6.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/16/H57i1kxS4QaYhZy.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/16/JrHu61kifZCNsmO.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/09/Y5XfyPxaQGcSgEu.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/09/ztK5RETxmkU71w4.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/RgknqFWA9MYb1zo.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/UaYyz6nJcw9EIhT.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/SmCxYaDPkpn3r85.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/MKa2EV48fY6kXFl.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/BX4GxdHpnb9zCuS.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/12/5klbasJQOiz6IAC.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/v6W9y7Q83pGcjFl.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/ENtIQYoGUuph6PX.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/Q7SUNhd96AgRWLb.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/12/nwErFPyhx3VReQ7.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/12/vt4S7Wic2a6z8JT.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/12/qjnOP3yTfcxR2K4.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/17/C7GnhFcYDimRQ94.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/17/oScGwrnBs1PQxdq.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/17/UnSOy7zrQLjPt45.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/17/7JCIjQiSMgtADdm.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/11/V8QW1lRq9zHs3Ei.png">
+<meta property="article:published_time" content="2021-01-08T13:09:24.000Z">
+<meta property="article:modified_time" content="2021-01-26T04:23:05.294Z">
+<meta property="article:author" content="Wei CHEN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/01/12/bSe35pXlxgEafwC.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/01/08/LLVM-Pass/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+<title>LLVM Pass | Wei's Blog</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blog/atom.xml" title="Wei's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Wei's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+        <li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+        <li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9F%A5%E7%9C%8Bllvm-ir"><span class="nav-text"> 1. 查看LLVM IR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-llvm-ir%E8%AF%AD%E6%B3%95"><span class="nav-text"> 2. LLVM IR语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#21-module"><span class="nav-text"> 2.1 Module</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#22-function"><span class="nav-text"> 2.2 Function</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#23-baisc-block"><span class="nav-text"> 2.3 Baisc Block</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#24-instruction"><span class="nav-text"> 2.4 Instruction</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#241-%E7%AE%80%E5%8D%95%E6%95%B0%E7%BB%84"><span class="nav-text"> 2.4.1 简单数组</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#242-%E5%A4%8D%E6%9D%82%E6%95%B0%E7%BB%84"><span class="nav-text"> 2.4.2 复杂数组</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#243-%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-text"> 2.4.3 结构体</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#25-operand"><span class="nav-text"> 2.5 Operand</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-mac%E9%85%8D%E7%BD%AEllvm"><span class="nav-text"> 3. Mac配置LLVM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#31-xcode%E7%BC%96%E8%AF%91llvm-project"><span class="nav-text"> 3.1 Xcode编译LLVM Project</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#32-xcode%E7%BC%96%E8%AF%91llvm-pass"><span class="nav-text"> 3.2 Xcode编译LLVM Pass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#33-xcode-%E8%B0%83%E8%AF%95-llvm-pass"><span class="nav-text"> 3.3 Xcode 调试 LLVM Pass</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-ubuntu%E9%85%8D%E7%BD%AEllvm"><span class="nav-text"> 4. Ubuntu配置LLVM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#41-ubuntu%E7%BC%96%E8%AF%91llvm-project"><span class="nav-text"> 4.1 Ubuntu编译LLVM Project</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#42-%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BC%96%E8%AF%91llvm-pass"><span class="nav-text"> 4.2 命令行编译LLVM Pass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#43-clion%E7%BC%96%E8%AF%91llvm-pass"><span class="nav-text"> 4.3 Clion编译LLVM Pass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#44-clion%E8%B0%83%E8%AF%95llvm-pass"><span class="nav-text"> 4.4 Clion调试LLVM Pass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#45-%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BC%96%E8%AF%91%E5%8D%95%E4%B8%AAllvm-pass%E6%96%87%E4%BB%B6"><span class="nav-text"> 4.5 命令行编译单个LLVM Pass文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-write-llvm-pass"><span class="nav-text"> 5. Write LLVM Pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-read-llvm-pass"><span class="nav-text"> 6. Read LLVM Pass</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#61-%E4%BE%8B%E5%AD%901"><span class="nav-text"> 6.1 例子1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#62-%E4%BE%8B%E5%AD%90%E4%BA%8C"><span class="nav-text"> 6.2 例子二</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E9%A1%B9%E7%9B%AEsanrazor"><span class="nav-text"> 7. 项目SanRazor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#71-%E6%B5%8B%E8%AF%95%E7%A8%8B%E5%BA%8F"><span class="nav-text"> 7.1 测试程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#72-%E6%8F%92%E6%A1%A9%E7%A8%8B%E5%BA%8F"><span class="nav-text"> 7.2 插桩程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#73-%E5%88%A0%E9%99%A4%E5%A4%9A%E4%BD%99sanitizer"><span class="nav-text"> 7.3 删除多余sanitizer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#74-%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91"><span class="nav-text"> 7.4 代码逻辑</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/08/LLVM-Pass/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LLVM Pass
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-01-08 21:09:24" itemprop="dateCreated datePublished" datetime="2021-01-08T21:09:24+08:00">2021-01-08</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-01-26 12:23:05" itemprop="dateModified" datetime="2021-01-26T12:23:05+08:00">2021-01-26</time>
+      </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="1-查看llvm-ir"><a class="markdownIt-Anchor" href="#1-查看llvm-ir"></a> 1. 查看LLVM IR</h3>
 <p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
 <ul>
 <li><code>llvm-as</code>：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的<strong>不是</strong>目标平台的机器码。</li>
@@ -265,4 +584,150 @@
 <p><code>-dcc</code>对应DynamicCallCounter类，该类继承自ModulePass，处理对SC和UC进行插桩，统计在给定workload的情况下每个分支的执行次数</p>
 <p><code>-DynPassL0/L1/L2</code> 对应DynPassL0/L1/L2类，该类继承自ModulePass，每次处理一个program，根据执行次数和静态依赖信息将冗余的sanity check的if语句设置为永远false</p>
 <p><code>-SCClean</code>用于删除冗余sanitizer对应的指令</p>
-</div></article></div></main><footer><div class="paginator"><a class="prev" href="/blog/2021/01/10/Memory-Safety/">上一篇</a><a class="next" href="/blog/2021/01/08/OpenArk-Compiler/">下一篇</a></div><div class="copyright"><p>© 2019 - 2021 <a href="https://harperchen.github.io/blog">Wei CHEN</a>. </p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/01/08/OpenArk-Compiler/" rel="prev" title="OpenArk Compiler">
+                  <i class="fa fa-chevron-left"></i> OpenArk Compiler
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/01/10/Memory-Safety/" rel="next" title="Memory Safety">
+                  Memory Safety <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+<script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script><script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    <div class="pjax">
+
+
+    </div>
+</body>
+</html>
