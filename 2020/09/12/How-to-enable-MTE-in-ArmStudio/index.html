@@ -1,12 +1,9 @@
 <!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> How to enable MTE in ArmStudio · Wei's Blog</title><meta name="description" content="How to enable MTE in ArmStudio - Wei CHEN"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/blog/favicon.png"><link rel="stylesheet" href="/blog/css/hermes.css"><link rel="search" type="application/opensearchdescription+xml" href="https://harperchen.github.io/blog/atom.xml" title="Wei's Blog"><meta name="generator" content="Hexo 5.1.1"></head><body><div class="wrap"><header><a class="logo-link" href="/blog/"><img src="/blog/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/blog/" target="_self">BLOG</a></li><li class="nav-list-item"><a class="nav-list-link" href="https://github.com/harperchen" target="_blank">GITHUB</a></li><li class="nav-list-item"><a class="nav-list-link" href="/blog/archives/" target="_self">ARCHIVE</a></li><li class="nav-list-item"><a class="nav-list-link" href="/blog/atom.xml" target="_self">FEED</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">How to enable MTE in ArmStudio</h1><div class="post-info">Sep 12, 2020</div><div class="post-content"><p><strong>Prerequisites:</strong></p>
 <ol>
-<li>
-<p>Download and install Arm Development Studio for either <a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Linux?lang=en">Linux</a> or <a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Windows?lang=en">Windows</a>. Obtain a 30-day evaluation license so that the project can be built successfully.</p>
-</li>
-<li>
-<p>Download and install Armv8-A Base RevC AEM FVP (Fixed Virtual Platform) that supports Memory Tagging Extension for <a target="_blank" rel="noopener" href="https://silver.arm.com/download/download.tm?pv=4799001&amp;p=3042387">Linux</a> (No windows version online, need to be compiled by ourselves).</p>
-</li>
+<li>Download and install Arm Development Studio for either <a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Linux?lang=en">Linux</a> or <a target="_blank" rel="noopener" href="https://developer.arm.com/documentation/101469/2000/Installation/Installing-on-Windows?lang=en">Windows</a>. Obtain a 30-day evaluation license so that the project can be built successfully.</li>
+<li>Download and install Armv8-A Base RevC AEM FVP (Fixed Virtual Platform) that supports Memory Tagging Extension for <a target="_blank" rel="noopener" href="https://silver.arm.com/download/download.tm?pv=4799001&amp;p=3042387">Linux</a> (No windows version online, need to be compiled by ourselves).</li>
 </ol>
+<a id="more"></a>
 <p><strong>Procedure</strong></p>
 <ol>
 <li>Create a new C project, select: File &gt; New &gt; Project.</li>
