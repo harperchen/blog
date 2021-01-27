@@ -31,15 +31,15 @@
 <meta property="og:site_name" content="Wei&#39;s Blog">
 <meta property="og:description" content="Abstract Hybrid fuzzing, combining symbolic execution and fuzzing, is a promising approach for vulnerability discovery because each approach can complement the other. However, we observe that applyin">
 <meta property="og:locale">
-<meta property="og:image" content="https://i.loli.net/2021/01/26/zmWVNjJlk93bKH4.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/26/YUqptSdmC4TjFoE.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/26/7SPG5oewQX8pdsy.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/26/MtTgOQsUpL3wePW.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/27/4Hv2RrtBOhgj6MV.png">
 <meta property="article:published_time" content="2021-01-24T06:02:50.000Z">
-<meta property="article:modified_time" content="2021-01-27T05:05:52.212Z">
+<meta property="article:modified_time" content="2021-01-27T06:58:35.649Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2021/01/26/zmWVNjJlk93bKH4.png">
+<meta name="twitter:image" content="https://i.loli.net/2021/01/26/YUqptSdmC4TjFoE.png">
 
 
 <link rel="canonical" href="https://harperchen.github.io/blog/2021/01/24/NDSS-20-HFL-Hybrid-Fuzzing-on-the-Linux-Kernel/">
@@ -165,7 +165,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#abstract"><span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#table"><span class="nav-text"> Table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outline"><span class="nav-text"> Outline</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#difficulties-of-performing-hybrid-fuzzing-on-kernel"><span class="nav-text"> Difficulties of performing hybrid fuzzing on kernel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#drawbacks-of-previous-work"><span class="nav-text"> Drawbacks of previous work</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#why-this-paper-is-accepted"><span class="nav-text"> Why this paper is accepted</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#how-it-works"><span class="nav-text"> How it works</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#technique-details"><span class="nav-text"> Technique details</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%A0%E4%B8%AA%E5%88%9B%E6%96%B0%E7%82%B9"><span class="nav-text"> 几个创新点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#evaluation"><span class="nav-text"> Evaluation</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#abstract"><span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#table"><span class="nav-text"> Table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outline"><span class="nav-text"> Outline</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#difficulties-of-performing-hybrid-fuzzing-on-kernel"><span class="nav-text"> Difficulties of performing hybrid fuzzing on kernel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#drawbacks-of-previous-work"><span class="nav-text"> Drawbacks of previous work</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#why-this-paper-is-accepted"><span class="nav-text"> Why this paper is accepted</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#how-it-works"><span class="nav-text"> How it works</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#technique-details"><span class="nav-text"> Technique details</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#evaluation"><span class="nav-text"> Evaluation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#reflection"><span class="nav-text"> Reflection</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -273,7 +273,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-27 13:05:52" itemprop="dateModified" datetime="2021-01-27T13:05:52+08:00">2021-01-27</time>
+        <time title="Modified: 2021-01-27 14:58:35" itemprop="dateModified" datetime="2021-01-27T14:58:35+08:00">2021-01-27</time>
       </span>
 
   
@@ -302,14 +302,14 @@
 <thead>
 <tr>
 <th style="text-align:center">Kernel Testing</th>
-<th style="text-align:center">Target Kernel</th>
-<th style="text-align:center">Target Component</th>
-<th style="text-align:center">Coverage-guided</th>
+<th style="text-align:center">Kernel</th>
+<th style="text-align:center">Target</th>
+<th style="text-align:center">Coverage guided</th>
 <th style="text-align:center">Call Sequence Inference</th>
 <th style="text-align:center">Nested Syscall  Argument</th>
 <th style="text-align:center">Indirect Control Flow</th>
-<th style="text-align:center">Handle Strict Branch Condition</th>
-<th>Remark</th>
+<th style="text-align:center">Handle Branch Condition</th>
+<th style="text-align:center">Remark</th>
 </tr>
 </thead>
 <tbody>
@@ -322,7 +322,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td></td>
+<td style="text-align:center"></td>
 </tr>
 <tr>
 <td style="text-align:center">Digtool</td>
@@ -333,7 +333,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td></td>
+<td style="text-align:center"></td>
 </tr>
 <tr>
 <td style="text-align:center">kAFL</td>
@@ -344,7 +344,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td>Fuzzer</td>
+<td style="text-align:center">Fuzzer</td>
 </tr>
 <tr>
 <td style="text-align:center">Razzer</td>
@@ -355,7 +355,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td>Race Bug</td>
+<td style="text-align:center">Race Bug</td>
 </tr>
 <tr>
 <td style="text-align:center">PeriScope</td>
@@ -366,7 +366,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td></td>
+<td style="text-align:center"></td>
 </tr>
 <tr>
 <td style="text-align:center">FIRM-AFL</td>
@@ -377,7 +377,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td></td>
+<td style="text-align:center"></td>
 </tr>
 <tr>
 <td style="text-align:center">CAB-Fuzz</td>
@@ -388,7 +388,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center">⭐️</td>
-<td>Hybrid</td>
+<td style="text-align:center">Hybrid</td>
 </tr>
 <tr>
 <td style="text-align:center">IMF</td>
@@ -399,7 +399,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td>Fuzzer</td>
+<td style="text-align:center">Fuzzer</td>
 </tr>
 <tr>
 <td style="text-align:center">Syzkaller</td>
@@ -410,7 +410,7 @@
 <td style="text-align:center">⭐️</td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td>Fuzzer</td>
+<td style="text-align:center">Fuzzer</td>
 </tr>
 <tr>
 <td style="text-align:center">Moonshine</td>
@@ -421,7 +421,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td>Fuzzer</td>
+<td style="text-align:center">Fuzzer</td>
 </tr>
 <tr>
 <td style="text-align:center">DIFUZE</td>
@@ -432,7 +432,7 @@
 <td style="text-align:center">⭐️</td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td></td>
+<td style="text-align:center"></td>
 </tr>
 <tr>
 <td style="text-align:center">JANUS</td>
@@ -443,7 +443,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td>Fuzzer</td>
+<td style="text-align:center">Fuzzer</td>
 </tr>
 <tr>
 <td style="text-align:center">Krace</td>
@@ -454,7 +454,7 @@
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
 <td style="text-align:center"></td>
-<td>Race Bug</td>
+<td style="text-align:center">Race Bug</td>
 </tr>
 <tr>
 <td style="text-align:center">HFL</td>
@@ -465,34 +465,27 @@
 <td style="text-align:center">⭐️</td>
 <td style="text-align:center">⭐️</td>
 <td style="text-align:center">⭐️</td>
-<td>Hybrid</td>
+<td style="text-align:center">Hybrid</td>
 </tr>
 </tbody>
 </table>
 <h3 id="outline"><a class="markdownIt-Anchor" href="#outline"></a> Outline</h3>
 <h4 id="difficulties-of-performing-hybrid-fuzzing-on-kernel"><a class="markdownIt-Anchor" href="#difficulties-of-performing-hybrid-fuzzing-on-kernel"></a> Difficulties of performing hybrid fuzzing on kernel</h4>
-<p>P1: Having indirect control transfers determined by system call arguments</p>
-<ul>
-<li>use function pointer table to support polymorphism</li>
-</ul>
-<img src="https://i.loli.net/2021/01/26/zmWVNjJlk93bKH4.png" alt="image-20210126165309110" style="zoom:55%;" />
-<p>P2: Controlling and matching internal system state via system calls</p>
+<p><strong>P1: Having indirect control transfers determined by system call arguments</strong>. Kernel prefers to use function pointer table to support polymorphism.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">size_t</span> (*ucma_table[])(struct ucma_file *file,</span><br><span class="line">                       <span class="keyword">char</span> __user *inbuf, <span class="keyword">int</span> in_len, <span class="keyword">int</span> out_len) = &#123;</span><br><span class="line">    [RDMA_CREATE_ID] = ucma_create_id,</span><br><span class="line">    [RDMA_DESTROY_ID] = ucma_destroy_id,</span><br><span class="line">    [RDMA_BIND_IP] = ucma_bind_ip,</span><br><span class="line">    ...</span><br><span class="line">    [RDMA_JOIN_MCAST] = ucma_join_multicast</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">ucma_write</span><span class="params">(struct file *filp, <span class="keyword">char</span> __user *buf,</span></span></span><br><span class="line"><span class="function"><span class="params">                   <span class="keyword">size_t</span> len, <span class="keyword">loff_t</span> *pos)</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rdma_ucm_cmd_hdr</span> <span class="title">hdr</span>;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (copy_from_user(&amp;hdr, buf, <span class="keyword">sizeof</span>(hdr)))</span><br><span class="line">     ...</span><br><span class="line">	<span class="comment">// indirect function invocation</span></span><br><span class="line">    ret = ucma_table[hdr.cmd](file, buf + <span class="keyword">sizeof</span>(hdr), hdr.in, hdr.out);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>P2: Controlling and matching internal system state via system calls</strong>. Correct system call execution order is necessary to touch the deep logic of syscall.</p>
 <img src="https://i.loli.net/2021/01/26/YUqptSdmC4TjFoE.png" alt="image-20210126165218803" style="zoom:45%;" />
-<p>P3: Inferring nested argument type for invoking system calls</p>
+<p><strong>P3: Inferring nested argument type for invoking system calls</strong>. A field number in one structure points to another structure.</p>
 <img src="https://i.loli.net/2021/01/26/7SPG5oewQX8pdsy.png" alt="image-20210126170342251" style="zoom:67%;" />
 <h4 id="drawbacks-of-previous-work"><a class="markdownIt-Anchor" href="#drawbacks-of-previous-work"></a> Drawbacks of previous work</h4>
 <p>either naively use fuzzing/symbolic execution separately by not handling such challenges</p>
 <ul>
-<li>Razzer (Fuzzing)</li>
+<li>Razzer: Fuzzing</li>
 <li>Digtool</li>
-<li>kAFL (Fuzzing)</li>
-<li>Periscope (Fuzzing)</li>
+<li>kAFL: Fuzzing</li>
+<li>Periscope: Fuzzing</li>
 <li>perf fuzzer</li>
-<li>CAB-Fuzz
-<ul>
-<li>Hybrid Fuzzer without handling P1, P2, P3</li>
-</ul>
-</li>
+<li>CAB-Fuzz: Hybrid Fuzzer without handling P1, P2, P3</li>
 </ul>
 <p>or  imprecisely handle a part of challenges only by static analysis</p>
 <ul>
@@ -527,51 +520,61 @@
 <li>Uncover multiple previously unknown vulnerabilities</li>
 </ul>
 <h4 id="how-it-works"><a class="markdownIt-Anchor" href="#how-it-works"></a> How it works</h4>
+<p>Kernel Fuzzing + Symbolic Execution</p>
 <img src="https://i.loli.net/2021/01/26/MtTgOQsUpL3wePW.png" alt="image-20210126191910353" style="zoom: 50%;" />
-<p>Step 1: converting indirect control transfers to direct transfers <font color="#dd0000">for symbolic analyze</font></p>
+<p><strong>IV-B:</strong> converting indirect control transfers to direct transfers at compile time <font color="#dd0000">for symbolic analyze</font></p>
 <ul>
 <li>resolve function pointer, unfold indirect transfer to direct one offline 👍</li>
-<li>only interest in those originates from syscall parameters</li>
+<li>only interest in those index variable originates from syscall parameters by data flow analysis</li>
 </ul>
-<p>Step 2: inferring system call sequence to build a consistent system state</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before translation</span></span><br><span class="line">ret = ucma_table[hdr.cmd](...);</span><br><span class="line"></span><br><span class="line"><span class="comment">// after translation</span></span><br><span class="line"><span class="keyword">if</span> (hdr.cmd == RDMA_CREATE_ID)</span><br><span class="line">    ret = ucma_create_id (...);</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (hdr.cmd == RDMA_DESTROY_ID)</span><br><span class="line">    ret = ucma_destroy_id (...);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><strong>IV-C</strong>: inferring system call sequence to build a consistent system state</p>
 <ul>
-<li>step 1: static analysis to capture candidate dependency pairs (<font color="#dd0000">offline</font>)</li>
-<li>step 2: runtime validation to identify true dependencies (<font color="dd0000">infer execution order</font>)
+<li>Step 1: point-to analysis to capture candidate read/write dependency pairs (<font color="#dd0000">offline</font>)</li>
+<li>Step 2: runtime validation to identify true dependencies (<font color="dd0000">infer execution order</font>)
 <ul>
 <li>check if they access the same address during symbolically execution</li>
-<li>selectively symbolize data variables involved in system states</li>
 <li>distinguish true dependency pairs &amp; write must before read</li>
 </ul>
 </li>
-<li>step 3:</li>
+<li>Step 3: detect parameter dependencies (<font color="dd0000">infer parameter dependencies</font>)</li>
 </ul>
-<p>Step 3:identifying nested arguments types of system calls</p>
+<p><strong>IV-D</strong>: identifying nested arguments types of system calls at runtime</p>
 <ul>
-<li>retrieves nested syscall arguments at runtime by exploiting the domain knowledge copy_from_user on how the kernel handles the arguments (not 100% the same as S&amp;P’20: EASIER 😅)</li>
+<li>monitor invocation of copy_from_user</li>
+<li>using symbolic state to track offset and length of nested data structure</li>
+<li>not the same as S&amp;P’20: EASIER 😅</li>
 </ul>
 <h4 id="technique-details"><a class="markdownIt-Anchor" href="#technique-details"></a> Technique details</h4>
+<p><strong>IV-A:</strong> Fuzzing: Syzkaller</p>
 <ul>
-<li>Fuzzing: Syzkaller
-<ul>
-<li>Fully automated kernel-specific features instead of using manually written template of Syzkaller</li>
-<li>Coverage guided-fuzzing + Syscall fuzzing</li>
+<li>✨ Fully automated kernel-specific features instead of using manually written template of Syzkaller</li>
 </ul>
+<p>**IV-C &amp; IV-D: **Symbolic Execution: S2E</p>
+<ul>
+<li>
+<p>All syscall parameters is symbolized <code>s2e_make_symbolic</code></p>
 </li>
-<li>Symbolic Execution: S2E
-<ul>
-<li>Identify always-false or always-true branch using frequency table (hard branch)</li>
-<li>Pass user program that executes hard branch to symbolic analyzer</li>
-<li>Perform concolic execution to execute another path</li>
-</ul>
+<li>
+<p>✨ Identify always-false or always-true branch as hard branch by maintaining a frequency table</p>
 </li>
-<li>Handle indirect control flow: gcc GIMPLE</li>
-<li>Static analysis: SVF, in whic LLVM Linux <a target="_blank" rel="noopener" href="https://wiki.linuxfoundation.org/llvmlinux">https://wiki.linuxfoundation.org/llvmlinux</a></li>
-<li>Code <a target="_blank" rel="noopener" href="https://bitbucket.org/anonyk/hfl-release/src/master/">https://bitbucket.org/anonyk/hfl-release/src/master/</a></li>
+<li>
+<p>Pass user program that executes hard branch to symbolic analyzer</p>
+</li>
+<li>
+<p>Symbolize all syscall parameters and perform concolic execution to reach another branch</p>
+</li>
 </ul>
-<h4 id="几个创新点"><a class="markdownIt-Anchor" href="#几个创新点"></a> 几个创新点</h4>
+<p>**IV-B: **Unflod indirect control flow</p>
 <ul>
-<li>对比Moonshine，HFL虽然也进行了static point-to analysis，但HFL在runtime时利用符号执行验证识别true dependency，来修正静态分析带来的false positive。</li>
+<li>GIMPLE representation in gcc</li>
 </ul>
+<p><strong>IV-C:</strong> Infer syscall order and syscall paramter dependency</p>
+<ul>
+<li>Static analysis: SVF using <a target="_blank" rel="noopener" href="https://wiki.linuxfoundation.org/llvmlinux">LLVM Linux</a></li>
+</ul>
+<p>Code <a target="_blank" rel="noopener" href="https://bitbucket.org/anonyk/hfl-release/src/master/">https://bitbucket.org/anonyk/hfl-release/src/master/</a></p>
+<img src="https://i.loli.net/2021/01/27/4Hv2RrtBOhgj6MV.png" alt="image-20210127144429015" style="zoom:67%;" />
 <h4 id="evaluation"><a class="markdownIt-Anchor" href="#evaluation"></a> Evaluation</h4>
 <ul>
 <li>24 previously unknown vulnerabilities in recent Linux kernels</li>
@@ -579,6 +582,12 @@
 <li>HFL found 13 known vulnerabilities more than three times faster than Syzkaller</li>
 <li>Contribution of each feature in HFL</li>
 </ul>
+<h4 id="reflection"><a class="markdownIt-Anchor" href="#reflection"></a> Reflection</h4>
+<ul>
+<li>HFL虽然也进行了static point-to analysis，但HFL在runtime时利用符号执行验证识别true dependency，来修正false positive。</li>
+<li>其实implicit dependencies的话，不是函数A在函数B前面就可以，他们的参数可能还有依赖关系，可能两个field字端要保持一致，也就是说，参数间的依赖关系，不止存在于explict dependencies例如open和read这种关系，还存在于如下这种情况。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ioctl(fd, DRM_ALLOC, &#123;*_1&#125;);</span><br><span class="line">ioctl(fd, DRM_BIND, &#123;*_2&#125;);</span><br><span class="line"><span class="comment">// two ioctl have implicit dependency not only on execution order, but also paramter</span></span><br><span class="line"><span class="comment">// _1.ID = _2.ID is required</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> _1 &#123;</span></span><br><span class="line">    u64 x;</span><br><span class="line">    u32 ID;</span><br><span class="line">    u64 y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> _2 &#123;</span></span><br><span class="line">    u32 ID;</span><br><span class="line">    u64 x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
