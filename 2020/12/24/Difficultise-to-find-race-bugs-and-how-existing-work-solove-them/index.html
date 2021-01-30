@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/12/30/icZQWPUHudtnyp2.png">
 <meta property="og:image" content="https://i.loli.net/2020/12/30/gkD5fQ9zqoFlyZJ.png">
 <meta property="article:published_time" content="2020-12-24T07:21:02.000Z">
-<meta property="article:modified_time" content="2020-12-30T13:42:34.642Z">
+<meta property="article:modified_time" content="2021-01-30T08:08:23.258Z">
 <meta property="article:author" content="Wei CHEN">
 <meta property="article:tag" content="Kernel">
 <meta property="article:tag" content="Race Bugs">
@@ -165,7 +165,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-race-bug"><span class="nav-text"> 1. Race Bug</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%AF%86%E5%88%ABrace-bug%E7%9A%84%E9%9A%BE%E7%82%B9"><span class="nav-text"> 2. 识别Race Bug的难点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%9C%80%E8%A6%81%E8%A7%A3%E5%86%B3%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-text"> 3. 需要解决哪些问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%8E%B0%E6%9C%89%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text"> 4. 现有工作的解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#41-%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E5%93%AA%E4%BA%9B%E6%8C%87%E4%BB%A4%E8%AE%BF%E9%97%AE%E5%90%8C%E4%B8%80%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F"><span class="nav-text"> 4.1 如何确定哪些指令访问同一内存区域？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-razzer"><span class="nav-text"> 1. Razzer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-krace"><span class="nav-text"> 2. Krace</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#42-%E5%AF%B9%E4%BA%8E%E8%AE%BF%E9%97%AE%E5%90%8C%E4%B8%80%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%8C%87%E4%BB%A4%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E5%AE%83%E4%BB%AC%E6%98%AF%E5%90%A6%E6%9C%89%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%AB%9E%E6%80%81"><span class="nav-text"> 4.2 对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-razzer-2"><span class="nav-text"> 1. Razzer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-krace-2"><span class="nav-text"> 2. Krace</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#43-%E5%AF%B9%E4%BA%8E%E6%9C%89%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%AB%9E%E6%80%81%E7%9A%84%E6%8C%87%E4%BB%A4%E5%AF%B9%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E7%89%B9%E5%AE%9A%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%E6%9D%A5%E8%A7%A6%E5%8F%91%E7%AB%9E%E6%80%81"><span class="nav-text"> 4.3 对于有可能出现竞态的指令对，如何确定特定的线程执行顺序来触发竞态？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-razzer-3"><span class="nav-text"> 1. Razzer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-krace-3"><span class="nav-text"> 2. Krace</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#44-%E5%AF%B9%E4%BA%8E%E8%A7%A6%E5%8F%91%E7%9A%84%E7%AB%9E%E6%80%81%E5%A6%82%E4%BD%95%E7%AB%8B%E5%8D%B3%E6%8D%95%E6%8D%89%E5%88%B0"><span class="nav-text"> 4.4 对于触发的竞态，如何立即捕捉到？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#45-%E5%A6%82%E4%BD%95%E8%A6%86%E7%9B%96%E5%B0%BD%E5%8F%AF%E8%83%BD%E5%A4%9A%E7%9A%84%E4%BB%A3%E7%A0%81%E5%8C%BA%E5%9F%9F%E6%9D%A5%E5%AE%9E%E6%96%BD%E4%B8%8A%E8%BF%B01-4%E7%9A%84%E6%A3%80%E6%B5%8B%E8%BF%87%E7%A8%8B"><span class="nav-text"> 4.5 如何覆盖尽可能多的代码区域，来实施上述1-4的检测过程？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-razzer-4"><span class="nav-text"> 1. Razzer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-krace-4"><span class="nav-text"> 2. Krace</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%93%AA%E4%BA%9B%E5%8F%AF%E4%BB%A5%E6%94%B9%E8%BF%9B%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-text"> 5. 哪些可以改进的地方</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#related-work"><span class="nav-text"> Related Work</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Race-Bug"><span class="nav-text">1. Race Bug</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%AF%86%E5%88%ABRace-Bug%E7%9A%84%E9%9A%BE%E7%82%B9"><span class="nav-text">2. 识别Race Bug的难点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%9C%80%E8%A6%81%E8%A7%A3%E5%86%B3%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-text">3. 需要解决哪些问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%8E%B0%E6%9C%89%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">4. 现有工作的解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E5%93%AA%E4%BA%9B%E6%8C%87%E4%BB%A4%E8%AE%BF%E9%97%AE%E5%90%8C%E4%B8%80%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%EF%BC%9F"><span class="nav-text">4.1 如何确定哪些指令访问同一内存区域？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Razzer"><span class="nav-text">1. Razzer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Krace"><span class="nav-text">2. Krace</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E5%AF%B9%E4%BA%8E%E8%AE%BF%E9%97%AE%E5%90%8C%E4%B8%80%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%8C%87%E4%BB%A4%EF%BC%8C%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E5%AE%83%E4%BB%AC%E6%98%AF%E5%90%A6%E6%9C%89%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%AB%9E%E6%80%81%EF%BC%9F"><span class="nav-text">4.2 对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Razzer-v2"><span class="nav-text">1. Razzer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Krace-v2"><span class="nav-text">2. Krace</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-%E5%AF%B9%E4%BA%8E%E6%9C%89%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%AB%9E%E6%80%81%E7%9A%84%E6%8C%87%E4%BB%A4%E5%AF%B9%EF%BC%8C%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E7%89%B9%E5%AE%9A%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%E6%9D%A5%E8%A7%A6%E5%8F%91%E7%AB%9E%E6%80%81%EF%BC%9F"><span class="nav-text">4.3 对于有可能出现竞态的指令对，如何确定特定的线程执行顺序来触发竞态？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Razzer-v3"><span class="nav-text">1. Razzer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Krace-v3"><span class="nav-text">2. Krace</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-%E5%AF%B9%E4%BA%8E%E8%A7%A6%E5%8F%91%E7%9A%84%E7%AB%9E%E6%80%81%EF%BC%8C%E5%A6%82%E4%BD%95%E7%AB%8B%E5%8D%B3%E6%8D%95%E6%8D%89%E5%88%B0%EF%BC%9F"><span class="nav-text">4.4 对于触发的竞态，如何立即捕捉到？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-%E5%A6%82%E4%BD%95%E8%A6%86%E7%9B%96%E5%B0%BD%E5%8F%AF%E8%83%BD%E5%A4%9A%E7%9A%84%E4%BB%A3%E7%A0%81%E5%8C%BA%E5%9F%9F%EF%BC%8C%E6%9D%A5%E5%AE%9E%E6%96%BD%E4%B8%8A%E8%BF%B01-4%E7%9A%84%E6%A3%80%E6%B5%8B%E8%BF%87%E7%A8%8B%EF%BC%9F"><span class="nav-text">4.5 如何覆盖尽可能多的代码区域，来实施上述1-4的检测过程？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Razzer-v4"><span class="nav-text">1. Razzer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Krace-v4"><span class="nav-text">2. Krace</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%93%AA%E4%BA%9B%E5%8F%AF%E4%BB%A5%E6%94%B9%E8%BF%9B%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-text">5. 哪些可以改进的地方</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Related-Work"><span class="nav-text">Related Work</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -273,7 +273,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-30 21:42:34" itemprop="dateModified" datetime="2020-12-30T21:42:34+08:00">2020-12-30</time>
+        <time title="Modified: 2021-01-30 16:08:23" itemprop="dateModified" datetime="2021-01-30T16:08:23+08:00">2021-01-30</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -302,7 +302,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="1-race-bug"><a class="markdownIt-Anchor" href="#1-race-bug"></a> 1. Race Bug</h3>
+        <h3 id="1-Race-Bug">1. Race Bug</h3>
 <p>两个访问内存区域的线程，当下面三个条件同时满足时，即可认定是Race bug。</p>
 <ol>
 <li>访问的内存区域地址相同</li>
@@ -321,12 +321,12 @@
 <center>Single-variable race</center>
 <img src="https://i.loli.net/2020/12/30/gkD5fQ9zqoFlyZJ.png" alt="image-20201230205159941" style="zoom: 67%;" />
 <center>Multi-variable race</center>
-<h3 id="2-识别race-bug的难点"><a class="markdownIt-Anchor" href="#2-识别race-bug的难点"></a> 2. 识别Race Bug的难点</h3>
+<h3 id="2-识别Race-Bug的难点">2. 识别Race Bug的难点</h3>
 <ol>
 <li>race bug 是非常不确定的，非常难复现</li>
 <li>race bug 触发后很大可能不会导致系统崩溃，只有在后期回溯的时候才能发现</li>
 </ol>
-<h3 id="3-需要解决哪些问题"><a class="markdownIt-Anchor" href="#3-需要解决哪些问题"></a> 3. 需要解决哪些问题</h3>
+<h3 id="3-需要解决哪些问题">3. 需要解决哪些问题</h3>
 <p>其实可以根据定义延伸出一系列的问题：</p>
 <ol>
 <li>面对代码量非常大的内核，如何确定哪些指令访问同一内存地址？</li>
@@ -336,13 +336,13 @@
 <li>如何覆盖尽可能多的代码区域，来实施上述1-4的检测过程？</li>
 <li>由于Race Bug的不确定性，上述1-4的检测过程可能需要重复很多次。</li>
 </ol>
-<h3 id="4-现有工作的解决方案"><a class="markdownIt-Anchor" href="#4-现有工作的解决方案"></a> 4. 现有工作的解决方案</h3>
+<h3 id="4-现有工作的解决方案">4. 现有工作的解决方案</h3>
 <p>现在我主要看了两个工作Razzer和Krace，两个工作各有利弊，针对上述问题，提出了各自的解决方案。首先介绍两个工作的workflow：</p>
 <p>Razzer 1）首先执行static analysis，分析出内核中访问同一内存区域的指令对。2）利用单线程fuzzing，找到执行每个指令对的系统调用序列。<strong>3）判断两个指令是否访问同一内存区域</strong> 4）利用多线程fuzzing，确定性的枚举两个线程在指令对处的执行顺序（也就是两个vCPU执行的先后顺序）。4）当找到一种线程交织使两个线程同时访问同一内存区域后，会后续系统调用进行mutate，期望触发竞态漏洞导致的有害影响，使内核崩溃。</p>
 <p>Krace的工作流程是一个完整的Fuzzing过程，只是在常规Fuzzing过程中增加了一些针对于race bug的特殊处理。整个过程为 1）merge两个已有的多线程系统调用序列 2）执行mutate操作，生成新的多线程系统调用序列 2）清理虚拟机状态，多线程运行此系统调用序列 3）如果有新的branch coverage 或 alias coverage 则保留下来以进一步mutate 4）一旦有新的alias coverage 则offline启动竞态bug检测机制 5）此过程不断循环，有时还会，直到循环结束。</p>
 <p>两个工作都会运行几周的时间来检测竞态bug，说明检测竞态bug实属不易，另外，两个工作的明显区别是，Razzer继承于Syzkaller，因此并不会在每条trace执行后清理虚拟机状态，而Krace每次回清理虚拟机状态，为了便于调试和定位原因。</p>
-<h4 id="41-如何确定哪些指令访问同一内存区域"><a class="markdownIt-Anchor" href="#41-如何确定哪些指令访问同一内存区域"></a> 4.1 如何确定哪些指令访问同一内存区域？</h4>
-<h5 id="1-razzer"><a class="markdownIt-Anchor" href="#1-razzer"></a> 1. Razzer</h5>
+<h4 id="4-1-如何确定哪些指令访问同一内存区域？">4.1 如何确定哪些指令访问同一内存区域？</h4>
+<h5 id="1-Razzer">1. Razzer</h5>
 <p>利用静态points-to分析，分析内核的LLVM代码。</p>
 <p><strong>a. 优点</strong>：</p>
 <ol>
@@ -353,7 +353,7 @@
 <ol>
 <li>内核代码这么多，怎么高效检测？
 <ul>
-<li>分模块分析，不考虑模块间的指令对，不考虑同步元语，因此是over-approximated的。</li>
+<li>分模块分析，不考虑模块间的指令对，是under-approximated的；不考虑同步元语，是over-approximated的。</li>
 </ul>
 </li>
 <li>如何解决静态分析固有的false-positive比较高的问题？（见问题3）</li>
@@ -363,7 +363,7 @@
 </ul>
 </li>
 </ol>
-<h5 id="2-krace"><a class="markdownIt-Anchor" href="#2-krace"></a> 2. Krace</h5>
+<h5 id="2-Krace">2. Krace</h5>
 <p>动态运行时检测，提出alias coverage的概念，并应用到coverage-guided fuzzing中。其中，alias coverage指的是有多少可能会出现竞态漏洞的指令对被覆盖。</p>
 <p><strong>a. 优点</strong>：</p>
 <ol>
@@ -384,8 +384,8 @@
 </ul>
 </li>
 </ol>
-<h4 id="42-对于访问同一内存地址的指令如何确定它们是否有可能出现竞态"><a class="markdownIt-Anchor" href="#42-对于访问同一内存地址的指令如何确定它们是否有可能出现竞态"></a> 4.2 对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？</h4>
-<h5 id="1-razzer-2"><a class="markdownIt-Anchor" href="#1-razzer-2"></a> 1. Razzer</h5>
+<h4 id="4-2-对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？">4.2 对于访问同一内存地址的指令，如何确定它们是否有可能出现竞态？</h4>
+<h5 id="1-Razzer-v2">1. Razzer</h5>
 <p>不考虑此问题，在后续Fuzzing过程中进行处理，在得到正确的多线程交织后（两个指令访问同一内存地址），进一步mutate后续的系统调用序列，期待合理的后续系统调用的执行能够触发竞态造成的有效影响。</p>
 <p><strong>a. 优点：</strong></p>
 <ol>
@@ -396,7 +396,7 @@
 <ol>
 <li>极其依赖syscall序列的后续处理过程，由于大多数情况下，竞态漏洞并不能立即崩溃系统，因此需要合理的后续系统调用的执行，触发竞态漏洞导致的有害影响，而本步骤在Razzer中是利用fuzzing实现的，其效率可能有待提高。（可能是可以突破的地方）</li>
 </ol>
-<h5 id="2-krace-2"><a class="markdownIt-Anchor" href="#2-krace-2"></a> 2. Krace</h5>
+<h5 id="2-Krace-v2">2. Krace</h5>
 <p>针对内核文件系统中常见的锁和同步机制建模，对于访问同一内存地址的指令，offline执行精确、全面的竞态监测，主要是针对第三个条件，两个线程的执行顺序是不受限制的，检测过程经历如下两个步骤：</p>
 <ol>
 <li>Lockset Analysis：针对锁操作，两个线程针对内存的操作是没有上锁的话，说明执行顺序是不受控制的。当对于同一内存地址，两个线程的分别的读写锁相交为空，且写锁也相交为空时，说明两个线程的执行顺序是不受控制的。</li>
@@ -412,8 +412,8 @@
 <li>性能上可能会有问题，该算法不能执行过多次，否则影响fuzzing的性能。</li>
 <li>此类分析会发现benign和harmful的bug，还需要进一步筛选benign的竞态漏洞，本论文利用heuristics来筛选出benign的漏洞。</li>
 </ol>
-<h4 id="43-对于有可能出现竞态的指令对如何确定特定的线程执行顺序来触发竞态"><a class="markdownIt-Anchor" href="#43-对于有可能出现竞态的指令对如何确定特定的线程执行顺序来触发竞态"></a> 4.3 对于有可能出现竞态的指令对，如何确定特定的线程执行顺序来触发竞态？</h4>
-<h5 id="1-razzer-3"><a class="markdownIt-Anchor" href="#1-razzer-3"></a> 1. Razzer</h5>
+<h4 id="4-3-对于有可能出现竞态的指令对，如何确定特定的线程执行顺序来触发竞态？">4.3 对于有可能出现竞态的指令对，如何确定特定的线程执行顺序来触发竞态？</h4>
+<h5 id="1-Razzer-v3">1. Razzer</h5>
 <p>利用定制的hypervisor，给每个可能出现竞态的指令对加入断点，使两个线程自动执行到设置断点的位置，然后随机启动其中一个线程，使两个线程按不同的顺序交织。</p>
 <p><strong>a. 优点</strong></p>
 <ol>
@@ -425,7 +425,7 @@
 <li>可以处理的线程数是非常有限的</li>
 <li>断点和再启动会影响系统调用序列的执行速度</li>
 </ol>
-<h5 id="2-krace-3"><a class="markdownIt-Anchor" href="#2-krace-3"></a> 2. Krace</h5>
+<h5 id="2-Krace-v3">2. Krace</h5>
 <p>delay schedule，间接控制线程的执行顺序。在每个内存访问指令处，随机抽取一个随机数，并将内存操作指令延后相应时间</p>
 <p><strong>a. 优点</strong></p>
 <ol>
@@ -438,14 +438,14 @@
 <li>delay操作会影响系统调用序列的执行速度。</li>
 <li>难以复现，因为不是对所有的内核代码都进行了插桩</li>
 </ol>
-<h4 id="44-对于触发的竞态如何立即捕捉到"><a class="markdownIt-Anchor" href="#44-对于触发的竞态如何立即捕捉到"></a> 4.4 对于触发的竞态，如何立即捕捉到？</h4>
+<h4 id="4-4-对于触发的竞态，如何立即捕捉到？">4.4 对于触发的竞态，如何立即捕捉到？</h4>
 <p>见问题4.2</p>
-<h4 id="45-如何覆盖尽可能多的代码区域来实施上述1-4的检测过程"><a class="markdownIt-Anchor" href="#45-如何覆盖尽可能多的代码区域来实施上述1-4的检测过程"></a> 4.5 如何覆盖尽可能多的代码区域，来实施上述1-4的检测过程？</h4>
-<h5 id="1-razzer-4"><a class="markdownIt-Anchor" href="#1-razzer-4"></a> 1. Razzer</h5>
+<h4 id="4-5-如何覆盖尽可能多的代码区域，来实施上述1-4的检测过程？">4.5 如何覆盖尽可能多的代码区域，来实施上述1-4的检测过程？</h4>
+<h5 id="1-Razzer-v4">1. Razzer</h5>
 <p>coverage-guided fuzzing，缺点是有时不同的线程交织会造成相同的branch coverage，不利于在多线程的上下文中发现更多的线程交织情况。</p>
-<h5 id="2-krace-4"><a class="markdownIt-Anchor" href="#2-krace-4"></a> 2. Krace</h5>
+<h5 id="2-Krace-v4">2. Krace</h5>
 <p>branch covearge+alias coverage，并提出针对多线程系统调用序列的merge操作，可以产生更多的线程交织可能性。</p>
-<h3 id="5-哪些可以改进的地方"><a class="markdownIt-Anchor" href="#5-哪些可以改进的地方"></a> 5. 哪些可以改进的地方</h3>
+<h3 id="5-哪些可以改进的地方">5. 哪些可以改进的地方</h3>
 <ol>
 <li>
 <p>如何生成合理的后续系统调用序列来显式触发有害的race bug造成的影响。</p>
@@ -460,7 +460,7 @@
 </blockquote>
 </li>
 </ol>
-<h3 id="related-work"><a class="markdownIt-Anchor" href="#related-work"></a> Related Work</h3>
+<h3 id="Related-Work">Related Work</h3>
 <ol>
 <li>[USENIX’21] ExpRace: Exploiting Kernel Races through Raising Interrupts (conditional accept)</li>
 </ol>
