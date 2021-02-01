@@ -17,10 +17,10 @@
   --btn-default-hover-bg: #222;
   --btn-default-hover-color: #fff;
   --btn-default-hover-border-color: #222;
-  --highlight-background: #fff;
-  --highlight-foreground: #4d4d4c;
+  --highlight-background: #fefefe;
+  --highlight-foreground: #545454;
   --highlight-gutter-background: #ededed;
-  --highlight-gutter-foreground: #5e5e5d;
+  --highlight-gutter-foreground: #656565;
 }
 html {
   line-height: 1.15; /* 1 */
@@ -224,7 +224,7 @@ h6 {
   font-size: 0.875em;
 }
 p {
-  margin: 0 0 10px 0;
+  margin: 0 0 0 0;
 }
 ul {
   padding-left: 25px;
@@ -368,15 +368,17 @@ td {
   top: -5px;
   transform: rotate(-45deg);
 }
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* a11y-light theme */
+/* Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css */
+/* @author: ericwbailey */
 
-/* Tomorrow Comment */
+/* Comment */
 .hljs-comment,
 .hljs-quote {
-  color: #8e908c;
+  color: #696969;
 }
 
-/* Tomorrow Red */
+/* Red */
 .hljs-variable,
 .hljs-template-variable,
 .hljs-tag,
@@ -385,10 +387,10 @@ td {
 .hljs-selector-class,
 .hljs-regexp,
 .hljs-deletion {
-  color: #c82829;
+  color: #d91e18;
 }
 
-/* Tomorrow Orange */
+/* Orange */
 .hljs-number,
 .hljs-built_in,
 .hljs-builtin-name,
@@ -397,39 +399,39 @@ td {
 .hljs-params,
 .hljs-meta,
 .hljs-link {
-  color: #f5871f;
+  color: #aa5d00;
 }
 
-/* Tomorrow Yellow */
+/* Yellow */
 .hljs-attribute {
-  color: #eab700;
+  color: #aa5d00;
 }
 
-/* Tomorrow Green */
+/* Green */
 .hljs-string,
 .hljs-symbol,
 .hljs-bullet,
 .hljs-addition {
-  color: #718c00;
+  color: #008000;
 }
 
-/* Tomorrow Blue */
+/* Blue */
 .hljs-title,
 .hljs-section {
-  color: #4271ae;
+  color: #007faa;
 }
 
-/* Tomorrow Purple */
+/* Purple */
 .hljs-keyword,
 .hljs-selector-tag {
-  color: #8959a8;
+  color: #7928a1;
 }
 
 .hljs {
   display: block;
   overflow-x: auto;
-  background: white;
-  color: #4d4d4c;
+  background: #fefefe;
+  color: #545454;
   padding: 0.5em;
 }
 
@@ -439,6 +441,31 @@ td {
 
 .hljs-strong {
   font-weight: bold;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .hljs-addition,
+  .hljs-attribute,
+  .hljs-built_in,
+  .hljs-builtin-name,
+  .hljs-bullet,
+  .hljs-comment,
+  .hljs-link,
+  .hljs-literal,
+  .hljs-meta,
+  .hljs-number,
+  .hljs-params,
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-type,
+  .hljs-quote {
+        color: highlight;
+    }
+
+    .hljs-keyword,
+    .hljs-selector-tag {
+        font-weight: bold;
+    }
 }
 
 .highlight:hover .copy-btn,
