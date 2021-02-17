@@ -24,24 +24,22 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="Abstract The ability to execute and analyze code makes many security tasks such as exploit development, reverse engineering, and vulnerability detection much easier. However, on embedded devices such">
+<meta name="description" content="Abstract Operating system kernels are appealing attack targets: compromising the kernel usually allows attackers to bypass all deployed security mechanisms and take control over the entire system. Co">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[S&amp;P&#39;20] Ex-vivo dynamic analysis framework for Android device drivers">
-<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/index.html">
+<meta property="og:title" content="[NDSS&#39;18] K-miner: Uncovering memory corruption in linux">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/02/01/NDSS-18-K-miner-Uncovering-memory-corruption-in-linux/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Abstract The ability to execute and analyze code makes many security tasks such as exploit development, reverse engineering, and vulnerability detection much easier. However, on embedded devices such">
+<meta property="og:description" content="Abstract Operating system kernels are appealing attack targets: compromising the kernel usually allows attackers to bypass all deployed security mechanisms and take control over the entire system. Co">
 <meta property="og:locale">
-<meta property="og:image" content="https://i.loli.net/2020/12/28/8HLgaI6wWkPjVmq.png">
-<meta property="article:published_time" content="2020-12-27T11:06:47.000Z">
-<meta property="article:modified_time" content="2020-12-28T15:25:08.876Z">
+<meta property="article:published_time" content="2021-02-01T07:39:37.000Z">
+<meta property="article:modified_time" content="2021-02-17T14:47:36.152Z">
 <meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Static Analysis">
 <meta property="article:tag" content="Kernel">
-<meta property="article:tag" content="Hardware Boostup">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/12/28/8HLgaI6wWkPjVmq.png">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/02/01/NDSS-18-K-miner-Uncovering-memory-corruption-in-linux/">
 
 
 <script data-pjax class="page-configurations">
@@ -53,7 +51,7 @@
     lang   : 'zh-Hans'
   };
 </script>
-<title>[S&P'20] Ex-vivo dynamic analysis framework for Android device drivers | Wei's Blog</title>
+<title>[NDSS'18] K-miner: Uncovering memory corruption in linux | Wei's Blog</title>
   
 
 
@@ -164,7 +162,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#abstract"><span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outline"><span class="nav-text"> Outline</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#abstract"><span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outline"><span class="nav-text"> Outline</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-difficulties-of-os-kernel-fuzzing"><span class="nav-text"> 1. Difficulties of OS Kernel Fuzzing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-drawbacks-of-previous-work"><span class="nav-text"> 2. Drawbacks of previous work</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-why-this-paper-is-accepted"><span class="nav-text"> 3. Why this paper is accepted</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-how-it-works"><span class="nav-text"> 4. How it works</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-technique-details"><span class="nav-text"> 5. Technique details</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-evaluation"><span class="nav-text"> 6. Evaluation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-examples"><span class="nav-text"> 7. Examples</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-reflection"><span class="nav-text"> 8. Reflection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-bug-report"><span class="nav-text"> 9. Bug report</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -241,7 +239,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/02/01/NDSS-18-K-miner-Uncovering-memory-corruption-in-linux/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -254,7 +252,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          [S&P'20] Ex-vivo dynamic analysis framework for Android device drivers
+          [NDSS'18] K-miner: Uncovering memory corruption in linux
         </h1>
 
         <div class="post-meta-container">
@@ -265,14 +263,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2020-12-27 19:06:47" itemprop="dateCreated datePublished" datetime="2020-12-27T19:06:47+08:00">2020-12-27</time>
+      <time title="Created: 2021-02-01 15:39:37" itemprop="dateCreated datePublished" datetime="2021-02-01T15:39:37+08:00">2021-02-01</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-28 23:25:08" itemprop="dateModified" datetime="2020-12-28T23:25:08+08:00">2020-12-28</time>
+        <time title="Modified: 2021-02-17 22:47:36" itemprop="dateModified" datetime="2021-02-17T22:47:36+08:00">2021-02-17</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -302,196 +300,55 @@
     
     <div class="post-body" itemprop="articleBody">
         <h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
-<p>The ability to execute and analyze code makes many security tasks such as exploit development, reverse engineering, and vulnerability detection much easier. However, on embedded devices such as Android smartphones, executing code in-vivo, on the device, for analysis is limited by the need to acquire such devices, the speed of the device, and in some cases the need to flash custom code onto the devices. The other option is to execute the code ex-vivo, off the device, but this approach either requires porting or complex hardware emulation.</p>
+<p>Operating system kernels are appealing attack targets: compromising the kernel usually allows attackers to bypass all deployed security mechanisms and take control over the entire system. Commodity kernels, like Linux, are written in low-level programming languages that offer only limited type and memory-safety guarantees, enabling adversaries to launch sophisticated run-time attacks against the kernel by exploiting memory-corruption vulnerabilities.</p>
 <a id="more"></a>
-<p>In this paper, we take advantage of the observation that many execution paths in drivers are only superficially dependent on both the hardware and kernel on which the driver executes, to create an ex-vivo dynamic driver analysis framework for Android devices that requires neither porting nor emulation. We achieve this by developing a generic <em>evasion</em> framework that enables driver initialization by evading hardware and kernel dependen- cies instead of precisely emulating them, and then developing a novel <em>Ex-vivo AnalySIs framEwoRk (EASIER)</em> that enables off-device analysis with the initialized driver state. Compared to on-device analysis, our approach enables the use of userspace tools and scales with the number of available commodity CPU’s, not the number of smartphones.</p>
-<p>We demonstrate the usefulness of our framework by targeting privilege escalation vulnerabilities in system call handlers in platform device drivers. We find it can load 48/62 (77%) drivers from three different Android kernels: MSM, Xiaomi, and Huawei. We then confirm that it is able to reach and detect 21 known vulnerabilities. Finally, we have discovered 12 new bugs which we have reported and confirmed.</p>
-<img src="https://i.loli.net/2020/12/28/8HLgaI6wWkPjVmq.png" alt="image-20201228135046211" style="zoom: 50%;" />
+<p>Many defenses have been proposed to protect operating systems at run time, such as control-flow integrity (CFI). However, the goal of these runtime monitors is to prevent exploitation as a symptom of memory corruption, rather than eliminating the underlying root cause, i.e., bugs in the kernel code. While finding bugs can be automated, e.g., using static analysis, all existing approaches are limited to local, intra-procedural checks, and face severe scalability challenges due to the large kernel code base. Consequently, there currently exist no tools for conducting global static analysis of operating system kernels.</p>
+<p>In this paper, we present <em>K-Miner</em>, a new framework to efficiently analyze large, commodity operating system kernels like Linux. Our novel approach exploits the highly standardized interface structure of the kernel code to enable scalable pointer analysis and conduct global, context-sensitive analysis. Through our inter-procedural analysis we show that K-Miner systematically and reliably uncovers several different classes of memory-corruption vulnerabilities, such as dangling pointers, user-after-free, double-free, and double-lock vulnerabilities. We thoroughly evaluate our extensible analysis framework, which leverages the popular and widely used LLVM compiler suite, for the current Linux kernel and demonstrate its effectiveness by reporting several memory-corruption vulnerabilities.</p>
 <h3 id="outline"><a class="markdownIt-Anchor" href="#outline"></a> Outline</h3>
+<h4 id="1-difficulties-of-os-kernel-fuzzing"><a class="markdownIt-Anchor" href="#1-difficulties-of-os-kernel-fuzzing"></a> 1. Difficulties of OS Kernel Fuzzing</h4>
+<p>Currently, Linux comprises over 24 million lines of code. The huge size and complexity of its monolithic code base makes precise data-flow analysis for kernel code difficult. The number of possible paths grows exponentially with the code size, and hence, static analysis approaches face severe scalability problems</p>
+<h4 id="2-drawbacks-of-previous-work"><a class="markdownIt-Anchor" href="#2-drawbacks-of-previous-work"></a> 2. Drawbacks of previous work</h4>
+<ol>
+<li>Run-time monitors are designed to defend against a specific class of attacks. A combination of many different defenses is required to protect the kernel against multiple classes of adversaries.</li>
+<li>Compile-time verification is feasible for small model, but impractical for commodity monolithic kernels due to their size and extensive use of machine-level code</li>
+<li>Static analysis safely over-approximates program execution, allowing for strong statements in the case of negative analysis results.</li>
+<li>All analysis frameworks for kernel code (Coccinelle/Smatch/TypeChef/APISAN/EBA) are limited to <em>intra-procedural</em> analysis, i.e., local checks per function, or simple file-based analysis.</li>
+<li>None of existing static analysis framework supports <em>inter-procedural</em> data-flow analyses therefore they cannot uncover memory corruption caused by global pointer relationships.</li>
+<li>scalable static analysis designed for user space programs cannot simply be applied in kernel setting due to the non-trivial entry point</li>
+</ol>
+<h4 id="3-why-this-paper-is-accepted"><a class="markdownIt-Anchor" href="#3-why-this-paper-is-accepted"></a> 3. Why this paper is accepted</h4>
 <ul>
-<li>Target Problem
+<li>Observation
 <ul>
-<li>对嵌入式系统例如Android设备的分析经常需要flash系统，例如重新编译linux来利用kcov收集coverage进行coverage-guided fuzzing。在设备外运行分析的话，需要模拟化或者移植，观察到很多驱动程序的代码只是表面上依赖硬件和内核，因此提出不需要模拟化和移植的对驱动程序的动态分析框架。</li>
+<li>the interface to user space is highly standardized</li>
+<li>partition the kernel code along separate execution paths using the system call interface as a starting point</li>
 </ul>
 </li>
-<li>Existing approaches
+<li>Challenge of partition the kernel code
 <ul>
-<li>[CCS’17] DIFUZE
-<ul>
-<li>真机运行</li>
-<li>静态分析无法获取动态分配object和array的大小</li>
-<li>无法利用syzkaller的coverage-guided fuzzing</li>
+<li>frequent reuse of global data structures</li>
+<li>the synchronization between the per-system call</li>
+<li>global memory states (contexts)</li>
+<li>complicated and deeply nested aliasing relationships of pointers</li>
 </ul>
 </li>
-<li>[USENIX’18] Charm：当驱动需要访问外设时，会被转移到物理设备上，否则则在虚拟机里运行。
-<ul>
-<li>需要移植驱动</li>
-<li>需要手动分离驱动</li>
-<li>需要为每个分析实例提供真实的硬件设备</li>
+<li><strong>Enable global static analysis for kernel code:</strong> The observation significantly reduces the number of relevant paths, allowing us to conduct even complex, inter-procedural data-flow analysis in the kernel.</li>
 </ul>
-</li>
-</ul>
-</li>
-<li>Difficulties of ex-vivo derive analysis
-<ul>
-<li>In-vivo: 在设备内运行动态分析的扩展性不够好，因为对内核的动态分许需要
-<ul>
-<li>特定硬件的支持：kAFL利用Intel PT特性是在Arm上不支持的</li>
-<li>有足够高的特权操作内核：Syzkaller需要对内核进行重新编译来启动kcov和kasan功能</li>
-</ul>
-</li>
-<li>Ex-vivo：一般是需要硬件模拟器，然而对于驱动的分析
-<ul>
-<li>驱动是生来就依赖硬件的，这些相应的硬件在虚拟机中是不支持的
-<ul>
-<li>尽管这些硬件是支持的，驱动在模拟器中也没有合适的环境</li>
-</ul>
-</li>
-<li>驱动也在软件上依赖内核，但其实很多硬件特定的内核也没法在虚拟机里运行</li>
-<li>为了在虚拟机里运行相应的驱动，需要将驱动移植到可以被模拟运行的内核中，但费时费力</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Why this paper is accepted
-<ul>
-<li>Usefulness
-<ul>
-<li>可以设备外执行驱动程序的动态分析，不需设备移植，也不需真实的物理设备</li>
-<li>发现了针对IOCTL的29个特权提升的漏洞，其中12个为零日漏洞</li>
-</ul>
-</li>
-<li>Novelty
-<ul>
-<li>观察驱动程序对硬件和软件的依赖是非常表面的，而且这些路径上是有漏洞的。
-<ul>
-<li>例如具备读取设备寄存器的能力而不关心实际寄存器的值。</li>
-<li>例如只需要特定的函数返回success代码，并不依赖这个函数的实际语义</li>
-</ul>
-</li>
-<li>实现一种逃避依赖的方案，不需要真的被依赖的软件和硬件，就可以对驱动进行加载和初始化</li>
-<li>该技术允许AFL和Manticore（符号执行工具）等用户级的漏洞检测技术应用到对驱动程序的分析中</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>How it works
-<ul>
-<li>Evasion kernel: 利用可以被虚拟化的内核（vexpress和virt）加载和初始化不被支持的内核相关联的驱动
-<ul>
-<li>内核数据结构、全局变量、系统调用中使用的内核API数据结构和例如MIMO内存范围等资源、以及中断等都需要被初始化</li>
-<li>为什么不直接重新编译驱动使其在能被虚拟化的内核中运行呢？
-<ul>
-<li>因为驱动依赖主机内核特定的子系统、头文件和配置文件等</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>EASIER (Ex-vivo Analysis framework)：在用户空间对驱动进行fuzzing或符号执行
-<ul>
-<li>利用Qemu模拟器，初始化驱动和内核，运行应用程序调用ioctl，在进入内核空间时提取内存快照，导出所有内存页和寄存器的值</li>
-<li>利用CPU模拟器dUnicorn加载内存和恢复寄存器的值，从文件中读取传递给系统调用的参数，模拟执行系统调用直到返回用户空间</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Implementation details for Evasion (需满足的条件)
-<ul>
-<li>满足驱动对内核的软件依赖：三个stub替代依赖的内核函数，利用模块的导出函数表，查找内核代码中相应函数的签名，将签名信息插入到ELF文件的section中，后续被evasion内核子定义模块使用来确定具体需要哪一个stub函数
-<ul>
-<li>stub0：返回0，替代所有返回值是int的函数，因为Linux经常用0表示成功，其他非零值为错误代码</li>
-<li>stubP：开辟内存空间，用于替代返回值为指针的函数，这种情况下原函数一般是返回一个指向结构的指针</li>
-<li>stub1：返回1，针对少数非零值才表示成功的函数</li>
-</ul>
-</li>
-<li>隐藏驱动对硬件的硬件依赖
-<ul>
-<li>重用device tree条目， 如果主机内核device tree文件
-<ul>
-<li>可用，直接在evasion kernel中进行使用</li>
-<li>不可用，或者没有搜索到对应的条目，evasion直接使用最常用的合理值生成一个条目</li>
-</ul>
-</li>
-<li>忽略驱动与设备的通信
-<ul>
-<li>重定向注册MIMO range的函数为kzalloc，读写操作被忽略</li>
-<li>监听和替换15个kernel函数</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>确保内核和驱动之间传输数据结构的一致性
-<ul>
-<li>结构体各字段要对齐，偏移量要一致</li>
-<li>若主机内核代码不可访问，则对比二进制中字段的偏移量，插入填充使字段对齐</li>
-<li>若主机内核代码可访问，直接尝试不同配置编译evasion，使最终各字段一致</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Implementation details for EASIER (Ex-vivo Analysis framework)
-<ul>
-<li>dUnicorn是一个CPU模拟器，仅模拟Arm指令集，不支持任何硬件，需要监听和重定位所有内核的函数
-<ul>
-<li>没有MMU，替换所有kzalloc、krealloc和kfree为定制的内存分配器</li>
-<li>监听进程调度函数，例如 _cond_resched，直接返回到用户空间</li>
-<li>选择性关闭log函数，例如printk</li>
-</ul>
-</li>
-<li>恢复IOCTL的结构体参数格式
-<ul>
-<li>动态恢复ioctl所需的数据结构布局，监听copy_from_user，动态开辟所需的数据结构</li>
-<li>所有用户空间和内核空间的数据交互都是用copy_from_user</li>
-</ul>
-</li>
-<li>如何收集Coverage进行Fuzzing
-<ul>
-<li>AFL-Unicorn，工作原理类似于Fuzz二进制的AFL-Qemu模式</li>
-</ul>
-</li>
-<li>执行Symbolic Execution
-<ul>
-<li>Manticore框架，符号化执行用户态ELF Binary</li>
-<li>扩展其Manticore使其能从内存快照中获取执行状态</li>
-<li>恢复IOCTL的command参数</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Evalution
-<ul>
-<li>表面依赖的假设是否成立？
-<ul>
-<li>对于26个已知的程序漏洞，给定触发程序下，可以触发其中81%，说明该方案是有效的</li>
-</ul>
-</li>
-<li>逃避技术是否能够加载和初始化驱动
-<ul>
-<li>针对3个设备上的62个驱动，实现对其中77%的驱动的加载和初始化</li>
-</ul>
-</li>
-<li>是否能利用Fuzzing找到真的IOCTL的漏洞，针对32个drivers
-<ul>
-<li>fuzz过程发现29个漏洞，其中12个是零日漏洞</li>
-</ul>
-</li>
-<li>Fuzzing的吞吐量
-<ul>
-<li>1167 executions per second for MSM kernel drivers</li>
-<li>525 executions per second for Xiaomi derivers</li>
-<li>Whereas Charm only achieve 20 executions per second</li>
-<li>No need to restart the device after reboot</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Reflection
-<ul>
-<li>这篇感觉是DiFUZE的后续工作，DIFUZE就是需要刷机才能支持Syzkaller的kcov功能，采用x86模拟了一些驱动来检测生成ioctl结构体信息的有效性，这里既然可以解决这个问题，说不定可以两者结合。</li>
-</ul>
-</li>
-<li>How to improve this work</li>
-</ul>
+<h4 id="4-how-it-works"><a class="markdownIt-Anchor" href="#4-how-it-works"></a> 4. How it works</h4>
+<p>Because randomly selecting system calls from existing program traces do not result in any coverage improvement over hand-coded rules, this paper leverages light-weight static analysis for efficiently detecting dependencies across different system calls.</p>
+<h4 id="5-technique-details"><a class="markdownIt-Anchor" href="#5-technique-details"></a> 5. Technique details</h4>
+<p>Built on top of LLVM Pass to analyze system calls simultaneously</p>
+<p>For every system call, K-Miner generates a call graph (CG), a value- flow graph (VFG), a pointer-analysis graph (PAG), and several other internal data structures by taking the entry point of the system call function as a starting point.</p>
+<p>compute a list of all globally allocated kernel objects, are reachable by any single system call.</p>
+<h4 id="6-evaluation"><a class="markdownIt-Anchor" href="#6-evaluation"></a> 6. Evaluation</h4>
+<p>Applying the proposed static analysis framework to all system calls across many different Linux versions</p>
+<p>Uncover several known memory-corruption vulnerabilities that previously required manual inspection of the code</p>
+<h4 id="7-examples"><a class="markdownIt-Anchor" href="#7-examples"></a> 7. Examples</h4>
+<p>integer overflows (IO), use-after-free (UAF),</p>
+<p><strong>dangling pointers (DP):</strong>  A memory location is freed but the pointer is still accessible.</p>
+<p>double free (DF), buffer overflow (BO), missing pointer checks (MPC), uninitialized data (UD), type errors (TE), or synchronization errors (SE)</p>
+<h4 id="8-reflection"><a class="markdownIt-Anchor" href="#8-reflection"></a> 8. Reflection</h4>
+<h4 id="9-bug-report"><a class="markdownIt-Anchor" href="#9-bug-report"></a> 9. Bug report</h4>
 
     </div>
 
@@ -501,21 +358,21 @@
 
     <footer class="post-footer">
           <div class="post-tags">
+              <a href="/blog/tags/Static-Analysis/" rel="tag"># Static Analysis</a>
               <a href="/blog/tags/Kernel/" rel="tag"># Kernel</a>
-              <a href="/blog/tags/Hardware-Boostup/" rel="tag"># Hardware Boostup</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/blog/2020/12/24/Difficultise-to-find-race-bugs-and-how-existing-work-solove-them/" rel="prev" title="Difficultise to find race bugs and how existing work solve them">
-                  <i class="fa fa-chevron-left"></i> Difficultise to find race bugs and how existing work solve them
+                <a href="/blog/2021/01/30/USENIX-18-MoonShine-Optimizing-OS-Fuzzer-Seed-Selection-with-Trace-Distillation/" rel="prev" title="[USENIX'18] MoonShine: Optimizing OS Fuzzer Seed Selection with Trace Distillation">
+                  <i class="fa fa-chevron-left"></i> [USENIX'18] MoonShine: Optimizing OS Fuzzer Seed Selection with Trace Distillation
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/blog/2020/12/27/Overview-of-Linux-kernel/" rel="next" title="Overview of Linux kernel">
-                  Overview of Linux kernel <i class="fa fa-chevron-right"></i>
+                <a href="/blog/2021/02/02/RLTrace-Related/" rel="next" title="RLTrace Related">
+                  RLTrace Related <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
