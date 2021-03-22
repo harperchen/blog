@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://harperchen.github.io/blog/2021/03/22/Side-Channel/</loc>
+    
+    <lastmod>2021-03-22</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://harperchen.github.io/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/</loc>
     
     <lastmod>2021-03-05</lastmod>
