@@ -24,19 +24,19 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="Z3 Solver 1234python scripts&#x2F;mk_make.py --javacd buildmakesudo make install https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;60403775&#x2F;how-to-setup-a-java-development-environment-for-z3 1234567891011121314151617181">
+<meta name="description" content="KLEE  Z3 Solver 1234python scripts&#x2F;mk_make.py --javacd buildmakesudo make install https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;60403775&#x2F;how-to-setup-a-java-development-environment-for-z3 12345678910111213141">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Symbolic Execution">
 <meta property="og:url" content="https://harperchen.github.io/blog/2021/03/28/Tech-Symbolic-Execution/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Z3 Solver 1234python scripts&#x2F;mk_make.py --javacd buildmakesudo make install https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;60403775&#x2F;how-to-setup-a-java-development-environment-for-z3 1234567891011121314151617181">
+<meta property="og:description" content="KLEE  Z3 Solver 1234python scripts&#x2F;mk_make.py --javacd buildmakesudo make install https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;60403775&#x2F;how-to-setup-a-java-development-environment-for-z3 12345678910111213141">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.loli.net/2021/03/29/tQp6R1PJfAes7HT.png">
 <meta property="og:image" content="https://i.loli.net/2021/03/29/hVAi8I6LTmkbBx3.png">
 <meta property="og:image" content="https://i.loli.net/2021/03/29/FEkNvZGIHoOJcy2.png">
 <meta property="og:image" content="https://i.loli.net/2021/03/29/ftCoO2QKmHc5eIs.png">
 <meta property="article:published_time" content="2021-03-28T04:36:19.000Z">
-<meta property="article:modified_time" content="2021-03-30T13:46:40.197Z">
+<meta property="article:modified_time" content="2021-03-30T13:51:17.285Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2021/03/29/tQp6R1PJfAes7HT.png">
@@ -165,7 +165,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Z3-Solver"><span class="nav-text">Z3 Solver</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#klee"><span class="nav-text"> KLEE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#z3-solver"><span class="nav-text"> Z3 Solver</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -188,7 +188,7 @@
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -273,8 +273,17 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-03-30 21:46:40" itemprop="dateModified" datetime="2021-03-30T21:46:40+08:00">2021-03-30</time>
+        <time title="Modified: 2021-03-30 21:51:17" itemprop="dateModified" datetime="2021-03-30T21:51:17+08:00">2021-03-30</time>
       </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+        </span>
+    </span>
 
   
     <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -293,7 +302,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h4 id="Z3-Solver">Z3 Solver</h4>
+        <a id="more"></a>
+<h4 id="klee"><a class="markdownIt-Anchor" href="#klee"></a> KLEE</h4>
+<h4 id="z3-solver"><a class="markdownIt-Anchor" href="#z3-solver"></a> Z3 Solver</h4>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">python scripts/mk_make.py --java</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/60403775/how-to-setup-a-java-development-environment-for-z3">https://stackoverflow.com/questions/60403775/how-to-setup-a-java-development-environment-for-z3</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.10/z3-4.8.10-x64-ubuntu-18.04.zip</span><br><span class="line">unzip z3-4.8.10-x64-ubuntu-18.04.zip</span><br><span class="line"><span class="built_in">export</span> Z3_DIR=&lt;some_path&gt;/z3-4.8.10-x64-ubuntu-18.04</span><br><span class="line"></span><br><span class="line"><span class="comment"># install maven by apt</span></span><br><span class="line">sudo apt install maven</span><br><span class="line"><span class="comment"># install maven manually</span></span><br><span class="line">wget https://apache.website-solution.net/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">tar -xvzf apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">mv apache-maven-3.6.3 /opt</span><br><span class="line"><span class="built_in">export</span> PATH=/opt/apache-maven-3.6.3/bin:<span class="variable">$PATH</span></span><br><span class="line"></span><br><span class="line">mvn install:install-file \</span><br><span class="line">   -Dfile=<span class="variable">$Z3_DIR</span>/bin/com.microsoft.z3.jar \</span><br><span class="line">   -DgroupId=com.microsoft \</span><br><span class="line">   -DartifactId=z3 \</span><br><span class="line">   -Dversion=4.8.7 \</span><br><span class="line">   -Dpackaging=jar \</span><br><span class="line">   -DgeneratePom=<span class="literal">true</span></span><br></pre></td></tr></table></figure>

@@ -180,7 +180,7 @@
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -344,8 +344,17 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-03-30 21:44:46" itemprop="dateModified" datetime="2021-03-30T21:44:46+08:00">2021-03-30</time>
+        <time title="Modified: 2021-03-30 21:51:12" itemprop="dateModified" datetime="2021-03-30T21:51:12+08:00">2021-03-30</time>
       </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+        </span>
+    </span>
 
   
 </div>
@@ -357,7 +366,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="1-查看LLVM-IR">1. 查看LLVM IR</h3>
+          <h3 id="1-查看llvm-ir"><a class="markdownIt-Anchor" href="#1-查看llvm-ir"></a> 1. 查看LLVM IR</h3>
 <p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
 <ul>
 <li><code>llvm-as</code>：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的<strong>不是</strong>目标平台的机器码。</li>
