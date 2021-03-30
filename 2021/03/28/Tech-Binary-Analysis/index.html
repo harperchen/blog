@@ -24,26 +24,20 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="Side channel Steal Secret through side channels side channels: timing; power; em emissions; sound; heat; cache Infer secrets via secret-dependent physical information">
+<meta name="description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Side Channel">
-<meta property="og:url" content="https://harperchen.github.io/blog/2021/03/22/Side-Channel/index.html">
+<meta property="og:title" content="Binary Analysis">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/03/28/Tech-Binary-Analysis/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Side channel Steal Secret through side channels side channels: timing; power; em emissions; sound; heat; cache Infer secrets via secret-dependent physical information">
+<meta property="og:description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
 <meta property="og:locale">
-<meta property="og:image" content="https://i.loli.net/2021/03/22/4ShuJOAKLDZVrC5.png">
-<meta property="og:image" content="https://i.loli.net/2021/03/22/bY3NiR8VJ17HeqZ.png">
-<meta property="og:image" content="https://i.loli.net/2021/03/22/9g463RPiF8rLUET.png">
-<meta property="og:image" content="https://i.loli.net/2021/03/22/qSvZraW2K5MneRP.png">
-<meta property="og:image" content="https://i.loli.net/2021/03/22/umxjnMIq9FlD3N4.png">
-<meta property="article:published_time" content="2021-03-22T06:20:55.000Z">
-<meta property="article:modified_time" content="2021-03-28T04:35:22.689Z">
+<meta property="article:published_time" content="2021-03-28T04:39:06.000Z">
+<meta property="article:modified_time" content="2021-03-30T13:41:58.557Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2021/03/22/4ShuJOAKLDZVrC5.png">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/2021/03/22/Side-Channel/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/03/28/Tech-Binary-Analysis/">
 
 
 <script data-pjax class="page-configurations">
@@ -55,7 +49,7 @@
     lang   : 'zh-Hans'
   };
 </script>
-<title>Side Channel | Wei's Blog</title>
+<title>Binary Analysis | Wei's Blog</title>
   
 
 
@@ -153,7 +147,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -166,7 +160,6 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Side-channel"><span class="nav-text">Side channel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Example"><span class="nav-text">Example</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#RSA-Decryption-Algorithm"><span class="nav-text">RSA Decryption Algorithm</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Timing-side-channel"><span class="nav-text">Timing side channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Break-RSA-with-Timing-Side-Channel"><span class="nav-text">Break RSA with Timing Side Channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Break-RSA-with-Power-Side-channel"><span class="nav-text">Break RSA with Power Side channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Break-RSA-with-Power-Side-channel-v2"><span class="nav-text">Break RSA with Power Side channel</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache-based-side-channel"><span class="nav-text">Cache-based side channel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Meltdown"><span class="nav-text">Meltdown</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Spectre"><span class="nav-text">Spectre</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#L1-and-L2-Cache-Side-Channel"><span class="nav-text">L1 and L2 Cache Side Channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#LLC-Side-Channel"><span class="nav-text">LLC Side Channel</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -182,7 +175,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -243,7 +236,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/22/Side-Channel/">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/28/Tech-Binary-Analysis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -256,7 +249,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Side Channel
+          Binary Analysis
         </h1>
 
         <div class="post-meta-container">
@@ -267,14 +260,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-03-22 14:20:55" itemprop="dateCreated datePublished" datetime="2021-03-22T14:20:55+08:00">2021-03-22</time>
+      <time title="Created: 2021-03-28 12:39:06" itemprop="dateCreated datePublished" datetime="2021-03-28T12:39:06+08:00">2021-03-28</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-03-28 12:35:22" itemprop="dateModified" datetime="2021-03-28T12:35:22+08:00">2021-03-28</time>
+        <time title="Modified: 2021-03-30 21:41:58" itemprop="dateModified" datetime="2021-03-30T21:41:58+08:00">2021-03-30</time>
       </span>
 
   
@@ -294,52 +287,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h4 id="Side-channel">Side channel</h4>
-<p>Steal Secret through side channels</p>
-<p>side channels: timing; power; em emissions; sound; heat; cache</p>
-<p>Infer secrets via secret-dependent physical information</p>
-<a id="more"></a>
-<h4 id="Example">Example</h4>
-<h5 id="RSA-Decryption-Algorithm">RSA Decryption Algorithm</h5>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> bit in k:</span><br><span class="line">    <span class="comment">// compute square</span></span><br><span class="line">    <span class="keyword">if</span> bit == <span class="number">1</span>:</span><br><span class="line">        <span class="comment">// compute multiply</span></span><br><span class="line">endfor</span><br></pre></td></tr></table></figure>
-<p>|  square | square  | square &amp; multiply | square &amp; multiply  | …</p>
-<p>|       0      |       0      |                   1               |                    1               | …</p>
-<h5 id="Timing-side-channel">Timing side channel</h5>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (k == <span class="number">1</span>) then</span><br><span class="line">    <span class="comment">// slow branch</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment">// fast branch</span></span><br><span class="line">endfor</span><br></pre></td></tr></table></figure>
-<h5 id="Break-RSA-with-Timing-Side-Channel">Break RSA with Timing Side Channel</h5>
-<p>|  square |  square | square + multiply | square + multiply | …</p>
-<p>|       0      |       0      |                  1                |                  1                | …</p>
-<p>|     fast   |     fast    |              slow             |               slow            | …</p>
-<h5 id="Break-RSA-with-Power-Side-channel">Break RSA with Power Side channel</h5>
-<img src="https://i.loli.net/2021/03/22/4ShuJOAKLDZVrC5.png" alt="image-20210322145237378" style="zoom: 43%;" />
-<h5 id="Break-RSA-with-Power-Side-channel-v2">Break RSA with Power Side channel</h5>
-<img src="https://i.loli.net/2021/03/22/bY3NiR8VJ17HeqZ.png" alt="image-20210322145348892" style="zoom:50%;" />
-<h4 id="Cache-based-side-channel">Cache-based side channel</h4>
-<p>Cache lines: minimal storage units of a cache 64 bytes</p>
-<p>Cache sets: equal number of cache lines</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Table Lookup</span></span><br><span class="line">x = A[idx]</span><br></pre></td></tr></table></figure>
-<p>idx is virtual address, for L1 and L2 cache, virtual address is used for indexing, however for L3 cache, physical address is used.</p>
-<p>The upper part of a memory address maps a memory access to a cache line access</p>
-<ul>
-<li>
-<p>Set index: locate the set in which the data may be stored.</p>
-</li>
-<li>
-<p>Tag: confirm the data is present in one of its lines</p>
-</li>
-</ul>
-<img src="https://i.loli.net/2021/03/22/9g463RPiF8rLUET.png" alt="image-20210322150113988" style="zoom:33%;" />
-<p>The System model for a multi-core processor, L1 and L2 cache is private to each core and LLC is shared across multiple cores;</p>
-<img src="https://i.loli.net/2021/03/22/qSvZraW2K5MneRP.png" alt="image-20210322145946903" style="zoom:30%;" />
-<p>Threat model</p>
-<p><img src="https://i.loli.net/2021/03/22/umxjnMIq9FlD3N4.png" alt="image-20210322192746039"></p>
-<p>Support</p>
-<h4 id="Meltdown">Meltdown</h4>
-<h5 id="Spectre">Spectre</h5>
-<h5 id="L1-and-L2-Cache-Side-Channel">L1 and L2 Cache Side Channel</h5>
-<p>Prime-and-Probe</p>
-<h5 id="LLC-Side-Channel">LLC Side Channel</h5>
-
+        
     </div>
 
     
@@ -352,8 +300,8 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/blog/2021/03/04/S-P-19-NEUZZ-Efficient-Fuzzing-with-Neural-Program-Smoothing/" rel="prev" title="[S&P'19] NEUZZ: Efficient Fuzzing with Neural Program Smoothing">
-                  <i class="fa fa-chevron-left"></i> [S&P'19] NEUZZ: Efficient Fuzzing with Neural Program Smoothing
+                <a href="/blog/2021/03/28/Tech-Symbolic-Execution/" rel="prev" title="Symbolic Execution">
+                  <i class="fa fa-chevron-left"></i> Symbolic Execution
                 </a>
             </div>
             <div class="post-nav-item">

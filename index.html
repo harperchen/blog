@@ -173,7 +173,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -233,7 +233,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/22/Side-Channel/">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/28/Tech-Binary-Analysis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -246,7 +246,159 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/03/22/Side-Channel/" class="post-title-link" itemprop="url">Side Channel</a>
+          <a href="/blog/2021/03/28/Tech-Binary-Analysis/" class="post-title-link" itemprop="url">Binary Analysis</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-28 12:39:06" itemprop="dateCreated datePublished" datetime="2021-03-28T12:39:06+08:00">2021-03-28</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-03-30 21:41:58" itemprop="dateModified" datetime="2021-03-30T21:41:58+08:00">2021-03-30</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/28/Tech-Symbolic-Execution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/2021/03/28/Tech-Symbolic-Execution/" class="post-title-link" itemprop="url">Symbolic Execution</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-28 12:36:19" itemprop="dateCreated datePublished" datetime="2021-03-28T12:36:19+08:00">2021-03-28</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-03-30 21:46:40" itemprop="dateModified" datetime="2021-03-30T21:46:40+08:00">2021-03-30</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="Z3-Solver">Z3 Solver</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">python scripts/mk_make.py --java</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/60403775/how-to-setup-a-java-development-environment-for-z3">https://stackoverflow.com/questions/60403775/how-to-setup-a-java-development-environment-for-z3</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.10/z3-4.8.10-x64-ubuntu-18.04.zip</span><br><span class="line">unzip z3-4.8.10-x64-ubuntu-18.04.zip</span><br><span class="line"><span class="built_in">export</span> Z3_DIR=&lt;some_path&gt;/z3-4.8.10-x64-ubuntu-18.04</span><br><span class="line"></span><br><span class="line"><span class="comment"># install maven by apt</span></span><br><span class="line">sudo apt install maven</span><br><span class="line"><span class="comment"># install maven manually</span></span><br><span class="line">wget https://apache.website-solution.net/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">tar -xvzf apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">mv apache-maven-3.6.3 /opt</span><br><span class="line"><span class="built_in">export</span> PATH=/opt/apache-maven-3.6.3/bin:<span class="variable">$PATH</span></span><br><span class="line"></span><br><span class="line">mvn install:install-file \</span><br><span class="line">   -Dfile=<span class="variable">$Z3_DIR</span>/bin/com.microsoft.z3.jar \</span><br><span class="line">   -DgroupId=com.microsoft \</span><br><span class="line">   -DartifactId=z3 \</span><br><span class="line">   -Dversion=4.8.7 \</span><br><span class="line">   -Dpackaging=jar \</span><br><span class="line">   -DgeneratePom=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>Add the following source to maven pom.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.microsoft<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>z3<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.8.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://github.com/Z3Prover/z3/tree/z3-4.8.7/src/api/java">https://github.com/Z3Prover/z3/tree/z3-4.8.7/src/api/java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Z3Helper.z3Utility;</span><br><span class="line"><span class="keyword">import</span> com.microsoft.z3.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">z3Test1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Context z3 = <span class="keyword">new</span> Context();</span><br><span class="line">        IntExpr zero = z3.mkInt(<span class="number">0</span>);</span><br><span class="line">        IntExpr one = z3.mkInt(<span class="number">1</span>);</span><br><span class="line">        IntExpr variable = z3.mkIntConst(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">        IntExpr variable2 = z3.mkIntConst(<span class="string">&quot;c&quot;</span>);</span><br><span class="line">        IntExpr variable3 = z3.mkIntConst(<span class="string">&quot;b&quot;</span>);</span><br><span class="line">        System.out.println(variable.toString());</span><br><span class="line">        BoolExpr greater = z3.mkGe(variable,zero);</span><br><span class="line">        BoolExpr lessthan = z3.mkLt(variable2,one);</span><br><span class="line">        BoolExpr formula = z3.mkAnd(greater,lessthan);</span><br><span class="line">        System.out.println(greater);</span><br><span class="line">        Expr[] copy =<span class="keyword">new</span> Expr[<span class="number">2</span>];</span><br><span class="line">        copy[<span class="number">0</span>] = variable;</span><br><span class="line">        copy[<span class="number">1</span>] = variable2;</span><br><span class="line">        Expr[] beCopied =<span class="keyword">new</span> Expr[<span class="number">2</span>];</span><br><span class="line">        beCopied[<span class="number">0</span>] = variable3;</span><br><span class="line">        beCopied[<span class="number">1</span>] = variable3;</span><br><span class="line">        System.out.println(formula);</span><br><span class="line">        System.out.println(z3Utility.constructFreshExpr(formula,z3));</span><br><span class="line">        Solver s = z3.mkSolver();</span><br><span class="line">        s.add(greater);</span><br><span class="line">        Status result = s.check();</span><br><span class="line">        System.out.println(result);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>没有Main时打包为Jar</p>
+<img src="https://i.loli.net/2021/03/29/tQp6R1PJfAes7HT.png" alt="image-20210329131754749" style="zoom: 67%;" />
+<img src="https://i.loli.net/2021/03/29/hVAi8I6LTmkbBx3.png" alt="image-20210329131811471" style="zoom:67%;" />
+<img src="https://i.loli.net/2021/03/29/FEkNvZGIHoOJcy2.png" alt="image-20210329131847136" style="zoom: 67%;" />
+<img src="https://i.loli.net/2021/03/29/ftCoO2QKmHc5eIs.png" alt="image-20210329131900567" style="zoom:67%;" />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/22/Tech-Side-Channel-Attacks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/2021/03/22/Tech-Side-Channel-Attacks/" class="post-title-link" itemprop="url">Side Channel Attacks</a>
         </h2>
 
         <div class="post-meta-container">
@@ -264,7 +416,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-03-28 12:35:22" itemprop="dateModified" datetime="2021-03-28T12:35:22+08:00">2021-03-28</time>
+        <time title="Modified: 2021-03-30 21:40:39" itemprop="dateModified" datetime="2021-03-30T21:40:39+08:00">2021-03-30</time>
       </span>
 
   
@@ -277,13 +429,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="Side-channel">Side channel</h4>
+          <h4 id="Side-channel-Attacks">Side channel Attacks</h4>
 <p>Steal Secret through side channels</p>
 <p>side channels: timing; power; em emissions; sound; heat; cache</p>
 <p>Infer secrets via secret-dependent physical information</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/blog/2021/03/22/Side-Channel/#more" rel="contents">
+              <a class="btn" href="/blog/2021/03/22/Tech-Side-Channel-Attacks/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -788,7 +940,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/13/Metamorphic-Testing/">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/13/Tech-Metamorphic-Testing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -801,7 +953,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/01/13/Metamorphic-Testing/" class="post-title-link" itemprop="url">Metamorphic Testing</a>
+          <a href="/blog/2021/01/13/Tech-Metamorphic-Testing/" class="post-title-link" itemprop="url">Metamorphic Testing</a>
         </h2>
 
         <div class="post-meta-container">
@@ -811,10 +963,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2021-01-13 15:58:11 / Modified: 16:02:02" itemprop="dateCreated datePublished" datetime="2021-01-13T15:58:11+08:00">2021-01-13</time>
+      <time title="Created: 2021-01-13 15:58:11" itemprop="dateCreated datePublished" datetime="2021-01-13T15:58:11+08:00">2021-01-13</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-03-30 21:44:57" itemprop="dateModified" datetime="2021-03-30T21:44:57+08:00">2021-03-30</time>
+      </span>
 
   
 </div>
@@ -827,172 +985,6 @@
     
     <div class="post-body" itemprop="articleBody">
           
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/10/Memory-Safety/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/01/10/Memory-Safety/" class="post-title-link" itemprop="url">Memory Safety</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-10 17:10:01" itemprop="dateCreated datePublished" datetime="2021-01-10T17:10:01+08:00">2021-01-10</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-16 20:45:37" itemprop="dateModified" datetime="2021-01-16T20:45:37+08:00">2021-01-16</time>
-      </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1-asan"><a class="markdownIt-Anchor" href="#1-asan"></a> 1. ASAN</h3>
-<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904111570157575">https://juejin.cn/post/6844904111570157575</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf">https://www.ndss-symposium.org/wp-content/uploads/2018/02/ndss2018_05A-5_Han_paper.pdf</a></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/01/10/Memory-Safety/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/08/LLVM-Pass/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/01/08/LLVM-Pass/" class="post-title-link" itemprop="url">LLVM Pass</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-08 21:09:24" itemprop="dateCreated datePublished" datetime="2021-01-08T21:09:24+08:00">2021-01-08</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-01-26 12:46:08" itemprop="dateModified" datetime="2021-01-26T12:46:08+08:00">2021-01-26</time>
-      </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1-查看llvm-ir"><a class="markdownIt-Anchor" href="#1-查看llvm-ir"></a> 1. 查看LLVM IR</h3>
-<p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
-<ul>
-<li><code>llvm-as</code>：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的<strong>不是</strong>目标平台的机器码。</li>
-<li><code>llvm-dis</code>：<code>llvm-as</code>的逆过程，即反汇编。 不过这里的反汇编的对象是LLVM IR的二进制格式，而不是机器码。</li>
-<li><code>opt</code>：优化LLVM IR。输出新的LLVM IR。</li>
-<li><code>llc</code>：把LLVM IR编译成汇编码。需要用<code>as</code>进一步得到机器码。</li>
-<li><code>lli</code>：解释执行LLVM IR</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/01/08/LLVM-Pass/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
       
     </div>
 
