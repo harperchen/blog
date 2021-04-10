@@ -163,7 +163,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TSAN"><span class="nav-text">TSAN</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Paper-Skelton"><span class="nav-text">1. Paper Skelton</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%88%9D%E6%AD%A5%E6%8E%A2%E7%B4%A2"><span class="nav-text">2. 初步探索</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-SPEC-CPU-2006"><span class="nav-text">2. SPEC CPU 2006</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KTSAN"><span class="nav-text">KTSAN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KCSAN-Kernel-Concurrent-Sanitizer"><span class="nav-text">KCSAN (Kernel Concurrent Sanitizer)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SANRAZOR"><span class="nav-text">SANRAZOR</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#tsan"><span class="nav-text"> TSAN</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-paper-skelton"><span class="nav-text"> 1. Paper Skelton</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%88%9D%E6%AD%A5%E6%8E%A2%E7%B4%A2"><span class="nav-text"> 2. 初步探索</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-spec-cpu-2006"><span class="nav-text"> 2. SPEC CPU 2006</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ktsan"><span class="nav-text"> KTSAN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kcsan-kernel-concurrent-sanitizer"><span class="nav-text"> KCSAN (Kernel Concurrent Sanitizer)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sanrazor"><span class="nav-text"> SANRAZOR</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -179,7 +179,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -291,11 +291,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="TSAN">TSAN</h3>
+        <h3 id="tsan"><a class="markdownIt-Anchor" href="#tsan"></a> TSAN</h3>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers">https://github.com/google/sanitizers</a></p>
 <p><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/ThreadSafetyAnalysis.html">https://clang.llvm.org/docs/ThreadSafetyAnalysis.html</a></p>
 <a id="more"></a>
-<h5 id="1-Paper-Skelton">1. Paper Skelton</h5>
+<h5 id="1-paper-skelton"><a class="markdownIt-Anchor" href="#1-paper-skelton"></a> 1. Paper Skelton</h5>
 <ul>
 <li>
 <p>Data Race</p>
@@ -368,24 +368,24 @@
 </ul>
 </li>
 </ul>
-<h5 id="2-初步探索">2. 初步探索</h5>
+<h5 id="2-初步探索"><a class="markdownIt-Anchor" href="#2-初步探索"></a> 2. 初步探索</h5>
 <p><code>ThreadSanitizer</code> (aka TSan) is a data race detector for C/C++. Data races are one of the most common and hardest to debug types of bugs in concurrent systems. A data race occurs when two threads access the same variable concurrently and at least one of the accesses is write. <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/C%2B%2B11">C++11</a> standard officially bans data races as <em>undefined behavior</em>.</p>
-<p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892"></p>
+<p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892" /></p>
 <p>The cost of race detection varies by program, but for a typical program, memory usage may increase by 5-10x and execution time by 2-20x</p>
-<h5 id="2-SPEC-CPU-2006">2. SPEC CPU 2006</h5>
+<h5 id="2-spec-cpu-2006"><a class="markdownIt-Anchor" href="#2-spec-cpu-2006"></a> 2. SPEC CPU 2006</h5>
 <p>our study on SPEC CPU2006 benchmarks [25] shows that the geometric mean overheads in- duced by AddressSanitizer (ASan) [23] and UndefinedBehaviorSanitizer (UBSan) [6] are, respectively, 73.8% and 160.1% (see Sec. 6)</p>
 <p>19 C/C++ programs, in which 11 benchmarks can be compiled with clang and with ASan and UBSan enabled</p>
 <p>Each SPEC benchmark is shipped with a training workload, a testing workload, and a reference workload.  Following the convention, we use the training workload to profile these programs and obtain the dynamic patterns of sanitizer checks.</p>
 <p>Memory Overhead; CPU overhead;</p>
-<h4 id="KTSAN">KTSAN</h4>
+<h4 id="ktsan"><a class="markdownIt-Anchor" href="#ktsan"></a> KTSAN</h4>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan">https://github.com/google/ktsan</a></p>
 <p><a target="_blank" rel="noopener" href="https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf">https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf</a></p>
-<h4 id="KCSAN-Kernel-Concurrent-Sanitizer">KCSAN (Kernel Concurrent Sanitizer)</h4>
+<h4 id="kcsan-kernel-concurrent-sanitizer"><a class="markdownIt-Anchor" href="#kcsan-kernel-concurrent-sanitizer"></a> KCSAN (Kernel Concurrent Sanitizer)</h4>
 <p>• KCSAN, developed by Google 2019, found more than 300 race bugs.</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan/wiki/KCSAN">https://github.com/google/ktsan/wiki/KCSAN</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html">https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html</a></p>
-<h4 id="SANRAZOR">SANRAZOR</h4>
-<p><img src="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png" alt="image-20210102211000993"></p>
+<h4 id="sanrazor"><a class="markdownIt-Anchor" href="#sanrazor"></a> SANRAZOR</h4>
+<p><img src="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png" alt="image-20210102211000993" /></p>
 <ul>
 <li>Target problem: reduce redundant sanitizer check, specially, ASAN and UBSAN</li>
 <li>What is sanitizer
