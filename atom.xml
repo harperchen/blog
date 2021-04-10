@@ -96,16 +96,12 @@
     <link href="https://harperchen.github.io/blog/2021/03/04/S-P-19-NEUZZ-Efficient-Fuzzing-with-Neural-Program-Smoothing/"/>
     <id>https://harperchen.github.io/blog/2021/03/04/S-P-19-NEUZZ-Efficient-Fuzzing-with-Neural-Program-Smoothing/</id>
     <published>2021-03-04T06:50:28.000Z</published>
-    <updated>2021-03-04T07:32:54.480Z</updated>
+    <updated>2021-04-10T12:59:55.216Z</updated>
     
-    <content type="html"><![CDATA[<h3 id=""><a class="markdownIt-Anchor" href="#"></a> </h3><p>One of the main limitations of evolutionary optimization algorithms is that they cannot leverage the structure (<em>i.e.</em>, gradients or other higher-order derivatives) of the underlying optimization problem.</p><p>In this paper, we introduce a novel, efficient, and scalable program smoothing technique using feed-forward Neural Networks (NNs) that can incrementally learn smooth approximations of complex, real-world program branching behaviors, <em>i.e.</em>, predicting the control flow edges of the target program exercised by a particular given input.</p><img src="https://i.loli.net/2021/03/04/fELcX8lCpg5rGt9.png" alt="image-20210304152019208" style="zoom:50%;" /><p>The key challenge in incremental training is that if an NN is only trained on new data, it might completely forget the rules it learned from old data [57]. We avoid this problem by designing a new coverage-based filtration scheme that creates a condensed summary of both old and new data, allowing the NN to be trained efficiently on them.</p>]]></content>
+    <content type="html"><![CDATA[<p>One of the main limitations of evolutionary optimization algorithms is that they cannot leverage the structure (<em>i.e.</em>, gradients or other higher-order derivatives) of the underlying optimization problem. In this paper, we introduce a novel, efficient, and scalable program smoothing technique using feed-forward Neural Networks (NNs) that can incrementally learn smooth approximations of complex, real-world program branching behaviors, <em>i.e.</em>, predicting the control flow edges of the target program exercised by a particular given input.</p><a id="more"></a><p>The key challenge in incremental training is that if an NN is only trained on new data, it might completely forget the rules it learned from old data [57]. We avoid this problem by designing a new coverage-based filtration scheme that creates a condensed summary of both old and new data, allowing the NN to be trained efficiently on them.</p><img src="https://i.loli.net/2021/03/04/fELcX8lCpg5rGt9.png" alt="image-20210304152019208" style="zoom: 33%;" />]]></content>
     
     
-      
-      
-    <summary type="html">&lt;h3 id=&quot;&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#&quot;&gt;&lt;/a&gt; &lt;/h3&gt;
-&lt;p&gt;One of the main limitations of evolutionary optimization algorithms is that th</summary>
-      
+    <summary type="html">&lt;p&gt;One of the main limitations of evolutionary optimization algorithms is that they cannot leverage the structure (&lt;em&gt;i.e.&lt;/em&gt;, gradients or other higher-order derivatives) of the underlying optimization problem. In this paper, we introduce a novel, efficient, and scalable program smoothing technique using feed-forward Neural Networks (NNs) that can incrementally learn smooth approximations of complex, real-world program branching behaviors, &lt;em&gt;i.e.&lt;/em&gt;, predicting the control flow edges of the target program exercised by a particular given input.&lt;/p&gt;</summary>
     
     
     

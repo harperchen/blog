@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://harperchen.github.io/blog/2021/03/04/S-P-19-NEUZZ-Efficient-Fuzzing-with-Neural-Program-Smoothing/</loc>
+    
+    <lastmod>2021-04-10</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://harperchen.github.io/blog/2021/03/28/Tech-Symbolic-Execution/</loc>
     
     <lastmod>2021-04-10</lastmod>
@@ -124,13 +131,6 @@
     <loc>https://harperchen.github.io/blog/2020/12/24/S-P-20-KRACE-Data-Race-Fuzzing-for-Kernel-File-Systems/</loc>
     
     <lastmod>2021-03-05</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://harperchen.github.io/blog/2021/03/04/S-P-19-NEUZZ-Efficient-Fuzzing-with-Neural-Program-Smoothing/</loc>
-    
-    <lastmod>2021-03-04</lastmod>
     
   </url>
   
