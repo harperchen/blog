@@ -72,13 +72,6 @@
   </url>
   
   <url>
-    <loc>https://harperchen.github.io/blog/2021/01/13/Tech-Metamorphic-Testing/</loc>
-    
-    <lastmod>2021-03-30</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://harperchen.github.io/blog/2020/12/24/Tech-Data-Race/</loc>
     
     <lastmod>2021-03-30</lastmod>
@@ -291,13 +284,6 @@
   </url>
   
   <url>
-    <loc>https://harperchen.github.io/blog/tags/Hardware-Boostup/</loc>
-    <lastmod>2021-04-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://harperchen.github.io/blog/tags/Race-Bug/</loc>
     <lastmod>2021-04-10</lastmod>
     <changefreq>daily</changefreq>
@@ -305,7 +291,21 @@
   </url>
   
   <url>
+    <loc>https://harperchen.github.io/blog/tags/Hardware-Boostup/</loc>
+    <lastmod>2021-04-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://harperchen.github.io/blog/tags/Writting/</loc>
+    <lastmod>2021-04-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://harperchen.github.io/blog/tags/Taint-Analysis/</loc>
     <lastmod>2021-04-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -320,13 +320,6 @@
   
   <url>
     <loc>https://harperchen.github.io/blog/tags/Container/</loc>
-    <lastmod>2021-04-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://harperchen.github.io/blog/tags/Taint-Analysis/</loc>
     <lastmod>2021-04-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -377,14 +370,14 @@
   </url>
   
   <url>
-    <loc>https://harperchen.github.io/blog/categories/Container/</loc>
+    <loc>https://harperchen.github.io/blog/categories/Taint/</loc>
     <lastmod>2021-04-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://harperchen.github.io/blog/categories/Taint/</loc>
+    <loc>https://harperchen.github.io/blog/categories/Container/</loc>
     <lastmod>2021-04-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

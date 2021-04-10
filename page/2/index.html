@@ -173,7 +173,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -224,101 +224,6 @@
 
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/08/Tech-LLVM-Pass/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/01/08/Tech-LLVM-Pass/" class="post-title-link" itemprop="url">LLVM Pass</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-08 21:09:24" itemprop="dateCreated datePublished" datetime="2021-01-08T21:09:24+08:00">2021-01-08</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-03-30 21:51:12" itemprop="dateModified" datetime="2021-03-30T21:51:12+08:00">2021-03-30</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/blog/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1-查看llvm-ir"><a class="markdownIt-Anchor" href="#1-查看llvm-ir"></a> 1. 查看LLVM IR</h3>
-<p>使用LLVM的编译流程：源码 -&gt; AST -&gt; LLVM IR (<code>.ll</code>)-&gt; LLVM Bitcode (<code>.bc</code>) -&gt; ASM -&gt; Native</p>
-<ul>
-<li><code>llvm-as</code>：把LLVM IR从人类能看懂的文本格式汇编成二进制格式。注意：此处得到的<strong>不是</strong>目标平台的机器码。</li>
-<li><code>llvm-dis</code>：<code>llvm-as</code>的逆过程，即反汇编。 不过这里的反汇编的对象是LLVM IR的二进制格式，而不是机器码。</li>
-<li><code>opt</code>：优化LLVM IR。输出新的LLVM IR。</li>
-<li><code>llc</code>：把LLVM IR编译成汇编码。需要用<code>as</code>进一步得到机器码。</li>
-<li><code>lli</code>：解释执行LLVM IR</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/01/08/Tech-LLVM-Pass/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1106,8 +1011,96 @@
 
 
 
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/" class="post-title-link" itemprop="url">[CCS'17] DIFUZE: Interface Aware Fuzzing for Kernel Drivers </a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-12-21 18:54:50" itemprop="dateCreated datePublished" datetime="2020-12-21T18:54:50+08:00">2020-12-21</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-12-24 12:59:17" itemprop="dateModified" datetime="2020-12-24T12:59:17+08:00">2020-12-24</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
+<p>Device drivers are an essential part in modern Unix-like systems to handle operations on physical devices, from hard disks and print- ers to digital cameras and Bluetooth speakers. The surge of new hardware, particularly on mobile devices, introduces an explosive growth of device drivers in system kernels. Many such drivers are provided by third-party developers, which are susceptible to se- curity vulnerabilities and lack proper vetting. Unfortunately, the complex input data structures for device drivers render traditional analysis tools, such as fuzz testing, less effective, and so far, research on kernel driver security is comparatively sparse.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2020/12/21/CCS-17-DIFUZE-Interface-Aware-Fuzzing-for-Kernel-Drivers/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="page-number current">2</span><a class="page-number" href="/blog/page/3/">3</a><a class="page-number" href="/blog/page/4/">4</a><a class="extend next" rel="next" href="/blog/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/blog/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="page-number current">2</span><a class="page-number" href="/blog/page/3/">3</a><a class="extend next" rel="next" href="/blog/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
