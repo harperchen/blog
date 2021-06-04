@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://harperchen.github.io/blog/2020/09/20/Taint-Analysis/</loc>
+    
+    <lastmod>2021-06-04</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://harperchen.github.io/blog/2021/04/28/Tech-Binary-Analysis/</loc>
     
     <lastmod>2021-06-04</lastmod>
