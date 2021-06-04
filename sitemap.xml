@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://harperchen.github.io/blog/2021/01/08/Tech-OpenArk-Compiler/</loc>
+    
+    <lastmod>2021-06-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://harperchen.github.io/blog/2021/05/31/Tool-Angr-Binary-Analysis/</loc>
+    
+    <lastmod>2021-06-04</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://harperchen.github.io/blog/2021/01/30/USENIX-18-MoonShine-Optimizing-OS-Fuzzer-Seed-Selection-with-Trace-Distillation/</loc>
     
     <lastmod>2021-06-04</lastmod>

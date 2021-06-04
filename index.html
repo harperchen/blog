@@ -173,7 +173,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -287,6 +287,140 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/05/31/Tool-Angr-Binary-Analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/2021/05/31/Tool-Angr-Binary-Analysis/" class="post-title-link" itemprop="url">[Tool] Angr Binary Analysis</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-05-31 17:42:33" itemprop="dateCreated datePublished" datetime="2021-05-31T17:42:33+08:00">2021-05-31</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-06-04 21:55:50" itemprop="dateModified" datetime="2021-06-04T21:55:50+08:00">2021-06-04</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="Workflow">Workflow</h3>
+<ul>
+<li>
+<p>Binary Lifting <em><strong>libVEX</strong></em> : Binary Code  to VEX IR</p>
+</li>
+<li>
+<p>Binary Loading <em><strong>CLE</strong></em> : load binary with differernt formats</p>
+<ul>
+<li>Resolve dynamic symbol</li>
+<li>Perform relocation</li>
+<li>Initialize program state</li>
+</ul>
+</li>
+<li>
+<p>Program State Representation: <em><strong>SimuVEX</strong></em></p>
+<ul>
+<li>
+<p>Program state (<em><strong>SimState</strong></em>) is a snapshot of values in registers and memory, open files, etc.</p>
+<table>
+<thead>
+<tr>
+<th>State Plugins</th>
+<th>Information</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registers</td>
+<td>Value of registers at given point</td>
+</tr>
+<tr>
+<td>Symbolic memory</td>
+<td></td>
+</tr>
+<tr>
+<td>Abstract memory</td>
+<td></td>
+</tr>
+<tr>
+<td>POSIX</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+
       
     </div>
 
@@ -881,91 +1015,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2021/02/23/CCS-19-Learning-to-Fuzz-from-Symbolic-Execution-with-Application-to-Smart-Contracts/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/02/02/RLTrace-Related/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/02/02/RLTrace-Related/" class="post-title-link" itemprop="url">RLTrace Related</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-02-02 13:03:23" itemprop="dateCreated datePublished" datetime="2021-02-02T13:03:23+08:00">2021-02-02</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-03-30 21:46:17" itemprop="dateModified" datetime="2021-03-30T21:46:17+08:00">2021-03-30</time>
-      </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h5 id="readelf"><a class="markdownIt-Anchor" href="#readelf"></a> readelf</h5>
-<p>readelf is used to detect virtual memory offset.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -SW vmlinux</span><br></pre></td></tr></table></figure>
-<p>The meaning of the flags is as follows:</p>
-<ul>
-<li>-S - list section headers in the kernel image file</li>
-<li>-W - output each section header entry in a single line</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/02/02/RLTrace-Related/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>

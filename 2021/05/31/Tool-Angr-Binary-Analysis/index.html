@@ -24,18 +24,20 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta name="description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wei&#39;s Blog">
-<meta property="og:url" content="https://harperchen.github.io/blog/tags/Concolic-Testing/index.html">
+<meta name="description" content="Workflow   Binary Lifting libVEX : Binary Code  to VEX IR   Binary Loading CLE : load binary with differernt formats  Resolve dynamic symbol Perform relocation Initialize program state    Program Stat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Tool] Angr Binary Analysis">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/05/31/Tool-Angr-Binary-Analysis/index.html">
 <meta property="og:site_name" content="Wei&#39;s Blog">
-<meta property="og:description" content="Be Brave; Be Confident;  Be Happy; Be Optimistic;">
+<meta property="og:description" content="Workflow   Binary Lifting libVEX : Binary Code  to VEX IR   Binary Loading CLE : load binary with differernt formats  Resolve dynamic symbol Perform relocation Initialize program state    Program Stat">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-05-31T09:42:33.000Z">
+<meta property="article:modified_time" content="2021-06-04T13:55:50.672Z">
 <meta property="article:author" content="Wei CHEN">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://harperchen.github.io/blog/tags/Concolic-Testing/">
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/05/31/Tool-Angr-Binary-Analysis/">
 
 
 <script data-pjax class="page-configurations">
@@ -43,11 +45,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
-<title>Tag: Concolic Testing | Wei's Blog</title>
+<title>[Tool] Angr Binary Analysis | Wei's Blog</title>
   
 
 
@@ -145,7 +147,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -158,6 +160,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Workflow"><span class="nav-text">Workflow</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -223,50 +226,163 @@
 </noscript>
 
 
-    <div class="main-inner tag posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h2 class="collection-header">Concolic Testing
-          <small>Tag</small>
-        </h2>
-      </div>
 
-      
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/05/31/Tool-Angr-Binary-Analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Tool] Angr Binary Analysis
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-05-31 17:42:33" itemprop="dateCreated datePublished" datetime="2021-05-31T17:42:33+08:00">2021-05-31</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-06-04 21:55:50" itemprop="dateModified" datetime="2021-06-04T21:55:50+08:00">2021-06-04</time>
+      </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="Workflow">Workflow</h3>
+<ul>
+<li>
+<p>Binary Lifting <em><strong>libVEX</strong></em> : Binary Code  to VEX IR</p>
+</li>
+<li>
+<p>Binary Loading <em><strong>CLE</strong></em> : load binary with differernt formats</p>
+<ul>
+<li>Resolve dynamic symbol</li>
+<li>Perform relocation</li>
+<li>Initialize program state</li>
+</ul>
+</li>
+<li>
+<p>Program State Representation: <em><strong>SimuVEX</strong></em></p>
+<ul>
+<li>
+<p>Program state (<em><strong>SimState</strong></em>) is a snapshot of values in registers and memory, open files, etc.</p>
+<table>
+<thead>
+<tr>
+<th>State Plugins</th>
+<th>Information</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registers</td>
+<td>Value of registers at given point</td>
+</tr>
+<tr>
+<td>Symbolic memory</td>
+<td></td>
+</tr>
+<tr>
+<td>Abstract memory</td>
+<td></td>
+</tr>
+<tr>
+<td>POSIX</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-20T21:31:34+08:00"
-              content="2020-12-20">
-          12-20
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2020/12/20/USENIX-ATC-17-CAB-FUZZ-Practical-Concolic-Testing-Techniques-for-COTS-Operating-Systems/" itemprop="url">
-            <span itemprop="name">[USENIX ATC'17] CAB-FUZZ: Practical Concolic Testing Techniques for COTS Operating Systems </span>
-          </a>
-      </div>
+    <footer class="post-footer">
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/05/20/PLDI-14-Compiler-Validation-via-Equivalence-Modulo-Inputs/" rel="prev" title="[PLDI'14] Compiler Validation via Equivalence Modulo Inputs">
+                  <i class="fa fa-chevron-left"></i> [PLDI'14] Compiler Validation via Equivalence Modulo Inputs
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/06/02/NDSS-19-Send-Hardest-Problems-My-Way-Probabilistic-Path-Prioritization-for-Hybrid-Fuzzing/" rel="next" title="[NDSS'19] Send Hardest Problems My Way:Probabilistic Path Prioritization for Hybrid Fuzzing">
+                  [NDSS'19] Send Hardest Problems My Way:Probabilistic Path Prioritization for Hybrid Fuzzing <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
   </article>
+</div>
 
-    </div>
-  </div>
-  
-  
-  
+
+
+
+
 
 
 <script>
