@@ -173,7 +173,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -277,7 +277,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Abstract">Abstract</h3>
+          <h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
 <p>Hybrid fuzzing which combines fuzzing and concolic execution has become an advanced technique for software vulnerability detection. Based on the observation that fuzzing and concolic execution are complementary in nature, the state-of-theart hybrid fuzzing systems deploy “demand launch” and “optimal switch” strategies. Although these ideas sound intriguing, we point out several fundamental limitations in them, due to oversimplified assumptions. We then propose a novel “discriminative dispatch” strategy to better utilize the capability of concolic execution. We design a Monte Carlo based probabilistic path prioritization model to quantify each path’s difficulty and prioritize them for concolic execution. This model treats fuzzing as a random sampling process. It calculates each path’s probability based on the sampling information. Finally, our model prioritizes and assigns the most difficult paths to concolic execution. We implement a prototype system DigFuzz and evaluate our system with two representative datasets. Results show that the concolic execution in DigFuzz outperforms than those in state-of-the-art hybrid fuzzing systems in every major aspect. In particular, the concolic execution in DigFuzz contributes to discovering more vulnerabilities (12 vs. 5) and producing more code coverage (18.9% vs. 3.8%) on the CQE dataset than the concolic execution in Driller.</p>
           <!--noindex-->
             <div class="post-button">
@@ -287,134 +287,6 @@
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/05/31/Tool-Angr-Binary-Analysis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/05/31/Tool-Angr-Binary-Analysis/" class="post-title-link" itemprop="url">Tool-Angr Binary Analysis</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2021-05-31 17:42:33 / Modified: 17:52:27" itemprop="dateCreated datePublished" datetime="2021-05-31T17:42:33+08:00">2021-05-31</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="Workflow">Workflow</h3>
-<ul>
-<li>
-<p>Binary Lifting <em><strong>libVEX</strong></em> : Binary Code  to VEX IR</p>
-</li>
-<li>
-<p>Binary Loading <em><strong>CLE</strong></em> : load binary with differernt formats</p>
-<ul>
-<li>Resolve dynamic symbol</li>
-<li>Perform relocation</li>
-<li>Initialize program state</li>
-</ul>
-</li>
-<li>
-<p>Program State Representation: <em><strong>SimuVEX</strong></em></p>
-<ul>
-<li>
-<p>Program state (<em><strong>SimState</strong></em>) is a snapshot of values in registers and memory, open files, etc.</p>
-<table>
-<thead>
-<tr>
-<th>State Plugins</th>
-<th>Information</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Registers</td>
-<td>Value of registers at given point</td>
-</tr>
-<tr>
-<td>Symbolic memory</td>
-<td></td>
-</tr>
-<tr>
-<td>Abstract memory</td>
-<td></td>
-</tr>
-<tr>
-<td>POSIX</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</li>
-</ul>
-</li>
-</ul>
-
       
     </div>
 
@@ -478,7 +350,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Abstract">Abstract</h3>
+          <h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
 <p>We introduce equivalence modulo inputs (EMI), a simple, widely applicable methodology for validating optimizing compilers. Our key insight is to exploit the close interplay between (1) dynamically executing a program on some test inputs and (2) statically compiling the program to work on all possible inputs. Indeed, the test inputs induce a natural collection of the original program’s EMI variants, which can help differentially test any compiler and specifically target the difficult-to-find miscompilations.</p>
           <!--noindex-->
             <div class="post-button">
@@ -488,95 +360,6 @@
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/04/28/Tech-Binary-Analysis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/04/28/Tech-Binary-Analysis/" class="post-title-link" itemprop="url">Tech-Binary Analysis</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2021-04-28 16:06:43 / Modified: 16:47:29" itemprop="dateCreated datePublished" datetime="2021-04-28T16:06:43+08:00">2021-04-28</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Protections Againest Exploitation</p>
-<p>ASLR:</p>
-<p>DEP: Data Execution Protection</p>
-<p>Stack Canaries:</p>
-<p>CFI: Control flow integrity</p>
-<p>ROP: Return-oriented programming</p>
-<p>Closed Source Memory Errors:</p>
-<ol>
-<li>Resort to blackbox fuzzing: resulting in shallow coverage close to the provided test cases</li>
-<li>Rely on dynamic binary translation: instrument the binary at prohibitively high runtime cost (e.g., 10x to 100x for AFL fuzzing in QEMU mode on LAVA-M)</li>
-<li>Use unsound static rewriting based on heuristics</li>
-</ol>
-<p>Question: The fundamental difficulty for static rewriting techniques is disambiguating reference and scalar constants</p>
-<p>There are three fundamental techniques to rewrite binaries:</p>
-<ol>
-<li>
-<p>recompilation [14], which attempts to lift the code to an intermediate representation; Lifting code to IR for recompilation requires correctly recovering type information from binaries, which remains an open problem.</p>
-</li>
-<li>
-<p>trampolines [15], [16], which relies on indirection to insert new code segments without changing the size of basic blocks;  Trampolines may significantly increase code size, and the extra level of indirection increases performance overhead.</p>
-</li>
-<li>
-<p>reassembleable assembly [12], [13], which creates an assembly file equivalent to what a compiler would emit, i.e., with relocation symbols for the linker to resolve. Consequently, we believe that resymbolizing binaries for reassembleable assembly is one the most promising technique for static binary rewriting.</p>
-</li>
-</ol>
-
       
     </div>
 
@@ -667,79 +450,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/04/12/Tech-C-and-C++/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/04/12/Tech-C-and-C++/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-04-12 15:11:56" itemprop="dateCreated datePublished" datetime="2021-04-12T15:11:56+08:00">2021-04-12</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-04-16 00:26:48" itemprop="dateModified" datetime="2021-04-16T00:26:48+08:00">2021-04-16</time>
-      </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="comment">// 用来终止递归并处理包中最后一个元素</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">const</span> T &amp;t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; t;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 包中除了最后一个元素之外的其他元素都会调用这个版本的print</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>...argTypes&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(T retType, <span class="keyword">const</span> argTypes&amp;...rest)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; retType &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    print(rest...);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    print(<span class="string">&quot;string1&quot;</span>, <span class="number">2</span>, <span class="number">3.14f</span>, <span class="string">&quot;string2&quot;</span>, <span class="number">42</span>);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a target="_blank" rel="noopener" href="https://yuerblog.cc/2021/02/09/%E7%8E%B0%E4%BB%A3c%E4%B9%8B%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E6%A8%A1%E6%9D%BF/">https://yuerblog.cc/2021/02/09/现代c之可变参数模板/</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/a600423444/article/details/7206015">https://blog.csdn.net/a600423444/article/details/7206015</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/04/10/Tech-LLVM-Asan-Code/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -778,9 +488,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="asan-module-ctor">asan.module_ctor</h4>
+          <h4 id="asanmodule_ctor"><a class="markdownIt-Anchor" href="#asanmodule_ctor"></a> asan.module_ctor</h4>
 <p>works the same as _<em>attribute</em>_((constructor)), insert into section <code>.init_array</code></p>
-<h4 id="asan-module-dtor">asan.module_dtor</h4>
+<h4 id="asanmodule_dtor"><a class="markdownIt-Anchor" href="#asanmodule_dtor"></a> asan.module_dtor</h4>
 <p>works the same as  _<em>attribute</em>_ ((destructor)), insert into section <code>.fini_array</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.section	.init_array.1,&quot;aw&quot;,@init_array</span><br><span class="line">.p2align	3</span><br><span class="line">.quad	asan.module_ctor</span><br><span class="line"></span><br><span class="line">.section	.init_array,&quot;aw&quot;,@init_array</span><br><span class="line">.p2align	3</span><br><span class="line">.quad	test</span><br><span class="line"></span><br><span class="line">.section	.fini_array.1,&quot;aw&quot;,@fini_array</span><br><span class="line">.p2align	3</span><br><span class="line">.quad	asan.module_dtor</span><br></pre></td></tr></table></figure>
 <p>But openark compiler doesn’t support constructor and destructor.</p>
@@ -1041,8 +751,245 @@
 
 
 
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/04/S-P-19-NEUZZ-Efficient-Fuzzing-with-Neural-Program-Smoothing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/2021/03/04/S-P-19-NEUZZ-Efficient-Fuzzing-with-Neural-Program-Smoothing/" class="post-title-link" itemprop="url">[S&P'19] NEUZZ: Efficient Fuzzing with Neural Program Smoothing</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-04 14:50:28" itemprop="dateCreated datePublished" datetime="2021-03-04T14:50:28+08:00">2021-03-04</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-04-10 20:59:55" itemprop="dateModified" datetime="2021-04-10T20:59:55+08:00">2021-04-10</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>One of the main limitations of evolutionary optimization algorithms is that they cannot leverage the structure (<em>i.e.</em>, gradients or other higher-order derivatives) of the underlying optimization problem. In this paper, we introduce a novel, efficient, and scalable program smoothing technique using feed-forward Neural Networks (NNs) that can incrementally learn smooth approximations of complex, real-world program branching behaviors, <em>i.e.</em>, predicting the control flow edges of the target program exercised by a particular given input.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2021/03/04/S-P-19-NEUZZ-Efficient-Fuzzing-with-Neural-Program-Smoothing/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/02/23/CCS-19-Learning-to-Fuzz-from-Symbolic-Execution-with-Application-to-Smart-Contracts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/2021/02/23/CCS-19-Learning-to-Fuzz-from-Symbolic-Execution-with-Application-to-Smart-Contracts/" class="post-title-link" itemprop="url">[CCS'19] Learning to Fuzz from Symbolic Execution with Application to Smart Contracts</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2021-02-23 21:11:37 / Modified: 22:57:02" itemprop="dateCreated datePublished" datetime="2021-02-23T21:11:37+08:00">2021-02-23</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
+<p>Fuzzing and symbolic execution are two complementary techniques for discovering software vulnerabilities. Fuzzing is fast and scalable, but can be ineffective when it fails to randomly select the right inputs. Symbolic execution is thorough but slow and often does not scale to deep program paths with complex path conditions.</p>
+<p>In this work, we propose to learn an effective and fast fuzzer from symbolic execution, by phrasing the learning task in the framework of imitation learning. During learning, a symbolic execution expert generates a large number of quality inputs improving coverage on thousands of programs. Then, a fuzzing policy, represented with a suitable architecture of neural networks, is trained on the generated dataset. The learned policy can then be used to fuzz new programs.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2021/02/23/CCS-19-Learning-to-Fuzz-from-Symbolic-Execution-with-Application-to-Smart-Contracts/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/02/02/RLTrace-Related/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/2021/02/02/RLTrace-Related/" class="post-title-link" itemprop="url">RLTrace Related</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-02-02 13:03:23" itemprop="dateCreated datePublished" datetime="2021-02-02T13:03:23+08:00">2021-02-02</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-03-30 21:46:17" itemprop="dateModified" datetime="2021-03-30T21:46:17+08:00">2021-03-30</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h5 id="readelf"><a class="markdownIt-Anchor" href="#readelf"></a> readelf</h5>
+<p>readelf is used to detect virtual memory offset.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -SW vmlinux</span><br></pre></td></tr></table></figure>
+<p>The meaning of the flags is as follows:</p>
+<ul>
+<li>-S - list section headers in the kernel image file</li>
+<li>-W - output each section header entry in a single line</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2021/02/02/RLTrace-Related/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/4/">4</a><a class="extend next" rel="next" href="/blog/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="page-number" href="/blog/page/3/">3</a><a class="extend next" rel="next" href="/blog/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
