@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://harperchen.github.io/blog/2021/01/30/USENIX-18-MoonShine-Optimizing-OS-Fuzzer-Seed-Selection-with-Trace-Distillation/</loc>
+    
+    <lastmod>2021-06-04</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://harperchen.github.io/blog/2021/01/24/NDSS-20-HFL-Hybrid-Fuzzing-on-the-Linux-Kernel/</loc>
     
     <lastmod>2021-06-04</lastmod>
@@ -355,6 +362,13 @@
   
   <url>
     <loc>https://harperchen.github.io/blog/tags/Taint-Analysis/</loc>
+    <lastmod>2021-06-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://harperchen.github.io/blog/tags/Seeds-Generation/</loc>
     <lastmod>2021-06-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
