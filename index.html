@@ -173,7 +173,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -592,6 +592,101 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/04/28/Tech-Binary-Analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Wei CHEN">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/blog/2021/04/28/Tech-Binary-Analysis/" class="post-title-link" itemprop="url">[Tech] Binary Analysis</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-04-28 16:06:43" itemprop="dateCreated datePublished" datetime="2021-04-28T16:06:43+08:00">2021-04-28</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-06-04 21:57:47" itemprop="dateModified" datetime="2021-06-04T21:57:47+08:00">2021-06-04</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Protections Againest Exploitation</p>
+<p>ASLR:</p>
+<p>DEP: Data Execution Protection</p>
+<p>Stack Canaries:</p>
+<p>CFI: Control flow integrity</p>
+<p>ROP: Return-oriented programming</p>
+<p>Closed Source Memory Errors:</p>
+<ol>
+<li>Resort to blackbox fuzzing: resulting in shallow coverage close to the provided test cases</li>
+<li>Rely on dynamic binary translation: instrument the binary at prohibitively high runtime cost (e.g., 10x to 100x for AFL fuzzing in QEMU mode on LAVA-M)</li>
+<li>Use unsound static rewriting based on heuristics</li>
+</ol>
+<p>Question: The fundamental difficulty for static rewriting techniques is disambiguating reference and scalar constants</p>
+<p>There are three fundamental techniques to rewrite binaries:</p>
+<ol>
+<li>
+<p>recompilation [14], which attempts to lift the code to an intermediate representation; Lifting code to IR for recompilation requires correctly recovering type information from binaries, which remains an open problem.</p>
+</li>
+<li>
+<p>trampolines [15], [16], which relies on indirection to insert new code segments without changing the size of basic blocks;  Trampolines may significantly increase code size, and the extra level of indirection increases performance overhead.</p>
+</li>
+<li>
+<p>reassembleable assembly [12], [13], which creates an assembly file equivalent to what a compiler would emit, i.e., with relocation symbols for the linker to resolve. Consequently, we believe that resymbolizing binaries for reassembleable assembly is one the most promising technique for static binary rewriting.</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/04/19/Testing-Distributed-System/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -936,87 +1031,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/blog/2021/03/28/Tech-Symbolic-Execution/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/22/Tech-Side-Channel-Attacks/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="Wei CHEN">
-      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wei's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/blog/2021/03/22/Tech-Side-Channel-Attacks/" class="post-title-link" itemprop="url">[Tech] Side Channel Attacks</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-03-22 14:20:55" itemprop="dateCreated datePublished" datetime="2021-03-22T14:20:55+08:00">2021-03-22</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-06-04 21:56:32" itemprop="dateModified" datetime="2021-06-04T21:56:32+08:00">2021-06-04</time>
-      </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="side-channel-attacks"><a class="markdownIt-Anchor" href="#side-channel-attacks"></a> Side channel Attacks</h4>
-<p>Steal Secret through side channels</p>
-<p>side channels: timing; power; em emissions; sound; heat; cache</p>
-<p>Infer secrets via secret-dependent physical information</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/03/22/Tech-Side-Channel-Attacks/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
