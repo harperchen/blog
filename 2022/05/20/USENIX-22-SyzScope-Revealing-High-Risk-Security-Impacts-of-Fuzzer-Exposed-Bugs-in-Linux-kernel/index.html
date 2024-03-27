@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="Key: uncover new high-risk impacts given a bug with seemingly low-risk impactsAbstractFuzzing has become one of the most effective bug finding approach for software. In recent years, 24*7 continuous f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[USENIX&#39;22] SyzScope: Revealing High-Risk Security Impacts of Fuzzer-Exposed Bugs in Linux kernel">
+<meta property="og:url" content="https://harperchen.github.io/blog/2022/05/20/USENIX-22-SyzScope-Revealing-High-Risk-Security-Impacts-of-Fuzzer-Exposed-Bugs-in-Linux-kernel/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="Key: uncover new high-risk impacts given a bug with seemingly low-risk impactsAbstractFuzzing has become one of the most effective bug finding approach for software. In recent years, 24*7 continuous f">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-05-20T08:14:07.000Z">
+<meta property="article:modified_time" content="2024-03-27T08:16:10.444Z">
+<meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Static Analysis">
+<meta property="article:tag" content="Kernel">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2022/05/20/USENIX-22-SyzScope-Revealing-High-Risk-Security-Impacts-of-Fuzzer-Exposed-Bugs-in-Linux-kernel/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2022/05/20/USENIX-22-SyzScope-Revealing-High-Risk-Security-Impacts-of-Fuzzer-Exposed-Bugs-in-Linux-kernel/","path":"2022/05/20/USENIX-22-SyzScope-Revealing-High-Risk-Security-Impacts-of-Fuzzer-Exposed-Bugs-in-Linux-kernel/","title":"[USENIX'22] SyzScope: Revealing High-Risk Security Impacts of Fuzzer-Exposed Bugs in Linux kernel"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>[USENIX'22] SyzScope: Revealing High-Risk Security Impacts of Fuzzer-Exposed Bugs in Linux kernel | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Key-uncover-new-high-risk-impacts-given-a-bug-with-seemingly-low-risk-impacts"><span class="nav-number">1.</span> <span class="nav-text">Key: uncover new high-risk impacts given a bug with seemingly low-risk impacts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Abstract"><span class="nav-number">2.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%9A%E4%B9%89%E4%BB%80%E4%B9%88%E6%98%AF-High-Low-risk"><span class="nav-number">3.</span> <span class="nav-text">1. 定义什么是 High&#x2F;Low risk</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#High-risk-bugs"><span class="nav-number">3.1.</span> <span class="nav-text">High risk bugs</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Low-risk-bugs"><span class="nav-number">3.2.</span> <span class="nav-text">Low risk bugs</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Low-risk-%E5%8F%98%E4%B8%BA-High-risk-%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">4.</span> <span class="nav-text">2. Low risk 变为 High risk 的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%B8%80%E4%BA%9B%E5%AE%9E%E9%AA%8C%E6%95%B0%E6%8D%AE"><span class="nav-number">5.</span> <span class="nav-text">3. 一些实验数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E6%80%BB%E7%BB%93%E5%87%BA%E6%9D%A5%E7%8E%B0%E6%9C%89%E5%B7%A5%E4%BD%9C%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">6.</span> <span class="nav-text">4. 总结出来现有工作的问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E6%8F%90%E5%87%BA%E6%9D%A5%E5%AF%B9%E5%BA%94%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">7.</span> <span class="nav-text">5. 提出来对应的解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E4%B8%80%E4%BA%9B%E6%9C%89%E5%85%B3%E7%9A%84%E5%B7%A5%E4%BD%9C"><span class="nav-number">8.</span> <span class="nav-text">6. 一些有关的工作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Infer-the-security-impact-of-a-patch-statically-%EF%BC%88%E5%AF%B9%E6%AF%94%EF%BC%89"><span class="nav-number">8.1.</span> <span class="nav-text">Infer the security impact of a patch statically （对比）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Automated-exploit-generation-%EF%BC%88%E4%BA%92%E8%A1%A5%EF%BC%89"><span class="nav-number">8.2.</span> <span class="nav-text">Automated exploit generation （互补）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E9%97%AE%E9%A2%98%E5%87%BA%E7%8E%B0%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">9.</span> <span class="nav-text">7. 问题出现的原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Evaluation"><span class="nav-number">10.</span> <span class="nav-text">8. Evaluation</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2022/05/20/USENIX-22-SyzScope-Revealing-High-Risk-Security-Impacts-of-Fuzzer-Exposed-Bugs-in-Linux-kernel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="[USENIX'22] SyzScope: Revealing High-Risk Security Impacts of Fuzzer-Exposed Bugs in Linux kernel | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [USENIX'22] SyzScope: Revealing High-Risk Security Impacts of Fuzzer-Exposed Bugs in Linux kernel
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-05-20 16:14:07" itemprop="dateCreated datePublished" datetime="2022-05-20T16:14:07+08:00">2022-05-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 16:16:10" itemprop="dateModified" datetime="2024-03-27T16:16:10+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="Key-uncover-new-high-risk-impacts-given-a-bug-with-seemingly-low-risk-impacts"><a href="#Key-uncover-new-high-risk-impacts-given-a-bug-with-seemingly-low-risk-impacts" class="headerlink" title="Key: uncover new high-risk impacts given a bug with seemingly low-risk impacts"></a>Key: uncover new high-risk impacts given a bug with seemingly low-risk impacts</h4><h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><p>Fuzzing has become one of the most effective bug finding approach for software. In recent years, 24*7 continuous fuzzing platforms have emerged to test critical pieces of software, e.g., Linux kernel. Though capable of discovering many bugs and providing reproducers (e.g., proof-of-concepts), a major problem is that they neglect a critical function that should have been built-in, i.e., evaluation of a bug’s security impact. It is well-known that the lack of understanding of security impact can lead to delayed bug fixes as well as patch propagation. In this paper, we develop SyzScope, a system that can automatically uncover new “high-risk” impacts given a bug with seemingly “low-risk” impacts. From analyzing over a thousand low-risk bugs on syzbot, SyzScope successfully determined that 183 low-risk bugs (more than 15%) in fact contain high-risk impacts, e.g., control flow hijack and arbitrary memory write, some of which still do not have patches available yet.</p>
+<span id="more"></span>
+
+<h4 id="1-定义什么是-High-Low-risk"><a href="#1-定义什么是-High-Low-risk" class="headerlink" title="1. 定义什么是 High&#x2F;Low risk"></a>1. 定义什么是 High&#x2F;Low risk</h4><h5 id="High-risk-bugs"><a href="#High-risk-bugs" class="headerlink" title="High risk bugs"></a>High risk bugs</h5><ol>
+<li>UAF and heap OOB bugs that lead to function pointer deference &#x3D;&gt; control flow hijacking, arbitrary code execution</li>
+<li>UAF and OOB bugs that lead to write &#x3D;&gt; corrupt data, privilege escalation</li>
+<li>Invalid free</li>
+</ol>
+<h5 id="Low-risk-bugs"><a href="#Low-risk-bugs" class="headerlink" title="Low risk bugs"></a>Low risk bugs</h5><ol>
+<li>UAF or OOB bugs that lead to read</li>
+<li>WARNING, INFO, BUG, and GPF</li>
+</ol>
+<h4 id="2-Low-risk-变为-High-risk-的例子"><a href="#2-Low-risk-变为-High-risk-的例子" class="headerlink" title="2. Low risk 变为 High risk 的例子"></a>2. Low risk 变为 High risk 的例子</h4><ol>
+<li>Syzkaller stopped at line 8 due to slab-out-of-bounds of <code>exts-&gt;action</code></li>
+<li>OOB results from line 2: <code>cp-&gt;hash</code> can be larger than the size of array <code>cp-&gt;perfect</code></li>
+<li>If line 8 is successfully executed, invalid address access <code>action[i]</code> at line 14 (low-risk bug).</li>
+<li>If <code>action[i]</code> is a valid address, there is arbitrary address write at line 16.</li>
+<li>If line 16 is executed, <code>action[i]</code> is passed to <code>tcf_action_cleanup</code> and causes a function pointer dereference at line 36 (high-risk bug).</li>
+</ol>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">static void tcindex_free_perfect_hash(struct tcindex_data *cp) &#123;</span><br><span class="line">    <span class="function"><span class="title">for</span> (int i = 0; i &lt; cp-&gt;</span><span class="function"><span class="title">hash</span>; i++) // cp-&gt;</span>hash can be larger</span><br><span class="line">        <span class="function"><span class="title">tcf_exts_destroy</span>(&amp;cp-&gt;</span>perfect[i].exts);</span><br><span class="line">    <span class="function"><span class="title">kfree</span>(cp-&gt;</span>perfect);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void tcf_exts_destroy(struct tcf_exts *exts) &#123;</span><br><span class="line">    <span class="function"><span class="title">if</span> (exts-&gt;</span>actions) <span class="comment">// slab-out-of-bounds read</span></span><br><span class="line">        <span class="function"><span class="title">tcf_action_destroy</span>(exts-&gt;</span>actions);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int tcf_action_destroy(struct tc_action *actions[]) &#123;</span><br><span class="line">    struct tc_action *a;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; TCA_ACT_MAX_PRIO &amp;&amp; actions[i]; i++) &#123;</span><br><span class="line">        a = actions[i];</span><br><span class="line">        actions[i] = NULL; <span class="comment">// Arbitrary address write</span></span><br><span class="line">        ret = __tcf_idr_release(a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int __tcf_idr_release(struct tc_action *p) &#123;</span><br><span class="line">    <span class="keyword">if</span> (__tcf_action_put(p, ...))</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static int __tcf_action_put(struct tc_action *p, ...) &#123;</span><br><span class="line">    <span class="function"><span class="title">struct</span> tcf_idrinfo *idrinfo = p-&gt;</span>idrinfo;</span><br><span class="line">    <span class="function"><span class="title">if</span> (refcount_dec_and_mutex_lock(&amp;p-&gt;</span><span class="function"><span class="title">tcfa_refcnt</span>, &amp;idrinfo-&gt;</span>lock)) &#123;</span><br><span class="line">       ...</span><br><span class="line">       tcf_action_cleanup(p); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static void tcf_action_cleanup(struct tc_action *p) &#123;</span><br><span class="line">    <span class="function"><span class="title">if</span> (p-&gt;</span><span class="function"><span class="title">ops</span>-&gt;</span>cleanup)</span><br><span class="line">        <span class="function"><span class="title">p</span>-&gt;</span><span class="function"><span class="title">ops</span>-&gt;</span>cleanup(p); <span class="comment">// Function pointer dereference</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-一些实验数据"><a href="#3-一些实验数据" class="headerlink" title="3. 一些实验数据"></a>3. 一些实验数据</h4><p>The rate of bug discovery is much higher than the rate of bug fixes</p>
+<ul>
+<li>51 days on average to fix a bug</li>
+<li>&lt; 0.4 day to report a bug</li>
+</ul>
+<p>Write bugs are often fixed sooner than read bugs</p>
+<ul>
+<li>Write vs. read for UAF: 37 days vs. 63 days</li>
+<li>Write vs. read for OOB: 29 days vs. 89 days</li>
+</ul>
+<p>Patch propogation delays from upstream to downstream</p>
+<ul>
+<li>59 days for OOB write bugs</li>
+<li>83 days for WARNING errors</li>
+</ul>
+<h4 id="4-总结出来现有工作的问题"><a href="#4-总结出来现有工作的问题" class="headerlink" title="4. 总结出来现有工作的问题"></a>4. 总结出来现有工作的问题</h4><p>Syzbot neglect the evaluation of a bug’s security impact &#x2F; automated bug triage.</p>
+<ul>
+<li>delayed bug fixes</li>
+<li>delayed patch propagation</li>
+</ul>
+<h4 id="5-提出来对应的解决方案"><a href="#5-提出来对应的解决方案" class="headerlink" title="5. 提出来对应的解决方案"></a>5. 提出来对应的解决方案</h4><ol>
+<li>Prioritize opened bugs<ul>
+<li>static analysis - hidden impact estimation</li>
+<li>symbolic execution - validation and evaluation</li>
+</ul>
+</li>
+<li>Analyze the impact of fixed bug<ul>
+<li>fuzzing component - vulnerable context exploration</li>
+</ul>
+</li>
+<li>输入：一个bug的PoC和report</li>
+<li>工作流程：<ol>
+<li>targeted fuzzing 找到更多跟这个bug有关的PoC<ol>
+<li>两种可能性：同一序列后面的路径 or 完全由不同的序列触发</li>
+<li>方法：mutate给定的PoC</li>
+<li>挑战<ol>
+<li>已触发的bug影响后续路径的探索</li>
+<li>已经探索的路径也有机会触发bug</li>
+<li>新的impact应该也来源于原来的bug</li>
+</ol>
+</li>
+<li>解决方案<ol>
+<li>问题触发了还继续执行</li>
+<li>引来coverage的新的维度 impact aware fuzzing</li>
+<li>限制Fuzzing可选的系统调用<ol>
+<li>只使用PoC中出现的系统调用</li>
+<li>若1无效果，使用整个模块的系统调用</li>
+<li>也允许删除PoC中的系统调用</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>还是有可能出现毫不相关的bug：利用已有的patch验证<ol>
+<li>如果仍然发生，则是不同的bug</li>
+<li>如果不再发生了，则可能是之前的commit把他修复了，所以直接在当前commit应用patch</li>
+<li>如果应用成功且不触发，就说明还是这个bug</li>
+<li>如果无法应用，则在patch前的commit测试PoC，如果还可以崩溃，则说明是是同一个bug</li>
+<li>如果应用后不崩溃了，则放弃这个PoC</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>静态分析看找到的低风险PoC是否有可能隐藏高风险<ol>
+<li>从报告提取信息 IR and binary mapping<ol>
+<li>vulnerable object: 触发bug的对象</li>
+<li>vulnerability point: 触发bug的语句</li>
+</ol>
+</li>
+<li>对触发bug的对象做静态染色分析<ol>
+<li>taint source: 触发bug的对象</li>
+<li>taint sink<ol>
+<li>指针解引用（函数指针 or 数据指针）</li>
+<li>对tainted的内存区域进行写操作</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>记录高风险触发所需的分支，指导符号执行</li>
+<li>实现：Dr. Checker</li>
+</ol>
+</li>
+<li>通过符号执行看隐藏的高风险是否可达<ol>
+<li>符号化触发bug的对象检验隐藏的高风险是否可达<ol>
+<li>利用静态分析记录的分支，避免路径爆炸</li>
+<li>在最远的impact处结束分析</li>
+</ol>
+</li>
+<li>细粒度的分析high-risk impact<ol>
+<li>覆盖符号化的内存区域：UAF write or OOB write</li>
+<li>任意值写&#x2F;任意地址写</li>
+<li>函数指针解引用</li>
+<li>double free or invalid free</li>
+<li>实现：Angr</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="6-一些有关的工作"><a href="#6-一些有关的工作" class="headerlink" title="6. 一些有关的工作"></a>6. 一些有关的工作</h4><h5 id="Infer-the-security-impact-of-a-patch-statically-（对比）"><a href="#Infer-the-security-impact-of-a-patch-statically-（对比）" class="headerlink" title="Infer the security impact of a patch statically （对比）"></a>Infer the security impact of a patch statically （对比）</h5><p>[NDSS’20] Precisely characterizing security impact in a flood of patches via symbolic rule comparison.</p>
+<ol>
+<li>Static analysis has to make tradeoffs between soundness and completeness</li>
+<li>Static analysis cannot determine whether the bug is actually triggerable and exploitable in reality</li>
+</ol>
+<h5 id="Automated-exploit-generation-（互补）"><a href="#Automated-exploit-generation-（互补）" class="headerlink" title="Automated exploit generation （互补）"></a>Automated exploit generation （互补）</h5><p>[Security’18] FUZE: towards facilitating exploit generation for kernel use-after-free vulnerabilities</p>
+<p>[Security’20] KOOBE: towards facilitating exploit generation of kernel out-of-bounds write vulnerabilities</p>
+<ol>
+<li>UAF and OOB also exist distinction between high-risk and low-risk impacts</li>
+<li>Write primitive is more dangerous than read primitive</li>
+</ol>
+<h4 id="7-问题出现的原因"><a href="#7-问题出现的原因" class="headerlink" title="7. 问题出现的原因"></a>7. 问题出现的原因</h4><ol>
+<li>Syzkaller stops the execution of buggy input as soon as any bug impact is discovered</li>
+<li>Syzkaller的目的是最大化代码覆盖率和发现更多的bug</li>
+</ol>
+<h4 id="8-Evaluation"><a href="#8-Evaluation" class="headerlink" title="8. Evaluation"></a>8. Evaluation</h4><p>183 out of 1170 low-risk bugs in fact contain high-risk impacts</p>
+<ul>
+<li>42: control flow hijack</li>
+<li>173: arbitraty memory write</li>
+</ul>
+<ol>
+<li>各项数据</li>
+<li>各组件的有效性</li>
+<li>误报和漏报</li>
+<li>Case Study</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Static-Analysis/" rel="tag"># Static Analysis</a>
+              <a href="/blog/tags/Kernel/" rel="tag"># Kernel</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2022/05/10/FSE-19-Cerebro-Context-Aware-Adaptive-Fuzzing-for-Effective-Vulnerability-Detection/" rel="prev" title="[FSE'19] Cerebro: Context-Aware Adaptive Fuzzing for Effective Vulnerability Detection">
+                  <i class="fa fa-angle-left"></i> [FSE'19] Cerebro: Context-Aware Adaptive Fuzzing for Effective Vulnerability Detection
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2024/03/27/USENIX-22-Drifuzz-Harvesting-Bugs-in-Device-Drivers-from-Golden-Seeds/" rel="next" title="[USENIX'22] Drifuzz: Harvesting Bugs in Device Drivers from Golden Seeds ">
+                  [USENIX'22] Drifuzz: Harvesting Bugs in Device Drivers from Golden Seeds  <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

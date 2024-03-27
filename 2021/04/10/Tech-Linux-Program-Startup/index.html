@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="原文链接 https:&#x2F;&#x2F;luomuxiaoxiao.com&#x2F;?p&#x3D;516 本文介绍main函数如何被执行，并理解如何通过debug了解main函数启动前发生的事情">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux Program Startup">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/04/10/Tech-Linux-Program-Startup/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="原文链接 https:&#x2F;&#x2F;luomuxiaoxiao.com&#x2F;?p&#x3D;516 本文介绍main函数如何被执行，并理解如何通过debug了解main函数启动前发生的事情">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/04/10/jC3Sv6cDNEAU8na.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/10/84hiSDVnIFjs2Jy.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/10/TsSo8YD6VKBdMl1.png">
+<meta property="article:published_time" content="2021-04-10T10:02:20.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.058Z">
+<meta property="article:author" content="Wei CHEN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/10/jC3Sv6cDNEAU8na.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/04/10/Tech-Linux-Program-Startup/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2021/04/10/Tech-Linux-Program-Startup/","path":"2021/04/10/Tech-Linux-Program-Startup/","title":"Linux Program Startup"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux Program Startup | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-main%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">1. main函数的调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-start%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">2. _start函数分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-libc-start-main%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">3. __libc_start_main函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-libc-csu-init%E5%87%BD%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">4. __libc_csu_init函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-init%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">5. _init函数分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-do-global-ctors-aux%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90"><span class="nav-number">6.</span> <span class="nav-text">6. _do_global_ctors_aux函数分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Constructor"><span class="nav-number">7.</span> <span class="nav-text">7. Constructor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Conclusion"><span class="nav-number">8.</span> <span class="nav-text">8. Conclusion</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/04/10/Tech-Linux-Program-Startup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux Program Startup | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux Program Startup
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-04-10 18:02:20" itemprop="dateCreated datePublished" datetime="2021-04-10T18:02:20+08:00">2021-04-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>原文链接 <a target="_blank" rel="noopener" href="https://luomuxiaoxiao.com/?p=516">https://luomuxiaoxiao.com/?p=516</a></p>
+<p>本文介绍main函数如何被执行，并理解如何通过debug了解main函数启动前发生的事情</p>
+<span id="more"></span>
+
+<h4 id="1-main函数的调用"><a href="#1-main函数的调用" class="headerlink" title="1. main函数的调用"></a>1. main函数的调用</h4><p>我们将编译一个最简单的C程序——空的<code>main</code>函数，然后，查看其反汇编代码以理解程序是如何从启动开始调用到main函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将上述代码保存为<code>prog1.c</code>，首先要做的是使用下面的命令编译这个文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -ggdb -o prog1 prog1.c</span><br></pre></td></tr></table></figure>
+
+<p>我们首先查看其反汇编代码，通过这个程序来查看关于程序启动的一些过程，然后再用GDB去调试比这个版本稍微复杂一点的程序<code>prog2</code>。使用命令<code>objdump -d prog1 &gt; prog1.dump</code>，就能保存objdump的输出，从反汇编代码中，我们发现程序是由一个<code>_start</code>函数最终调用<code>main</code>函数执行的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">prog1:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disassembly of section .init:</span><br><span class="line"></span><br><span class="line">00000000000004b8 &lt;_init&gt;:</span><br><span class="line"> 4b8:	48 83 ec 08          	sub    $0x8,%rsp</span><br><span class="line"> 4bc:	48 8b 05 25 0b 20 00 	mov    0x200b25(%rip),%rax        # 200fe8 &lt;__gmon_start__&gt;</span><br><span class="line"> 4c3:	48 85 c0             	test   %rax,%rax</span><br><span class="line"> 4c6:	74 02                	je     4ca &lt;_init+0x12&gt;</span><br><span class="line"> 4c8:	ff d0                	callq  *%rax</span><br><span class="line"> 4ca:	48 83 c4 08          	add    $0x8,%rsp</span><br><span class="line"> 4ce:	c3                   	retq   </span><br><span class="line"></span><br><span class="line">Disassembly of section .plt:</span><br><span class="line"></span><br><span class="line">00000000000004d0 &lt;.plt&gt;:</span><br><span class="line"> 4d0:	ff 35 f2 0a 20 00    	pushq  0x200af2(%rip)         # 200fc8 &lt;_GLOBAL_OFFSET_TABLE_+0x8&gt;</span><br><span class="line"> 4d6:	ff 25 f4 0a 20 00    	jmpq   *0x200af4(%rip)        # 200fd0 &lt;_GLOBAL_OFFSET_TABLE_+0x10&gt;</span><br><span class="line"> 4dc:	0f 1f 40 00          	nopl   0x0(%rax)</span><br><span class="line"></span><br><span class="line">Disassembly of section .plt.got:</span><br><span class="line"></span><br><span class="line">00000000000004e0 &lt;__cxa_finalize@plt&gt;:</span><br><span class="line"> 4e0:	ff 25 12 0b 20 00    	jmpq   *0x200b12(%rip)        # 200ff8 &lt;__cxa_finalize@GLIBC_2.2.5&gt;</span><br><span class="line"> 4e6:	66 90                	xchg   %ax,%ax</span><br><span class="line"></span><br><span class="line">Disassembly of section .text:</span><br><span class="line"></span><br><span class="line">00000000000004f0 &lt;_start&gt;:</span><br><span class="line"> 4f0:	31 ed                	xor    %ebp,%ebp</span><br><span class="line"> 4f2:	49 89 d1             	mov    %rdx,%r9</span><br><span class="line"> 4f5:	5e                   	pop    %rsi</span><br><span class="line"> 4f6:	48 89 e2             	mov    %rsp,%rdx</span><br><span class="line"> 4f9:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp</span><br><span class="line"> 4fd:	50                   	push   %rax</span><br><span class="line"> 4fe:	54                   	push   %rsp</span><br><span class="line"> 4ff:	4c 8d 05 7a 01 00 00 	lea    0x17a(%rip),%r8        # 680 &lt;__libc_csu_fini&gt;</span><br><span class="line"> 506:	48 8d 0d 03 01 00 00 	lea    0x103(%rip),%rcx       # 610 &lt;__libc_csu_init&gt;</span><br><span class="line"> 50d:	48 8d 3d e6 00 00 00 	lea    0xe6(%rip),%rdi        # 5fa &lt;main&gt;</span><br><span class="line"> 514:	ff 15 c6 0a 20 00    	callq  *0x200ac6(%rip)        # 200fe0 &lt;__libc_start_main@GLIBC_2.2.5&gt;</span><br><span class="line"> 51a:	f4                   	hlt    </span><br><span class="line"> 51b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)</span><br><span class="line"></span><br><span class="line">0000000000000520 &lt;deregister_tm_clones&gt;:</span><br><span class="line"> 520:	48 8d 3d e9 0a 20 00 	lea    0x200ae9(%rip),%rdi        # 201010 &lt;__TMC_END__&gt;</span><br><span class="line"> ...</span><br><span class="line"> 55d:	00 00 00 </span><br><span class="line"></span><br><span class="line">0000000000000560 &lt;register_tm_clones&gt;:</span><br><span class="line"> 560:	48 8d 3d a9 0a 20 00 	lea    0x200aa9(%rip),%rdi        # 201010 &lt;__TMC_END__&gt;</span><br><span class="line"> ...</span><br><span class="line"> 5ad:	00 00 00 </span><br><span class="line"></span><br><span class="line">00000000000005b0 &lt;__do_global_dtors_aux&gt;:</span><br><span class="line"> 5b0:	80 3d 59 0a 20 00 00 	cmpb   $0x0,0x200a59(%rip)        # 201010 &lt;__TMC_END__&gt;</span><br><span class="line"> 5b7:	75 2f                	jne    5e8 &lt;__do_global_dtors_aux+0x38&gt;</span><br><span class="line"> 5b9:	48 83 3d 37 0a 20 00 	cmpq   $0x0,0x200a37(%rip)        # 200ff8 &lt;__cxa_finalize@GLIBC_2.2.5&gt;</span><br><span class="line"> 5c0:	00 </span><br><span class="line"> 5c1:	55                   	push   %rbp</span><br><span class="line"> 5c2:	48 89 e5             	mov    %rsp,%rbp</span><br><span class="line"> 5c5:	74 0c                	je     5d3 &lt;__do_global_dtors_aux+0x23&gt;</span><br><span class="line"> 5c7:	48 8b 3d 3a 0a 20 00 	mov    0x200a3a(%rip),%rdi        # 201008 &lt;__dso_handle&gt;</span><br><span class="line"> 5ce:	e8 0d ff ff ff       	callq  4e0 &lt;__cxa_finalize@plt&gt;</span><br><span class="line"> 5d3:	e8 48 ff ff ff       	callq  520 &lt;deregister_tm_clones&gt;</span><br><span class="line"> 5d8:	c6 05 31 0a 20 00 01 	movb   $0x1,0x200a31(%rip)        # 201010 &lt;__TMC_END__&gt;</span><br><span class="line"> 5df:	5d                   	pop    %rbp</span><br><span class="line"> 5e0:	c3                   	retq   </span><br><span class="line"> 5e1:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)</span><br><span class="line"> 5e8:	f3 c3                	repz retq </span><br><span class="line"> 5ea:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)</span><br><span class="line"></span><br><span class="line">00000000000005f0 &lt;frame_dummy&gt;:</span><br><span class="line"> 5f0:	55                   	push   %rbp</span><br><span class="line"> 5f1:	48 89 e5             	mov    %rsp,%rbp</span><br><span class="line"> 5f4:	5d                   	pop    %rbp</span><br><span class="line"> 5f5:	e9 66 ff ff ff       	jmpq   560 &lt;register_tm_clones&gt;</span><br><span class="line"></span><br><span class="line">00000000000005fa &lt;main&gt;:</span><br><span class="line"> 5fa:	55                   	push   %rbp</span><br><span class="line"> 5fb:	48 89 e5             	mov    %rsp,%rbp</span><br><span class="line"> 5fe:	b8 00 00 00 00       	mov    $0x0,%eax</span><br><span class="line"> 603:	5d                   	pop    %rbp</span><br><span class="line"> 604:	c3                   	retq   </span><br><span class="line"> 605:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)</span><br><span class="line"> 60c:	00 00 00 </span><br><span class="line"> 60f:	90                   	nop</span><br><span class="line"></span><br><span class="line">0000000000000610 &lt;__libc_csu_init&gt;:</span><br><span class="line"> 610:	41 57                	push   %r15</span><br><span class="line"> 612:	41 56                	push   %r14</span><br><span class="line"> 614:	49 89 d7             	mov    %rdx,%r15</span><br><span class="line"> 617:	41 55                	push   %r13</span><br><span class="line"> 619:	41 54                	push   %r12</span><br><span class="line"> 61b:	4c 8d 25 ce 07 20 00 	lea    0x2007ce(%rip),%r12        # 200df0 &lt;__frame_dummy_init_array_entry&gt;</span><br><span class="line"> 622:	55                   	push   %rbp</span><br><span class="line"> 623:	48 8d 2d ce 07 20 00 	lea    0x2007ce(%rip),%rbp        # 200df8 &lt;__init_array_end&gt;</span><br><span class="line"> 62a:	53                   	push   %rbx</span><br><span class="line"> 62b:	41 89 fd             	mov    %edi,%r13d</span><br><span class="line"> 62e:	49 89 f6             	mov    %rsi,%r14</span><br><span class="line"> 631:	4c 29 e5             	sub    %r12,%rbp</span><br><span class="line"> 634:	48 83 ec 08          	sub    $0x8,%rsp</span><br><span class="line"> 638:	48 c1 fd 03          	sar    $0x3,%rbp</span><br><span class="line"> 63c:	e8 77 fe ff ff       	callq  4b8 &lt;_init&gt;</span><br><span class="line"> 641:	48 85 ed             	test   %rbp,%rbp</span><br><span class="line"> 644:	74 20                	je     666 &lt;__libc_csu_init+0x56&gt;</span><br><span class="line"> 646:	31 db                	xor    %ebx,%ebx</span><br><span class="line"> 648:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)</span><br><span class="line"> 64f:	00 </span><br><span class="line"> 650:	4c 89 fa             	mov    %r15,%rdx</span><br><span class="line"> 653:	4c 89 f6             	mov    %r14,%rsi</span><br><span class="line"> 656:	44 89 ef             	mov    %r13d,%edi</span><br><span class="line"> 659:	41 ff 14 dc          	callq  *(%r12,%rbx,8)</span><br><span class="line"> 65d:	48 83 c3 01          	add    $0x1,%rbx</span><br><span class="line"> 661:	48 39 dd             	cmp    %rbx,%rbp</span><br><span class="line"> 664:	75 ea                	jne    650 &lt;__libc_csu_init+0x40&gt;</span><br><span class="line"> 666:	48 83 c4 08          	add    $0x8,%rsp</span><br><span class="line"> 66a:	5b                   	pop    %rbx</span><br><span class="line"> 66b:	5d                   	pop    %rbp</span><br><span class="line"> 66c:	41 5c                	pop    %r12</span><br><span class="line"> 66e:	41 5d                	pop    %r13</span><br><span class="line"> 670:	41 5e                	pop    %r14</span><br><span class="line"> 672:	41 5f                	pop    %r15</span><br><span class="line"> 674:	c3                   	retq   </span><br><span class="line"> 675:	90                   	nop</span><br><span class="line"> 676:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)</span><br><span class="line"> 67d:	00 00 00 </span><br><span class="line"></span><br><span class="line">0000000000000680 &lt;__libc_csu_fini&gt;:</span><br><span class="line"> 680:	f3 c3                	repz retq </span><br><span class="line"></span><br><span class="line">Disassembly of section .fini:</span><br><span class="line"></span><br><span class="line">0000000000000684 &lt;_fini&gt;:</span><br><span class="line"> 684:	48 83 ec 08          	sub    $0x8,%rsp</span><br><span class="line"> 688:	48 83 c4 08          	add    $0x8,%rsp</span><br><span class="line"> 68c:	c3                   	retq   </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-start函数分析"><a href="#2-start函数分析" class="headerlink" title="2. _start函数分析"></a>2. _start函数分析</h4><p>当你执行一个程序的时候，shell或者GUI会调用execve()，它会执行linux系统调用execve()。系统会为你设置栈，并且将<code>argc</code>，<code>argv</code>和<code>envp</code>压入栈中。文件描述符0，1和2（stdin, stdout和stderr）保留shell之前的设置。加载器会帮你完成重定位，调用你设置的预初始化函数。当所有搞定之后，控制权会传递给<code>_start()</code>，下面是使用<code>objdump -d prog1</code>输出的_start函数的内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">080482e0 &lt;_start&gt;:</span><br><span class="line">80482e0:       31 ed                   xor    %ebp,%ebp</span><br><span class="line">80482e2:       5e                      pop    %esi</span><br><span class="line">80482e3:       89 e1                   mov    %esp,%ecx</span><br><span class="line">80482e5:       83 e4 f0                and    $0xfffffff0,%esp</span><br><span class="line">80482e8:       50                      push   %eax</span><br><span class="line">80482e9:       54                      push   %esp</span><br><span class="line">80482ea:       52                      push   %edx</span><br><span class="line">80482eb:       68 00 84 04 08          push   $0x8048400</span><br><span class="line">80482f0:       68 a0 83 04 08          push   $0x80483a0</span><br><span class="line">80482f5:       51                      push   %ecx</span><br><span class="line">80482f6:       56                      push   %esi</span><br><span class="line">80482f7:       68 94 83 04 08          push   $0x8048394</span><br><span class="line">80482fc:       e8 c3 ff ff ff          call   80482c4 &lt;__libc_start_main@plt&gt;</span><br><span class="line">8048301:       f4</span><br></pre></td></tr></table></figure>
+
+<p>任何值<code>xor</code>自身得到的结果都是0。所以<code>xor %ebp,%ebp</code>语句会把<code>%ebp</code>设置为0。ABI（Application Binary Interface specification）推荐这么做，目的是为了标记最外层函数的页帧（frame）。</p>
+<p>接下来，从栈中弹出栈顶的值保存到<code>%esi</code>。在最开始的时候我们把<code>argc</code>，<code>argv</code>和<code>envp</code>放到了栈里，所以现在的<code>pop</code>语句会把<code>argc</code>放到<code>%esi</code>中。这里只是临时保存一下，稍后我们会把它再次压回栈中。因为我们弹出了<code>argc</code>，所以<code>%ebp</code>现在指向的是<code>argv</code>。<code>mov</code>指令把<code>argv</code>放到了<code>%ecx</code>中，但是并没有移动栈指针。</p>
+<p>然后，将栈指针和一个可以清除后四位的掩码做<code>and</code>操作。根据当前栈指针的位置不同，栈指针将会向下移动0到15个字节。这么做，保证了任何情况下，栈指针都是16字节的偶数倍对齐的。对齐的目的是保证栈上所有的变量都能够被内存和cache快速的访问。要求这么做的是SSE，就是指令都能在单精度浮点数组上工作的那个（扩展指令集）。比如，某次运行时，<code>_start</code>函数刚被调用的时候，<code>%esp</code>处于<code>0xbffff770</code>。在我们从栈上弹出<code>argc</code>后，<code>%esp</code>指向<code>0xbffff774</code>。它向高地址移动了（往栈里存放数据，栈指针地址向下增长；从栈中取出数据，栈指针地址向上增长）。当对栈指针执行了<code>and</code>操作后，栈指针回到了<code>0xbffff770</code>。</p>
+<h4 id="3-libc-start-main函数"><a href="#3-libc-start-main函数" class="headerlink" title="3. __libc_start_main函数"></a>3. __libc_start_main函数</h4><p>现在，我们把<code>__libc_start_main</code>函数的参数压入栈中。第一个参数<code>%rax</code>被压入栈中，里面保存了无效信息，原因是稍后会有七个参数将被压入栈中，但是为了保证16字节对齐，所以需要第八个参数。这个值也并不会被用到。<code>__libc_start_main</code>是在链接的时候从glibc复制过来的。在glibc的代码中，它位于<code>csu/libc-start.c</code>文件里。<code>__libc_start_main</code>的定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __libc_start_main(  <span class="built_in">int</span> (*main) (<span class="type">int</span>, <span class="type">char</span> * *, <span class="type">char</span> * *),</span><br><span class="line">                <span class="type">int</span> argc, <span class="type">char</span> * * ubp_av,</span><br><span class="line">                <span class="built_in">void</span> (*init) (<span class="type">void</span>),</span><br><span class="line">                <span class="built_in">void</span> (*fini) (<span class="type">void</span>),</span><br><span class="line">                <span class="built_in">void</span> (*rtld_fini) (<span class="type">void</span>),</span><br><span class="line">                <span class="built_in">void</span> (* stack_end));</span><br></pre></td></tr></table></figure>
+
+<p>所以，我们期望<code>_start</code>函数能够将<code>__libc_start_main</code>需要的参数按照逆序压入栈中。</p>
+<p><img src="https://i.loli.net/2021/04/10/jC3Sv6cDNEAU8na.png" alt="image-20210410183824866"></p>
+<p><code>__libc_csu_fini</code>函数也是从glibc被链接进我们代码的，它的源代码位于<code>csu/elf-init.c</code>中。稍后我们会看到它。</p>
+<p>你是否注意到我们并没有获取envp（栈里指向我们环境变量的指针）？它并不是<code>__libc_start_main</code>函数的参数。但是我们知道main函数的原型其实是<code>int main(int argc, char** argv, char** envp)</code>。所以，到底怎么回事？</p>
+<p>其实，<code>__libc_start_main</code>函数会调用<code>__libc_init_first</code>，这个函数会使用内部信息去找到环境变量（实际上环境变量就位于<code>argv</code>的终止字符null的后面），然后设置一个全局变量<code>__environ</code>，这个全局变量可以被<code>__libc_start_main</code>函数内部任何地方使用，包括调用main函数时。当<code>envp</code>建立了之后，<code>__libc_start_main</code>函数会使用相同的小技巧，越过envp数组之后的<code>NULL</code>字符，获取另一个向量——ELF辅助向量（加载器使用它给进程传递一些信息）。</p>
+<p>稍后本文会详细介绍__libc_start_main函数，但是，它的主要功能如下：</p>
+<ol>
+<li>处理关于setuid、setgid程序的安全问题</li>
+<li>启动线程</li>
+<li>把<code>fini</code>函数和<code>rtld_fini</code>函数作为参数传递给<code>at_exit</code>调用，使它们在<code>at_exit</code>里被调用，从而完成用户程序和加载器的调用结束之后的清理工作</li>
+<li>调用其<code>init</code>参数</li>
+<li>调用<code>main</code>函数，并把<code>argc</code>和<code>argv</code>参数、环境变量传递给它</li>
+<li>调用<code>exit</code>函数，并将main函数的返回值传递给它</li>
+</ol>
+<p><code>__libc_start_main</code>函数的<code>init</code>参数被设置成了<code>__libc_csu_init</code>函数，它也是被链接进我们代码的。它来源于glibc源代码中的csu&#x2F;elf-init.c。</p>
+<h4 id="4-libc-csu-init函数"><a href="#4-libc-csu-init函数" class="headerlink" title="4. __libc_csu_init函数"></a>4. __libc_csu_init函数</h4><p><code>__libc_csu_init</code>函数相当重要，因为它是我们可执行程序的构造函数。“等等！，我们的程序不是C++程序啊！”。是的，不是C++程序，但是构造函数和析构函数的概念并非属于C++，因为它的诞生早于C++。对于任意的可执行程序都可以有一个C函数的构造函数<code>__libc_csu_init</code>和C函数的析构函数<code>__libc_csu_fini</code>。在构造函数内部，你将会看到，可执行程序会找到全局C函数组成的构造函数集，并且调用它们。任何一个C程序都是可以有的构造函数集的。下面是<code>__libc_csu_init</code>函数的反汇编代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">080483a0 &lt;__libc_csu_init&gt;:</span><br><span class="line"> 80483a0:       55                      push   %ebp</span><br><span class="line"> 80483a1:       89 e5                   mov    %esp,%ebp</span><br><span class="line"> 80483a3:       57                      push   %edi</span><br><span class="line"> 80483a4:       56                      push   %esi</span><br><span class="line"> 80483a5:       53                      push   %ebx</span><br><span class="line"> 80483a6:       e8 5a 00 00 00          call   8048405 &lt;__i686.get_pc_thunk.bx&gt;</span><br><span class="line"> 80483ab:       81 c3 49 1c 00 00       add    $0x1c49,%ebx</span><br><span class="line"> 80483b1:       83 ec 1c                sub    $0x1c,%esp</span><br><span class="line"> 80483b4:       e8 bb fe ff ff          call   8048274 &lt;_init&gt;</span><br><span class="line"> 80483b9:       8d bb 20 ff ff ff       lea    -0xe0(%ebx),%edi</span><br><span class="line"> 80483bf:       8d 83 20 ff ff ff       lea    -0xe0(%ebx),%eax</span><br><span class="line"> 80483c5:       29 c7                   sub    %eax,%edi</span><br><span class="line"> 80483c7:       c1 ff 02                sar    $0x2,%edi</span><br><span class="line"> 80483ca:       85 ff                   test   %edi,%edi</span><br><span class="line"> 80483cc:       74 24                   je     80483f2 &lt;__libc_csu_init+0x52&gt;</span><br><span class="line"> 80483ce:       31 f6                   xor    %esi,%esi</span><br><span class="line"> 80483d0:       8b 45 10                mov    0x10(%ebp),%eax</span><br><span class="line"> 80483d3:       89 44 24 08             mov    %eax,0x8(%esp)</span><br><span class="line"> 80483d7:       8b 45 0c                mov    0xc(%ebp),%eax</span><br><span class="line"> 80483da:       89 44 24 04             mov    %eax,0x4(%esp)</span><br><span class="line"> 80483de:       8b 45 08                mov    0x8(%ebp),%eax</span><br><span class="line"> 80483e1:       89 04 24                mov    %eax,(%esp)</span><br><span class="line"> 80483e4:       ff 94 b3 20 ff ff ff    call   *-0xe0(%ebx,%esi,4)</span><br><span class="line"> 80483eb:       83 c6 01                add    $0x1,%esi</span><br><span class="line"> 80483ee:       39 fe                   cmp    %edi,%esi</span><br><span class="line"> 80483f0:       72 de                   jb     80483d0 &lt;__libc_csu_init+0x30&gt;</span><br><span class="line"> 80483f2:       83 c4 1c                add    $0x1c,%esp</span><br><span class="line"> 80483f5:       5b                      pop    %ebx</span><br><span class="line"> 80483f6:       5e                      pop    %esi</span><br><span class="line"> 80483f7:       5f                      pop    %edi</span><br><span class="line"> 80483f8:       5d                      pop    %ebp</span><br><span class="line"> 80483f9:       c3                      ret</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-init函数分析"><a href="#5-init函数分析" class="headerlink" title="5. _init函数分析"></a>5. _init函数分析</h4><p>当加载器将控制权交给<code>_start</code>函数之后，<code>_start</code>函数将会调用<code>__libc_start_main</code>函数，<code>__libc_start_main</code>函数会调用<code>__libc_csu_init</code>函数, <code>__libc_csu_init</code>函数会调用<code>_init</code>函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">08048274 &lt;_init&gt;:</span><br><span class="line"> 8048274:       55                      push   %ebp</span><br><span class="line"> 8048275:       89 e5                   mov    %esp,%ebp</span><br><span class="line"> 8048277:       53                      push   %ebx</span><br><span class="line"> 8048278:       83 ec 04                sub    $0x4,%esp</span><br><span class="line"> 804827b:       e8 00 00 00 00          call   8048280 &lt;_init+0xc&gt;</span><br><span class="line"> 8048280:       5b                      pop    %ebx</span><br><span class="line"> 8048281:       81 c3 74 1d 00 00       add    $0x1d74,%ebx        (.got.plt)</span><br><span class="line"> 8048287:       8b 93 fc ff ff ff       mov    -0x4(%ebx),%edx</span><br><span class="line"> 804828d:       85 d2                   test   %edx,%edx</span><br><span class="line"> 804828f:       74 05                   je     8048296 &lt;_init+0x22&gt;</span><br><span class="line"> 8048291:       e8 1e 00 00 00          call   80482b4 &lt;__gmon_start__@plt&gt;</span><br><span class="line"> 8048296:       e8 d5 00 00 00          call   8048370 &lt;frame_dummy&gt;</span><br><span class="line"> 804829b:       e8 70 01 00 00          call   8048410 &lt;__do_global_ctors_aux&gt;</span><br><span class="line"> 80482a0:       58                      pop    %eax</span><br><span class="line"> 80482a1:       5b                      pop    %ebx</span><br><span class="line"> 80482a2:       c9                      leave</span><br><span class="line"> 80482a3:       c3                      ret</span><br></pre></td></tr></table></figure>
+
+<p>我们来看<code>gmon_start</code>函数。如果它是空的，我们跳过它，不调用它。否则，调用它来设置profiling。该函数调用一个例程开始profiling，并且调用<code>at_exit</code>去调用另一个程序运行,并且在运行结束的时候生成gmon.out。</p>
+<p>完成上述两者之一的某个函数之后，接下来<code>frame_dummy</code>函数会被调用。其目的是调用<code>__register_frame_info</code>函数，但是，调用<code>frame_dummy</code>是为了给上述函数设置参数。这么做的目的是为了在出错时设置unwinding stack frames。</p>
+<h4 id="6-do-global-ctors-aux函数分析"><a href="#6-do-global-ctors-aux函数分析" class="headerlink" title="6. _do_global_ctors_aux函数分析"></a>6. _do_global_ctors_aux函数分析</h4><p>终于调用到<code>_do_global_ctors_aux</code>函数了。如果在调用main函数之前，你的程序出了问题，你很可能需要看看这个函数。当然，这里存放了全局C++对象的构造函数，但是，这里也能存放其他东西。</p>
+<p>来看个例子，我们修改程序prog1，并把它叫做prog2。令人兴奋的部分是<code>__attribute__ ((constructor))</code>，它告诉GCC：链接器应该在<code>__do_global_ctors_aux</code>使用的表里创建一个指针指向这里。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> __attribute__ ((constructor)) <span class="built_in">a_constructor</span>() &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>,__FUNCTION__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如你所见，我们编写的构造函数确实运行了（__FUNCTION__被编译器替换成了当前函数的名字，这就是GCC魅力所在）。</p>
+<img src="https://i.loli.net/2021/04/10/84hiSDVnIFjs2Jy.png" alt="image-20210410194109450" style="zoom: 43%;" />
+
+<p>稍后我们将使用GDB看看到底发生了什么。我们将进入prog2的_init函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">08048290 &lt;_init&gt;:</span><br><span class="line"> 8048290:       55                      push   %ebp</span><br><span class="line"> 8048291:       89 e5                   mov    %esp,%ebp</span><br><span class="line"> 8048293:       53                      push   %ebx</span><br><span class="line"> 8048294:       83 ec 04                sub    $0x4,%esp</span><br><span class="line"> 8048297:       e8 00 00 00 00          call   804829c &lt;_init+0xc&gt;</span><br><span class="line"> 804829c:       5b                      pop    %ebx</span><br><span class="line"> 804829d:       81 c3 58 1d 00 00       add    $0x1d58,%ebx</span><br><span class="line"> 80482a3:       8b 93 fc ff ff ff       mov    -0x4(%ebx),%edx</span><br><span class="line"> 80482a9:       85 d2                   test   %edx,%edx</span><br><span class="line"> 80482ab:       74 05                   je     80482b2 &lt;_init+0x22&gt;</span><br><span class="line"> 80482ad:       e8 1e 00 00 00          call   80482d0 &lt;__gmon_start__@plt&gt;</span><br><span class="line"> 80482b2:       e8 d9 00 00 00          call   8048390 &lt;frame_dummy&gt;</span><br><span class="line"> 80482b7:       e8 94 01 00 00          call   8048450 &lt;__do_global_ctors_aux&gt;</span><br><span class="line"> 80482bc:       58                      pop    %eax</span><br><span class="line"> 80482bd:       5b                      pop    %ebx</span><br><span class="line"> 80482be:       c9                      leave</span><br><span class="line"> 80482bf:       c3                      ret</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，上述的地址和prog1的地址略微有所不同。这些有差异的地址似乎相对于prog1移动了28个字节。这里，有两个函数：<code>&quot;a_constructor&quot;</code>（加上结束符一共14个字节）、<code>&quot;main&quot;</code>（加上结束符一共5个字节）和两个格式化字符串<code>&quot;%s\n&quot;</code>（2*4个字节，加上一个1字节的换行符和终止符），所以14 + 5 + 4 + 4 &#x3D; 27？ 似乎还差一个。不管怎样，这只是个猜想，我就不仔细研究了。然后我们就要跳入到<code>__do_global_ctors_aux</code>函数中去，我们列举出<code>__do_global_ctors_aux</code>函数的C代码，它位于GCC源码中的gcc&#x2F;crtstuff.c里。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">__do_global_ctors_aux (<span class="type">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  func_ptr *p;</span><br><span class="line">  <span class="keyword">for</span> (p = __CTOR_END__ - <span class="number">1</span>; *p != (func_ptr) <span class="number">-1</span>; p--)</span><br><span class="line">    (*p) ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，p的值被初始化成<code>__CTOR_END__</code>减去一个字节。这是一种指针算法，如果指针指向一个函数，在这种情况下，-1表示向上移动一个指针或者说4个字节。我们也能从汇编里面看出来。当指针不等于-1时，调用这个指针指向的函数，并且再次将指针上移。很明显，这个指针数组起始于-1，并且包含若干个函数指针。</p>
+<p>下面是使用<code>objdump -d</code>得到的<code>__do_global_ctors_aux</code>函数对应的汇编语言。我们将仔细的查看它的每条指令，以便你就能够在我们使用debugger之前完全了解它。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">08048450 &lt;__do_global_ctors_aux&gt;:</span><br><span class="line"> 8048450:       55                      push   %ebp</span><br><span class="line"> 8048451:       89 e5                   mov    %esp,%ebp</span><br><span class="line"> 8048453:       53                      push   %ebx</span><br><span class="line"> 8048454:       83 ec 04                sub    $0x4,%esp</span><br><span class="line"> 8048457:       a1 14 9f 04 08          mov    0x8049f14,%eax</span><br><span class="line"> 804845c:       83 f8 ff                cmp    $0xffffffff,%eax</span><br><span class="line"> 804845f:       74 13                   je     8048474 &lt;__do_global_ctors_aux+0x24&gt;</span><br><span class="line"> 8048461:       bb 14 9f 04 08          mov    $0x8049f14,%ebx</span><br><span class="line"> 8048466:       66 90                   xchg   %ax,%ax</span><br><span class="line"> 8048468:       83 eb 04                sub    $0x4,%ebx</span><br><span class="line"> 804846b:       ff d0                   call   *%eax</span><br><span class="line"> 804846d:       8b 03                   mov    (%ebx),%eax</span><br><span class="line"> 804846f:       83 f8 ff                cmp    $0xffffffff,%eax</span><br><span class="line"> 8048472:       75 f4                   jne    8048468 &lt;__do_global_ctors_aux+0x18&gt;</span><br><span class="line"> 8048474:       83 c4 04                add    $0x4,%esp</span><br><span class="line"> 8048477:       5b                      pop    %ebx</span><br><span class="line"> 8048478:       5d                      pop    %ebp</span><br><span class="line"> 8048479:       c3                      ret</span><br></pre></td></tr></table></figure>
+
+<p>函数最开始的部分依然遵从了C函数正常的调用惯例（保存调用者的栈基址寄存器，设置当前函数的栈基址寄存器），本函数中还增加了一点：额外把<code>%ebx</code>保存到了栈中，因为这个函数后面会使用到它。同时，我们也为（C代码中的）指针p保留了空间。你可能注意到了，即使我们在栈上为其开辟了空间，但是从未使用这部分空间。取而代之的是，<code>p</code>将会保存到<code>%ebx</code>中，<code>*p</code>会保存到<code>%eax</code>中。</p>
+<p>看起来编译器做了一些优化，编译器并没有直接“加载<code>__CTOR_END__</code>，然后将其值减去1，再查找它指向的内容”，而是直接加载<code>*(__CTOR_END__ - 1)</code>，这是一个立即数<code>0x8049f14</code>（注意，<code>$0x8049f14</code>意思是一个立即数，而不带<code>$</code>，只写<code>0x8049f14</code>的意思是这个地址指向的内容）。这个数里面的内容被直接放到了%eax中，然后立刻比较%eax和-1，如果相等，则跳转到地址0x8048474，回收栈，弹出我们保存在栈里的内容，函数调用结束，返回。</p>
+<p>假设在函数表中至少有一个值，立即数<code>0x8049f14</code>被存放到<code>%ebx</code>，也就是函数指针<code>p</code>，然后执行指令<code>xchg %ax,%ax</code>，这是什么鬼？原来这是X86 16或者32位里的一个nop（No Operation）语句。它什么也不做，只是占据了一个指令周期，起一个占位符作用而已。在这种情况下，使循环开始于<code>8048468</code>，而不是<code>8048466</code>。这么做的好处是使循环开始的地方以4字节对齐，这样整个循环将会极大可能的被保存到一个cache line里，而不会被分成两段，从而起到加速执行的作用。</p>
+<p>接下来，将<code>%ebx</code>减去4，从而为下一次循环做好准备，调用<code>%eax</code>里保存的地址对应的函数，然后将下一个函数指针移至<code>%eax</code>中，并且和-1比较，如果不等于-1，再次调回到上述循环。</p>
+<p>此时，已经运行到函数的最后，然后返回到<code>_init</code>中，然后又运行到<code>_init</code>函数的最后，并返回<code>__libc_csu_init__</code>中。你肯定已经忘了吧！此时仍然在循环处理中呢！但是首先我们完成之前的承诺。</p>
+<p>开始吧！需要记住一点的是：<strong>GDB总是显示你将要执行的下一行或者下一条指令</strong>。</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">$</span> gdb prog2</span><br><span class="line">Reading symbols from /home/patrick/src/asm/prog2...done.</span><br><span class="line">(gdb) <span class="keyword">set</span> disassemble-next-line <span class="comment">on</span></span><br><span class="line">(gdb) b <span class="comment">*0x80482b7</span></span><br><span class="line">Breakpoint <span class="comment">1 at 0x80482b7</span></span><br></pre></td></tr></table></figure>
+
+<p>运行调试器，打开<code>disassemble-next-line</code>，这样它就会总是显示下一条将要执行的指令的汇编代码，然后我们在<code>_init</code>函数将要调用<code>__do_global_ctors_aux</code>函数的地方设置一个断点。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(gdb) r</span><br><span class="line">Starting program: /home/patrick/src/asm/prog2 </span><br><span class="line"></span><br><span class="line">Breakpoint 1, 0x080482b7 <span class="keyword">in</span> _init ()</span><br><span class="line">=&gt; 0x080482b7 &lt;_init+39&gt;:    e8 94 01 00 00 call   0x8048450 &lt;__do_global_ctors_aux&gt;</span><br><span class="line">(gdb) si</span><br><span class="line">0x08048450 <span class="keyword">in</span> __do_global_ctors_aux ()</span><br><span class="line">=&gt; 0x08048450 &lt;__do_global_ctors_aux+0&gt;:     55 push   %ebp</span><br></pre></td></tr></table></figure>
+
+<p>输入<code>r</code>继续运行程序，到达断点处。再输入<code>si</code>单步执行指令，现在我们进入了<code>__do_global_ctors_aux</code>函数内部。后面你会看到若干次我并没输入任何指令，但是GDB却继续执行，这是因为我只是按了回车而已，GDB默认会重复上条指令。所以，如果我按下回车，GDB将会按照输入<code>si</code>继续执行。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(gdb)</span><br><span class="line"><span class="number">0</span>x08048451 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048451 &lt;__do_global_ctors_aux+<span class="number">1</span>&gt;<span class="symbol">:</span>     <span class="number">89</span> <span class="symbol">e5</span>  mov    %esp,%ebp</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048453 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048453 &lt;__do_global_ctors_aux+<span class="number">3</span>&gt;<span class="symbol">:</span>     <span class="number">53</span> push   %ebx</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048454 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048454 &lt;__do_global_ctors_aux+<span class="number">4</span>&gt;<span class="symbol">:</span>     <span class="number">83</span> ec <span class="number">04</span>   sub    $<span class="number">0</span>x4,%esp</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048457 in __do_global_ctors_aux ()</span><br></pre></td></tr></table></figure>
+
+<p>好的，现在我们已经执行完程序最开始的部分，接下来将要执行真正的代码了。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(gdb)</span><br><span class="line">=&gt; <span class="number">0</span>x08048457 &lt;__do_global_ctors_aux+<span class="number">7</span>&gt;<span class="symbol">:</span>     <span class="symbol">a1</span> <span class="number">14</span> <span class="number">9</span>f <span class="number">04</span> <span class="number">08</span> mov    <span class="number">0</span>x8049f14,%eax</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x0804845c in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x0804845c &lt;__do_global_ctors_aux+<span class="number">12</span>&gt;<span class="symbol">:</span>    <span class="number">83</span> <span class="symbol">f8</span> ff   cmp    $<span class="number">0</span>xffffffff,%eax</span><br><span class="line">(gdb) p/x $eax</span><br><span class="line">$<span class="number">1</span> = <span class="number">0</span>x80483b4</span><br></pre></td></tr></table></figure>
+
+<p>我想知道加载完指针之后会是什么样，所以输入了<code>p/x $eax</code>，意思是以十六进制的形式打印寄存器<code>%eax</code>的内容。它不等于-1，所以我们假定程序将继续执行循环。现在由于我的最后一条指令是print指令，所以我不能按回车继续执行了，下次我就得输入<code>si</code>了。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(gdb) si</span><br><span class="line"><span class="number">0</span>x0804845f in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x0804845f &lt;__do_global_ctors_aux+<span class="number">15</span>&gt;<span class="symbol">:</span>    <span class="number">74</span> <span class="number">13</span>  je     <span class="number">0</span>x8048474 &lt;__do_global_ctors_aux+<span class="number">36</span>&gt;</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048461 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048461 &lt;__do_global_ctors_aux+<span class="number">17</span>&gt;<span class="symbol">:</span>    bb <span class="number">14</span> <span class="number">9</span>f <span class="number">04</span> <span class="number">08</span> mov    $<span class="number">0</span>x8049f14,%ebx</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048466 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048466 &lt;__do_global_ctors_aux+<span class="number">22</span>&gt;<span class="symbol">:</span>    <span class="number">66</span> <span class="number">90</span>  xchg   %ax,%ax</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048468 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048468 &lt;__do_global_ctors_aux+<span class="number">24</span>&gt;<span class="symbol">:</span>    <span class="number">83</span> eb <span class="number">04</span>   sub    $<span class="number">0</span>x4,%ebx</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x0804846b in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x0804846b &lt;__do_global_ctors_aux+<span class="number">27</span>&gt;<span class="symbol">:</span>    ff <span class="symbol">d0</span>  <span class="built_in">call</span>   *%eax</span><br><span class="line">(gdb) </span><br><span class="line">a_constructor () at prog2.<span class="symbol">c:3</span></span><br><span class="line"><span class="number">3</span>   void __attribute__ ((constructor)) a_constructor() &#123;</span><br><span class="line">=&gt; <span class="number">0</span>x080483b4 &lt;a_constructor+<span class="number">0</span>&gt;<span class="symbol">:</span>     <span class="number">55</span> push   %ebp</span><br><span class="line">   <span class="number">0</span>x080483b5 &lt;a_constructor+<span class="number">1</span>&gt;<span class="symbol">:</span>     <span class="number">89</span> <span class="symbol">e5</span>  mov    %esp,%ebp</span><br><span class="line">   <span class="number">0</span>x080483b7 &lt;a_constructor+<span class="number">3</span>&gt;<span class="symbol">:</span>     <span class="number">83</span> ec <span class="number">18</span>   sub    $<span class="number">0</span>x18,%esp</span><br></pre></td></tr></table></figure>
+
+<p>这部分代码很有意思。我们一步步调用来看看。现在我们已经进入了我们自己写的函数<code>a_constructor</code>。因为GDB是能看到我们的源代码的，所以它在下一行给出了我们源码。又因为我打开了<code>disassemble-next-line</code>，所以它也会给出对应的汇编代码。这个例子中输出了函数最开始的部分，对应了函数的声明，现在，我输入<code>n</code>命令，这个时候我们写的<code>prinf</code>就会被调用了。第一个n跳过了程序最开始的部分，第二个n执行prinf，第三个n执行了函数的结尾部分。如果你想知道为什么你需要在函数最开始和结束部分做些处理的话，现在，你使用GDB的单步调试应该能知道答案了吧。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) <span class="built_in">n</span></span><br><span class="line"><span class="number">4</span>       printf(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">=&gt; <span class="number">0</span>x080483ba &lt;a_constructor+<span class="number">6</span>&gt;<span class="symbol">:</span>     <span class="symbol">c7</span> <span class="number">04</span> <span class="number">24</span> <span class="symbol">a5</span> <span class="number">84</span> <span class="number">04</span> <span class="number">08</span>   movl   $<span class="number">0</span>x80484a5,(%esp)</span><br><span class="line">   <span class="number">0</span>x080483c1 &lt;a_constructor+<span class="number">13</span>&gt;<span class="symbol">:</span>    <span class="symbol">e8</span> <span class="number">2</span>a ff ff ff <span class="built_in">call</span>   <span class="number">0</span>x80482f0 &lt;puts@plt&gt;</span><br></pre></td></tr></table></figure>
+
+<p>之前，我们已经把<code>a_constructor</code>字符串的地址作为<code>printf</code>的参数保存到了栈里，因为编译器足够的智能，发现实际上<code>puts</code>函数才是我们想要的，所以它调用了<code>puts</code>函数。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(gdb) <span class="built_in">n</span></span><br><span class="line">a_constructor</span><br><span class="line"><span class="number">5</span>   &#125;</span><br><span class="line">=&gt; <span class="number">0</span>x080483c6 &lt;a_constructor+<span class="number">18</span>&gt;<span class="symbol">:</span>    <span class="symbol">c9</span> leave  </span><br><span class="line">   <span class="number">0</span>x080483c7 &lt;a_constructor+<span class="number">19</span>&gt;<span class="symbol">:</span>    <span class="symbol">c3</span> ret   </span><br></pre></td></tr></table></figure>
+
+<p>因为我们正在运行中来调试程序，所以我们看到了<code>a_constructor</code>打印出了上面的内容。后括号<code>&#125;</code>对应了函数的结尾部分，被显示出来了。提示一下，如果你不清楚<code>leave</code>指令的话，实际上它做了一下操作：</p>
+<figure class="highlight cos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">movl <span class="built_in">%ebp</span>, <span class="built_in">%esp</span></span><br><span class="line">popl <span class="built_in">%ebp</span></span><br></pre></td></tr></table></figure>
+
+<p>继续执行，我们就退出了函数，并返回了调用函数。这里我又不得不输入<code>si</code>了：</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(gdb) <span class="built_in">n</span></span><br><span class="line"><span class="number">0</span>x0804846d in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x0804846d &lt;__do_global_ctors_aux+<span class="number">29</span>&gt;<span class="symbol">:</span>    <span class="number">8</span>b <span class="number">03</span>  mov    (%ebx),%eax</span><br><span class="line">(gdb) si</span><br><span class="line"><span class="number">0</span>x0804846f in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x0804846f &lt;__do_global_ctors_aux+<span class="number">31</span>&gt;<span class="symbol">:</span>    <span class="number">83</span> <span class="symbol">f8</span> ff   cmp    $<span class="number">0</span>xffffffff,%eax</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048472 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048472 &lt;__do_global_ctors_aux+<span class="number">34</span>&gt;<span class="symbol">:</span>    <span class="number">75</span> <span class="symbol">f4</span>  jne    <span class="number">0</span>x8048468 &lt;__do_global_ctors_aux+<span class="number">24</span>&gt;</span><br><span class="line">(gdb) p/x $eax</span><br><span class="line">$<span class="number">2</span> = <span class="number">0</span>xffffffff</span><br></pre></td></tr></table></figure>
+
+<p>我比较好奇，并且再次看了一下：这次，我们的函数指针指向了-1，所以，程序退出了循环。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(gdb) si</span><br><span class="line"><span class="number">0</span>x08048474 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048474 &lt;__do_global_ctors_aux+<span class="number">36</span>&gt;<span class="symbol">:</span>    <span class="number">83</span> <span class="symbol">c4</span> <span class="number">04</span>   add    $<span class="number">0</span>x4,%esp</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048477 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048477 &lt;__do_global_ctors_aux+<span class="number">39</span>&gt;<span class="symbol">:</span>    <span class="number">5</span>b pop    %ebx</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048478 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048478 &lt;__do_global_ctors_aux+<span class="number">40</span>&gt;<span class="symbol">:</span>    <span class="number">5</span>d pop    %ebp</span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x08048479 in __do_global_ctors_aux ()</span><br><span class="line">=&gt; <span class="number">0</span>x08048479 &lt;__do_global_ctors_aux+<span class="number">41</span>&gt;<span class="symbol">:</span>    <span class="symbol">c3</span> ret    </span><br><span class="line">(gdb) </span><br><span class="line"><span class="number">0</span>x080482bc in _init ()</span><br><span class="line">=&gt; <span class="number">0</span>x080482bc &lt;_init+<span class="number">44</span>&gt;<span class="symbol">:</span>    <span class="number">58</span> pop    %eax</span><br></pre></td></tr></table></figure>
+
+<p>注意，我们现在退回到了<code>_init</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">(gdb) </span><br><span class="line">0x080482bd <span class="keyword">in</span> _init ()</span><br><span class="line">=&gt; 0x080482bd &lt;_init+45&gt;:    5b pop    %ebx</span><br><span class="line">(gdb) </span><br><span class="line">0x080482be <span class="keyword">in</span> _init ()</span><br><span class="line">=&gt; 0x080482be &lt;_init+46&gt;:    c9 leave  </span><br><span class="line">(gdb) </span><br><span class="line">0x080482bf <span class="keyword">in</span> _init ()</span><br><span class="line">=&gt; 0x080482bf &lt;_init+47&gt;:    c3 ret    </span><br><span class="line">(gdb) </span><br><span class="line">0x080483f9 <span class="keyword">in</span> __libc_csu_init ()</span><br><span class="line">=&gt; 0x080483f9 &lt;__libc_csu_init+25&gt;:  8d bb 1c ff ff ff  lea    -0xe4(%ebx),%edi</span><br><span class="line">(gdb) q</span><br><span class="line">A debugging session is active.</span><br><span class="line"></span><br><span class="line">    Inferior 1 [process 17368] will be killed.</span><br><span class="line"></span><br><span class="line">Quit anyway? (y or n) y</span><br></pre></td></tr></table></figure>
+
+<p>现在，程序跳转回<code>__libc_csu_init</code>函数，然后我们输入<code>q</code>退出了调试器。以上是我之前说的调试过程。现在我们回到<code>__libc_csu_init__</code>函数，这里还有另外一个循环要处理，我就不再进入循环单步分析了。我们刚刚经历了冗长的时间来分析一个汇编语言写的循环，这个用汇编写的循环要比上一个更加复杂。所以我留给读者自行分析。这里我贴出对应的C代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __libc_csu_init (<span class="type">int</span> argc, <span class="type">char</span> **argv, <span class="type">char</span> **envp) &#123;</span><br><span class="line">  _init ();</span><br><span class="line"></span><br><span class="line">  <span class="type">const</span> <span class="type">size_t</span> size = __init_array_end - __init_array_start;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; size; i++)</span><br><span class="line">      (*__init_array_start [i]) (argc, argv, envp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>__init__</code>数组里面是什么呢？你肯定不会想到。你也可以在这个阶段自定义代码。这时刚刚从运行我们自定义的构造函数的<code>_init</code>函数返回，这意味着，在这个数组里面的内容将会在构造函数完成之后运行。你能通过某种方式告诉编译器你想在这个阶段运行某个你自定义的函数。这个函数也会收到和main函数相同的参数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv, <span class="type">char</span> **envp)</span> </span>&#123;</span><br><span class="line"> 	<span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line">__attribute__((<span class="built_in">section</span>(<span class="string">&quot;.init_array&quot;</span>))) <span class="built_in">typeof</span>(init) *__init = init;</span><br></pre></td></tr></table></figure>
+
+<p>我们并不这么做，因为这和之前的动作基本差不多。现在，我们返回到<code>__lib_csu_init</code>函数中，你还记得会返回到哪里吗？程序将返回<code>__libc_start_main__</code>，它调用了我们的main函数，然后把main函数的返回值传递给exit()函数。exit()函数运行了更多的循环。exit()函数按照注册顺序依次运行了在at_exit()中注册的函数。然后会运行另外一个循环，这次的循环是在<code>__fini_</code>数组中定义的。在运行完这些函数之后，就会调用析构函数。</p>
+<h4 id="7-Constructor"><a href="#7-Constructor" class="headerlink" title="7. Constructor"></a>7. Constructor</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">	.text</span><br><span class="line">	.file	&quot;test.c&quot;</span><br><span class="line">	</span><br><span class="line">	.globl	test                    # -- Begin function test</span><br><span class="line">	.p2align	4, 0x90</span><br><span class="line">	.type	test,@function</span><br><span class="line">test:                                   # @test</span><br><span class="line">	.cfi_startproc</span><br><span class="line"># %bb.0:</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	...</span><br><span class="line">	retq</span><br><span class="line">.Lfunc_end0:</span><br><span class="line">	.size	test, .Lfunc_end0-test</span><br><span class="line">	.cfi_endproc</span><br><span class="line">                                        # -- End function</span><br><span class="line">                                        </span><br><span class="line">	.globl	main                    # -- Begin function main</span><br><span class="line">	.p2align	4, 0x90</span><br><span class="line">	.type	main,@function</span><br><span class="line">main:                                   # @main</span><br><span class="line">	.cfi_startproc</span><br><span class="line"># %bb.0:</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	...</span><br><span class="line">	retq</span><br><span class="line">.Lfunc_end1:</span><br><span class="line">	.size	main, .Lfunc_end1-main</span><br><span class="line">	.cfi_endproc</span><br><span class="line">                                        # -- End function</span><br><span class="line">	.type	c,@object               # @c</span><br><span class="line">	</span><br><span class="line">	.data</span><br><span class="line">	.globl	c</span><br><span class="line">	.p2align	2</span><br><span class="line">c:</span><br><span class="line">	.long	6                       # 0x6</span><br><span class="line">	.size	c, 4</span><br><span class="line"></span><br><span class="line">	.type	.L.str,@object          # @.str</span><br><span class="line">	.section	.rodata.str1.1,&quot;aMS&quot;,@progbits,1</span><br><span class="line">.L.str:</span><br><span class="line">	.asciz	&quot;test for constructor\n&quot;</span><br><span class="line">	.size	.L.str, 22</span><br><span class="line"></span><br><span class="line">	.type	.L.str.1,@object        # @.str.1</span><br><span class="line">.L.str.1:</span><br><span class="line">	.asciz	&quot;%d\n&quot;</span><br><span class="line">	.size	.L.str.1, 4</span><br><span class="line">	# __attribute((constructor))_ start</span><br><span class="line">	.section	.init_array,&quot;aw&quot;,@init_array</span><br><span class="line">	.p2align	3</span><br><span class="line">	.quad	test</span><br><span class="line">	# __attribute((constructor))_ end</span><br><span class="line">	.ident	&quot;clang version 10.0.1 &quot;</span><br><span class="line">	.section	&quot;.note.GNU-stack&quot;,&quot;&quot;,@progbits</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-Conclusion"><a href="#8-Conclusion" class="headerlink" title="8. Conclusion"></a>8. Conclusion</h4><p>这个程序，把上面所有的过程联系了起来</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">preinit</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv, <span class="type">char</span> **envp)</span> </span>&#123;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv, <span class="type">char</span> **envp)</span> </span>&#123;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fini</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__attribute__((<span class="built_in">section</span>(<span class="string">&quot;.init_array&quot;</span>))) <span class="built_in">typeof</span>(init) *__init = init;</span><br><span class="line">__attribute__((<span class="built_in">section</span>(<span class="string">&quot;.preinit_array&quot;</span>))) <span class="built_in">typeof</span>(preinit) *__preinit = preinit;</span><br><span class="line">__attribute__((<span class="built_in">section</span>(<span class="string">&quot;.fini_array&quot;</span>))) <span class="built_in">typeof</span>(fini) *__fini = fini;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span>  __attribute__ ((constructor)) <span class="built_in">constructor</span>() &#123;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> __attribute__ ((destructor)) <span class="built_in">destructor</span>() &#123;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">my_atexit</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">my_atexit2</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="built_in">atexit</span>(my_atexit);</span><br><span class="line"> <span class="built_in">atexit</span>(my_atexit2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译并运行这个函数（这里我将其命名为hooks.c），输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ./hooks</span><br><span class="line">preinit</span><br><span class="line">init</span><br><span class="line">constructor</span><br><span class="line">my_atexit2</span><br><span class="line">my_atexit</span><br><span class="line">destructor</span><br><span class="line">fini</span><br></pre></td></tr></table></figure>
+
+<p>现在我们再来回顾一下整个过程，这次你就不会对它感到陌生了吧。</p>
+<p><img src="https://i.loli.net/2021/04/10/TsSo8YD6VKBdMl1.png" alt="image-20210410200953737"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/04/04/Rebuttal/" rel="prev" title="Rebuttal">
+                  <i class="fa fa-angle-left"></i> Rebuttal
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/04/10/Tech-LLVM-Asan-Code/" rel="next" title="LLVM Asan Code">
+                  LLVM Asan Code <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="Side channel AttacksSteal Secret through side channels side channels: timing; power; em emissions; sound; heat; cache Infer secrets via secret-dependent physical information">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Tech] Side Channel Attacks">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/03/22/Tech-Side-Channel-Attacks/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="Side channel AttacksSteal Secret through side channels side channels: timing; power; em emissions; sound; heat; cache Infer secrets via secret-dependent physical information">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/03/22/4ShuJOAKLDZVrC5.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/22/bY3NiR8VJ17HeqZ.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/22/9g463RPiF8rLUET.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/22/qSvZraW2K5MneRP.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/22/umxjnMIq9FlD3N4.png">
+<meta property="article:published_time" content="2021-03-22T06:20:55.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.074Z">
+<meta property="article:author" content="Wei CHEN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/03/22/4ShuJOAKLDZVrC5.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/03/22/Tech-Side-Channel-Attacks/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2021/03/22/Tech-Side-Channel-Attacks/","path":"2021/03/22/Tech-Side-Channel-Attacks/","title":"[Tech] Side Channel Attacks"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>[Tech] Side Channel Attacks | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Side-channel-Attacks"><span class="nav-number">1.</span> <span class="nav-text">Side channel Attacks</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Example"><span class="nav-number">2.</span> <span class="nav-text">Example</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#RSA-Decryption-Algorithm"><span class="nav-number">2.1.</span> <span class="nav-text">RSA Decryption Algorithm</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Timing-side-channel"><span class="nav-number">2.2.</span> <span class="nav-text">Timing side channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Break-RSA-with-Timing-Side-Channel"><span class="nav-number">2.3.</span> <span class="nav-text">Break RSA with Timing Side Channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Break-RSA-with-Power-Side-channel"><span class="nav-number">2.4.</span> <span class="nav-text">Break RSA with Power Side channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Break-RSA-with-Power-Side-channel-1"><span class="nav-number">2.5.</span> <span class="nav-text">Break RSA with Power Side channel</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache-based-side-channel"><span class="nav-number">3.</span> <span class="nav-text">Cache-based side channel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Meltdown"><span class="nav-number">4.</span> <span class="nav-text">Meltdown</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Spectre"><span class="nav-number">4.1.</span> <span class="nav-text">Spectre</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#L1-and-L2-Cache-Side-Channel"><span class="nav-number">4.2.</span> <span class="nav-text">L1 and L2 Cache Side Channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#LLC-Side-Channel"><span class="nav-number">4.3.</span> <span class="nav-text">LLC Side Channel</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Branch-Prediction"><span class="nav-number">5.</span> <span class="nav-text">Branch Prediction</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/22/Tech-Side-Channel-Attacks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="[Tech] Side Channel Attacks | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Tech] Side Channel Attacks
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-22 14:20:55" itemprop="dateCreated datePublished" datetime="2021-03-22T14:20:55+08:00">2021-03-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="Side-channel-Attacks"><a href="#Side-channel-Attacks" class="headerlink" title="Side channel Attacks"></a>Side channel Attacks</h4><p>Steal Secret through side channels</p>
+<p>side channels: timing; power; em emissions; sound; heat; cache</p>
+<p>Infer secrets via secret-dependent physical information</p>
+<span id="more"></span>
+
+<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h4><h5 id="RSA-Decryption-Algorithm"><a href="#RSA-Decryption-Algorithm" class="headerlink" title="RSA Decryption Algorithm"></a>RSA Decryption Algorithm</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> bit in k:</span><br><span class="line">    <span class="comment">// compute square</span></span><br><span class="line">    <span class="keyword">if</span> bit == <span class="number">1</span>:</span><br><span class="line">        <span class="comment">// compute multiply</span></span><br><span class="line">endfor</span><br></pre></td></tr></table></figure>
+
+<p>|  square | square  | square &amp; multiply | square &amp; multiply  | …</p>
+<p>|       0      |       0      |                   1               |                    1               | …</p>
+<h5 id="Timing-side-channel"><a href="#Timing-side-channel" class="headerlink" title="Timing side channel"></a>Timing side channel</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (k == <span class="number">1</span>) then</span><br><span class="line">    <span class="comment">// slow branch</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment">// fast branch</span></span><br><span class="line">endfor</span><br></pre></td></tr></table></figure>
+
+<h5 id="Break-RSA-with-Timing-Side-Channel"><a href="#Break-RSA-with-Timing-Side-Channel" class="headerlink" title="Break RSA with Timing Side Channel"></a>Break RSA with Timing Side Channel</h5><p>|  square |  square | square + multiply | square + multiply | …</p>
+<p>|       0      |       0      |                  1                |                  1                | …</p>
+<p>|     fast   |     fast    |              slow             |               slow            | …</p>
+<h5 id="Break-RSA-with-Power-Side-channel"><a href="#Break-RSA-with-Power-Side-channel" class="headerlink" title="Break RSA with Power Side channel"></a>Break RSA with Power Side channel</h5><img src="https://i.loli.net/2021/03/22/4ShuJOAKLDZVrC5.png" alt="image-20210322145237378" style="zoom: 43%;" />
+
+<h5 id="Break-RSA-with-Power-Side-channel-1"><a href="#Break-RSA-with-Power-Side-channel-1" class="headerlink" title="Break RSA with Power Side channel"></a>Break RSA with Power Side channel</h5><img src="https://i.loli.net/2021/03/22/bY3NiR8VJ17HeqZ.png" alt="image-20210322145348892" style="zoom:50%;" />
+
+<h4 id="Cache-based-side-channel"><a href="#Cache-based-side-channel" class="headerlink" title="Cache-based side channel"></a>Cache-based side channel</h4><p>Cache lines: minimal storage units of a cache 64 bytes</p>
+<p>Cache sets: equal number of cache lines</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Table Lookup</span></span><br><span class="line">x = A[idx]</span><br></pre></td></tr></table></figure>
+
+<p>idx is virtual address, for L1 and L2 cache, virtual address is used for indexing, however for L3 cache, physical address is used.</p>
+<p>The upper part of a memory address maps a memory access to a cache line access</p>
+<ul>
+<li><p>Set index: locate the set in which the data may be stored. </p>
+</li>
+<li><p>Tag: confirm the data is present in one of its lines</p>
+</li>
+</ul>
+<img src="https://i.loli.net/2021/03/22/9g463RPiF8rLUET.png" alt="image-20210322150113988" style="zoom:33%;" />
+
+<p>The System model for a multi-core processor, L1 and L2 cache is private to each core and LLC is shared across multiple cores;</p>
+<img src="https://i.loli.net/2021/03/22/qSvZraW2K5MneRP.png" alt="image-20210322145946903" style="zoom:30%;" />
+
+<p>Threat model</p>
+<p><img src="https://i.loli.net/2021/03/22/umxjnMIq9FlD3N4.png" alt="image-20210322192746039"></p>
+<p>Support</p>
+<h4 id="Meltdown"><a href="#Meltdown" class="headerlink" title="Meltdown"></a>Meltdown</h4><h5 id="Spectre"><a href="#Spectre" class="headerlink" title="Spectre"></a>Spectre</h5><h5 id="L1-and-L2-Cache-Side-Channel"><a href="#L1-and-L2-Cache-Side-Channel" class="headerlink" title="L1 and L2 Cache Side Channel"></a>L1 and L2 Cache Side Channel</h5><p>Prime-and-Probe</p>
+<h5 id="LLC-Side-Channel"><a href="#LLC-Side-Channel" class="headerlink" title="LLC Side Channel"></a>LLC Side Channel</h5><h4 id="Branch-Prediction"><a href="#Branch-Prediction" class="headerlink" title="Branch Prediction"></a>Branch Prediction</h4><p>Branch prediction is one of the most important features of modern pipelined processors. At a high level, an instruction pipeline consists of four major stages: fetch, decode, execute, and write-back. At any given time, there are a number of instructions in-flight in the pipeline. Pro- cessors exploit instruction-level parallelism and out-of-order execution to maximize the throughput while still maintaining in-order retirement of instructions. Branch instructions can severely reduce instruction throughput since the processor cannot execute past the branch until the branch’s target and outcome are determined. Unless mitigated, branches would lead to pipeline stalls, also known as bubbles. Hence, modern processors use a branch prediction unit (BPU) to <em>predict</em> branch outcomes and branch targets. While the BPU increases throughput in general, it is worth noting that in the case of a misprediction, there is a pretty high penalty because the processor needs to clear the pipeline and roll back any speculative execution results. This is why Intel provides a dedicated hardware feature (the LBR) to profile branch execution</p>
+<p><strong>Branch and branch target prediction.</strong> <em>Branch prediction</em> is a procedure to predict the next instruction of a conditional branch by guessing whether it will be taken. <em>Branch target prediction</em> is a procedure to predict and fetch the target instruction of a branch before executing it. For branch target prediction, modern processors have the BTB to store the computed target addresses of taken branch instructions and fetch them when the corresponding branch instructions are predicted as taken.</p>
+<p><strong>BTB structure and partial tag hit.</strong> The BTB is an associative structure that resembles a cache. Address bits are used to compute the set index and tag fields. The number of bits used for set index is determined by the size of the BTB. Unlike a cache that uses all the remaining address bits for the tag, the BTB uses a subset of the remaining bits for the tag (i.e., a partial tag). For example, in a 64-bit address space, if ADDR[11:0] is used for index, instead of using ADDR[63:12] for a tag, only a partial number of bits such as ADDR[31:12] is used as the tag. The reasons for this choice are as follows: First, compared to a data cache, the BTB’s size is very small, and the overhead of complete tags can be very high. Second, the higher-order bits typically tend to be the same within a program. Third, unlike a cache, which needs to maintain an accurate microarchitectural state, the BTB is just a predictor. Even if a partial tag hit results in a false BTB hit, the correct target will be computed at the execution stage and the pipeline will roll back if the prediction is wrong (i.e., it affects only performance, not correctness.)</p>
+<p><strong>Static and dynamic branch prediction</strong>. <em>Static branch prediction</em> is a default rule for predicting the next instruction after a branch instruction when there is no history. First, the processor predicts that a forward conditional branch—a conditional branch whose target address is higher than itself—will <em>not be taken</em>, which means the next instruction will be directly fetched (i.e., a fall-through path). Second, the processor predicts that a backward conditional branch—a conditional branch whose target address is lower than itself—will <em>be taken</em>; that is, the specified target will be fetched. Third, the processor predicts that an indirect branch will <em>not be taken</em>, similar to the forward conditional branch case. Fourth, the processor predicts that an unconditional branch will <em>be taken</em>, similar to the backward conditional branch case. In contrast, when a branch has a history in the BTB, the processor will predict the next instruction according to the history. This procedure is known as <em>dynamic branch prediction</em>.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/03/04/S-P-19-NEUZZ-Efficient-Fuzzing-with-Neural-Program-Smoothing/" rel="prev" title="[S&P'19] NEUZZ: Efficient Fuzzing with Neural Program Smoothing">
+                  <i class="fa fa-angle-left"></i> [S&P'19] NEUZZ: Efficient Fuzzing with Neural Program Smoothing
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/03/22/Side-Channel/" rel="next" title="Side Channel">
+                  Side Channel <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

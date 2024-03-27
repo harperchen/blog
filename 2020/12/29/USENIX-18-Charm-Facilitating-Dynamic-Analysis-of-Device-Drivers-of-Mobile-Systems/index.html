@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="AbstractMobile systems, such as smartphones and tablets, incorporate a diverse set of I&#x2F;O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diver">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[USENIX&#39;18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="AbstractMobile systems, such as smartphones and tablets, incorporate a diverse set of I&#x2F;O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diver">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/12/29/g1VuLHYwJytkmX4.png">
+<meta property="article:published_time" content="2020-12-29T05:13:22.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.077Z">
+<meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Kernel">
+<meta property="article:tag" content="Hardware Boostup">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/12/29/g1VuLHYwJytkmX4.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/","path":"2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/","title":"[USENIX'18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>[USENIX'18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Outline"><span class="nav-number">2.</span> <span class="nav-text">Outline</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="[USENIX'18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [USENIX'18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-12-29 13:13:22" itemprop="dateCreated datePublished" datetime="2020-12-29T13:13:22+08:00">2020-12-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><p>Mobile systems, such as smartphones and tablets, incorporate a diverse set of I&#x2F;O devices, such as camera, audio devices, GPU, and sensors. This in turn results in a large number of diverse and customized device drivers running in the operating system kernel of mobile systems. These device drivers contain various bugs and vulnerabilities, making them a top target for kernel exploits. Unfortunately, security analysts face important challenges in analyzing these device drivers in order to find, understand, and patch vulnerabilities. More specifically, using the state-of-the-art dynamic analysis techniques such as interactive debugging, fuzzing, and record-and-replay for analysis of these drivers is difficult, inefficient, or even completely inaccessible depending on the analysis.</p>
+<span id="more"></span>
+
+<p>In this paper, we present Charm1, a system solution that facilitates dynamic analysis of device drivers of mo- bile systems. Charm’s key technique is <em>remote device driver execution</em>, which enables the device driver to ex- ecute in a virtual machine on a workstation. Charm makes this possible by using the actual mobile system only for servicing the low-level and infrequent I&#x2F;O operations through a low-latency and customized USB channel. Charm does not require any specialized hardware and is immediately available to analysts. We show that it is feasible to apply Charm to various device drivers, including camera, audio, GPU, and IMU sensor drivers, in different mobile systems, including LG Nexus 5X, Huawei Nexus 6P, and Samsung Galaxy S7. In an extensive evaluation, we show that Charm enhances the usability of fuzzing of device drivers, enables record-and- replay of driver’s execution, and facilitates detailed vulnerability analysis. Altogether, these capabilities have enabled us to find 25 bugs in device drivers, analyze 3 existing ones, and even build an arbitrary-code-execution kernel exploit using one of them.</p>
+<p><img src="https://i.loli.net/2020/12/29/g1VuLHYwJytkmX4.png" alt="image-20201229181646372"></p>
+<h4 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h4><ul>
+<li>Target Problem<ul>
+<li>移动设备中包含很多IO设备，但利用例如fuzzing、交互式调试等动态分析技术对其进行分析非常困难且效率低下，甚至完全无法访问。本文提出Charm，一种使驱动程序能够在虚拟机中运行的技术。在虚拟机中运行克服了对设备驱动进行动态分析的难点，促进驱动漏洞的检测。</li>
+</ul>
+</li>
+<li>Existing approaches<ul>
+<li>[CCS’17] DIFUZE<ul>
+<li>真机运行</li>
+<li>静态分析无法获取动态分配object和array的大小</li>
+<li>无法利用syzkaller的coverage-guided fuzzing</li>
+</ul>
+</li>
+<li>[USENIX’18] Charm：当驱动需要访问外设时，会被转移到物理设备上，否则则在虚拟机里运行。<ul>
+<li>需要移植驱动</li>
+<li>需要手动分离驱动</li>
+<li>需要为每个分析实例提供真实的硬件设备</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Difficulties of performing dynamic analysis on drivers<ul>
+<li>交互式调试和记录重放等动态分析需要驱动跑在一个完全可控制的环境里，例如虚拟机，但虚拟机并不支持模拟驱动</li>
+<li>Fuzzing例如kAFL和Syzkaller有局限性<ul>
+<li>kAFL需要运行在基于x86的虚拟机上，而不支持ARM；</li>
+<li>Syzkaller中很多fuzzing的feature，例如KASAN，KMSAN，KTSAN和KUBSAN等在移动设备的内核上都是不支持的，</li>
+<li>KGDB需要控制台访问，需要UART硬件才可以实现，有的手机不支持，有的手机得自己找引脚，有的有插口还得有特殊的线</li>
+<li>另一个读取内核信息的工具adb却不能在捕获内核崩溃时的日志，因为adb也同时崩溃了</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Difficulties of running driver inside virtual machine<ul>
+<li>驱动程序需要访问特定的IO设备硬件，没有相应的设备，驱动是无法完成初始化的</li>
+<li>由于驱动设备实在太多，所以模拟器不可能虚拟化模拟所有驱动</li>
+<li>驱动程序对特定内核有软件依赖，有些内核也不被支持虚拟化</li>
+<li>在移动设备的虚拟机里模拟驱动，然后利用设备直通使用主机的设备<ul>
+<li>一般只支持x86的PCI设备，而不支持移动手机上的IO设备</li>
+<li>ARM处理器虚拟化技术一般被移动设备禁止使用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Why this paper is accepted<ul>
+<li>本文提出技术在虚拟机里运行驱动的技术，使对驱动程序执行Fuzzing、record-and-reply等动态分析技术变得可能。<ul>
+<li>虚拟机模拟可以使Fuzzing利用别的技术，例如利用record-and-reply来分析漏洞</li>
+<li>虚拟机模拟便于Fuzzing使用许多kernel sanitizer，因为驱动是运行在支持sanitizer的内核上的</li>
+<li>虚拟机模拟便于利用hypervisor捕获内核崩溃时的执行日志，利于定位bug</li>
+</ul>
+</li>
+<li>Usefulness<ul>
+<li>驱动程序可以在虚拟机里运行，因此可观察执行情况和分析。</li>
+<li>不需要任何定制的硬件就可以直接给分析人员使用。</li>
+<li>本文提出技术找到4个驱动程序中的25个漏洞。</li>
+</ul>
+</li>
+<li>Novelty<ul>
+<li>本文观察到驱动对IO设备的访问是不常见的，提出远程设备驱动执行技术。</li>
+<li>本文将设备驱动和物理设备解藕，允许驱动运行在其余主机的虚拟机中</li>
+<li>The replay of the driver does not even require having access to the actual mobile system</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>How it works<ul>
+<li>本文提出远程设备驱动执行技术，在x86虚拟机上运行驱动<ul>
+<li>将真实物理设备以USB方式连接到主机上，仅将不常见的IO操作转发到真实设备上运行。</li>
+<li>hypervisor监听并拦截对IO设备交互和IO设备抛出的中断，利用定制的低延迟的USB通道，将其传递至真实物理设备上运行。<ul>
+<li>在hypervisor中实现stub模块，在物理设备上也实现stub模块，进而实现驱动与设备的通信<ul>
+<li>访问设备寄存器：寄存器读&#x2F;寄存器写</li>
+<li>中断：移动设备里的stub注册一个中断处理，代表实际驱动，每次接收到终端就交给驱动</li>
+<li>直接内存访问（外设直接访问内存而不经过CPU）DMA （目前不被支持）</li>
+</ul>
+</li>
+<li>驱动初始化：如何让内核检测到这个本来不属于他的驱动<ul>
+<li>ARM使用device tree检测本机设备</li>
+<li>x86使用ACPI检测本机设备</li>
+<li>使x86解析和使用device tree来检测远程IO设备</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>定制USB通道，解决驱动和IO设备访问所需的实时性问题 （硬件依赖）<ul>
+<li>虚拟机workstation和驱动的访问造成的延迟很容易产生time-out</li>
+<li>使用常见的USB接口，不需要定制特殊的硬件</li>
+<li>USB gadget接口；5 endpoint；write batching</li>
+</ul>
+</li>
+<li>如何在x86虚拟机上运行驱动？（本来就是C程序）移植驱动<ul>
+<li>添加驱动代码及其依赖到内核代码，并编译</li>
+<li>将IO设备的device tree中的条目及依赖条目拷贝到x86虚拟机中</li>
+<li>建立USB和RPC通信渠道，来发送驱动对设备的操作</li>
+<li>处理来自设备的中断，关闭真机中的驱动</li>
+</ul>
+</li>
+<li>利用远程RPC接口，解决驱动依赖匹配内核中特定的内核模块，而这些在通用虚拟机中不存在的问题（软件依赖）<ul>
+<li>如果内核模块不被真机需要，就直接把它移到虚拟机里</li>
+<li>如果被真机需要（resident modules），就保留到真机上，使用RPC接口实现驱动和依赖内核模块的交互<ul>
+<li>通用的RPC接口，使其能在不同移动设备的不同驱动上都能被使用</li>
+<li>Power and Clock management system, Pin controller hardware, and GPIO</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>在Syzkaller中添加相应设备操作系统调用函数的模版</li>
+</ul>
+</li>
+<li>Evalution<ul>
+<li>LG Nexus 5X：摄像头和音频驱动；Huawei Nexus 6P：GPU驱动；Samsung Galaxy S7：IMU驱动；<ul>
+<li>少于1周的时间移植GPU驱动，大概2天时间移植IMU驱动</li>
+</ul>
+</li>
+<li>Performance of remote device deriver execution：和真实移动设备中运行Fuzzing相当（相同的吞吐量）</li>
+<li>在4个不同厂商的驱动中找到25个bug，其中14个未知bug，而且有两个是kernel sanitizer找到的，直接在真机上Fuzzing是找不到的</li>
+<li>可以重放设备驱动的执行情况，也可以使用调试器来分析驱动中的漏洞，并设计任意代码执行的exploit来攻击驱动。<ul>
+<li>Record-and-replay: 只记录和重放驱动和IO设备的交互，舍弃写操作，读操作根据日志读取相应值</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Reflection <ul>
+<li>这篇工作还是需要使用物理机来处理不常见的驱动对设备的底层IO操作</li>
+<li>这篇工作只支持开放源代码的驱动</li>
+<li>这篇工作还得解锁bootloader来重新部署手机的内核镜像</li>
+<li>这篇工作需要移植驱动到别的虚拟机支持的内核</li>
+</ul>
+</li>
+<li>How to improve this work</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Kernel/" rel="tag"># Kernel</a>
+              <a href="/blog/tags/Hardware-Boostup/" rel="tag"># Hardware Boostup</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/12/27/Overview-of-Linux-kernel/" rel="prev" title="Overview of Linux kernel">
+                  <i class="fa fa-angle-left"></i> Overview of Linux kernel
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2020/12/30/S-P-19-Fuzzing-File-Systems-via-Two-Dimensional-Input-Space-Exploration/" rel="next" title="[S&P'19] Fuzzing File Systems via Two-Dimensional Input Space Exploration">
+                  [S&P'19] Fuzzing File Systems via Two-Dimensional Input Space Exploration <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

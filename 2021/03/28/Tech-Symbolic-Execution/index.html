@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="KLEE不同版本的KLEE需要不同版本的LLVM，首先安装LLVM，对于新版KLEE，可以使用LLVM高版本，对于KLEE 1.3版本，需要搭配LLVM 3.4 https:&#x2F;&#x2F;github.com&#x2F;tum-i4&#x2F;klee-install&#x2F;blob&#x2F;master&#x2F;README.md">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Tech] Symbolic Execution">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/03/28/Tech-Symbolic-Execution/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="KLEE不同版本的KLEE需要不同版本的LLVM，首先安装LLVM，对于新版KLEE，可以使用LLVM高版本，对于KLEE 1.3版本，需要搭配LLVM 3.4 https:&#x2F;&#x2F;github.com&#x2F;tum-i4&#x2F;klee-install&#x2F;blob&#x2F;master&#x2F;README.md">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/04/03/8rXHxC2ayuEJ5mF.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/03/r9VkAsSZpCbOJ5X.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/29/tQp6R1PJfAes7HT.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/29/hVAi8I6LTmkbBx3.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/29/FEkNvZGIHoOJcy2.png">
+<meta property="og:image" content="https://i.loli.net/2021/03/29/ftCoO2QKmHc5eIs.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/07/ksj3bMpxwAK95FX.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/07/vNAPZGxJFKdbBOD.png">
+<meta property="article:published_time" content="2021-03-28T04:36:19.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.064Z">
+<meta property="article:author" content="Wei CHEN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/03/8rXHxC2ayuEJ5mF.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/03/28/Tech-Symbolic-Execution/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2021/03/28/Tech-Symbolic-Execution/","path":"2021/03/28/Tech-Symbolic-Execution/","title":"[Tech] Symbolic Execution"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>[Tech] Symbolic Execution | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#KLEE"><span class="nav-number">1.</span> <span class="nav-text">KLEE</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#KLEE%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C"><span class="nav-number">1.1.</span> <span class="nav-text">KLEE模拟执行</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#KLEE%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C"><span class="nav-number">1.2.</span> <span class="nav-text">KLEE符号执行</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSmith"><span class="nav-number">2.</span> <span class="nav-text">CSmith</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Z3-Solver"><span class="nav-number">3.</span> <span class="nav-text">Z3 Solver</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Z3-for-Java"><span class="nav-number">3.1.</span> <span class="nav-text">Z3 for Java</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Z3-for-Python"><span class="nav-number">3.2.</span> <span class="nav-text">Z3 for Python</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Combined-Constraints"><span class="nav-number">4.</span> <span class="nav-text">Combined Constraints</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/03/28/Tech-Symbolic-Execution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="[Tech] Symbolic Execution | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Tech] Symbolic Execution
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-28 12:36:19" itemprop="dateCreated datePublished" datetime="2021-03-28T12:36:19+08:00">2021-03-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="KLEE"><a href="#KLEE" class="headerlink" title="KLEE"></a>KLEE</h4><p>不同版本的KLEE需要不同版本的LLVM，首先安装LLVM，对于新版KLEE，可以使用LLVM高版本，对于KLEE 1.3版本，需要搭配LLVM 3.4 <a target="_blank" rel="noopener" href="https://github.com/tum-i4/klee-install/blob/master/README.md">https://github.com/tum-i4/klee-install/blob/master/README.md</a></p>
+<span id="more"></span>
+
+<p>高版本KLEE编译方式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential curl libcap-dev git cmake libncurses5-dev python-minimal python-pip unzip libtcmalloc-minimal4 libgoogle-perftools-dev libsqlite3-dev doxygen</span><br><span class="line"></span><br><span class="line">sudo apt-get install clang-9 llvm-9 llvm-9-dev llvm-9-tools</span><br><span class="line"></span><br><span class="line">curl -OL https://github.com/google/googletest/archive/release-1.7.0.zip</span><br><span class="line">unzip release-1.7.0.zip</span><br><span class="line"></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/klee/klee-uclibc.git  </span><br><span class="line"><span class="built_in">cd</span> klee-uclibc  </span><br><span class="line">./configure --make-llvm-lib  </span><br><span class="line">make -j2  </span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span> build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">cmake -DENABLE_SOLVER_Z3=ON \</span><br><span class="line">	-DENABLE_POSIX_RUNTIME=ON  \</span><br><span class="line">	-DENABLE_KLEE_UCLIBC=ON \</span><br><span class="line">	-DKLEE_UCLIBC_PATH=../klee-uclibc \</span><br><span class="line">	-DGTEST_SRC_DIR=../googletest-release-1.7.0  \</span><br><span class="line">	-DENABLE_SYSTEM_TESTS=ON  \</span><br><span class="line">	-DENABLE_UNIT_TESTS=ON \</span><br><span class="line">	../</span><br><span class="line">	</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<p>KLEE使用LLVM IR进行符号执行，对于如下给定程序<code>example.c</code>，</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">char</span>* <span class="title">get_message</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* message)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">strlen</span>(message) &lt;= <span class="number">4</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!(<span class="string">&#x27;F&#x27;</span> == message[<span class="number">0</span>] &amp;&amp; <span class="string">&#x27;\x1&#x27;</span> == message[<span class="number">1</span>]))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> message_length = *(<span class="type">unsigned</span> <span class="type">int</span>*)&amp;message[<span class="number">2</span>];</span><br><span class="line">	<span class="type">char</span>* output_message = (<span class="type">char</span>*)<span class="built_in">malloc</span>(message_length);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">memcpy</span>(output_message,&amp;message[<span class="number">2</span>],message_length);</span><br><span class="line">	<span class="keyword">return</span> output_message;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span>** argv)</span> </span>&#123;</span><br><span class="line">	<span class="type">char</span> input_buffer[<span class="number">0x10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>,input_buffer);</span><br><span class="line">	<span class="type">char</span>* message_data = <span class="built_in">get_message</span>(input_buffer);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="literal">NULL</span> == message_data)</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Error for resolve message\n&quot;</span>);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;message data : %s\n&quot;</span>,message_data);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>KLEE有concrete执行模式和symbolize模式，如果没有指定任何symbolize的变量，KLEE就模拟执行</p>
+<h5 id="KLEE模拟执行"><a href="#KLEE模拟执行" class="headerlink" title="KLEE模拟执行"></a>KLEE模拟执行</h5><p>我们首先将其编译为LLVM bitcode <code>example.bc</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -emit-llvm -c for bitcode generation</span></span><br><span class="line"><span class="comment"># generate example.bc</span></span><br><span class="line">clang -emit-llvm -c example.c -o example.bc</span><br></pre></td></tr></table></figure>
+
+<p>该命令生成<code>example.bc</code>文件，我们将其传递给KLEE，没有任何符号化输入的情况下，KLEE模拟执行程序，仅探索一条path。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># run klee</span></span><br><span class="line">klee --libc=uclibc --posix-runtime example.bc</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2021/04/03/8rXHxC2ayuEJ5mF.png" alt="image-20210403151736478"></p>
+<p>执行后，KLEE将相关信息输出到<code>klee-out-N</code>目录下，其中<code>N</code>表示运行次数。</p>
+<img src="https://i.loli.net/2021/04/03/r9VkAsSZpCbOJ5X.png" alt="image-20210403152646024" style="zoom:87%;" />
+
+<h5 id="KLEE符号执行"><a href="#KLEE符号执行" class="headerlink" title="KLEE符号执行"></a>KLEE符号执行</h5><p>我们首先将其编译为LLVM bitcode <code>example.bc</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -emit-llvm -c for bitcode generation</span></span><br><span class="line"><span class="comment"># -g for debug information</span></span><br><span class="line"><span class="comment"># -O0 -Xclang -disable-O0-optnone for optimal level</span></span><br><span class="line"><span class="comment"># generate example_1.bc</span></span><br><span class="line">clang -I ../klee/include/ -emit-llvm -c -g -O0 -Xclang -disable-O0-optnone example.c</span><br></pre></td></tr></table></figure>
+
+<p>该命令生成<code>example.bc</code>文件，我们将其传递给KLEE，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># run klee</span></span><br><span class="line">klee --libc=uclibc --posix-runtime --debug-z3-dump-queries=./z3_queries --solver-backend=z3 --write-paths --write-smt2s --external-calls=all --check-overshift=0 --check-div-zero=0 example_1.bc</span><br></pre></td></tr></table></figure>
+
+<p>As expected, KLEE informs us that it explored three paths in the program and generated one test case for each path explored. The output of a KLEE execution is a directory (in our case <code>klee-out-0</code>) containing the test cases generated by KLEE. KLEE names the output directory <code>klee-out-N</code> where <code>N</code> is the lowest available number (so if we run KLEE again it will create a directory called <code>klee-out-1</code>), and also generates a symbolic link called <code>klee-last</code> to this directory for convenience:</p>
+<h4 id="CSmith"><a href="#CSmith" class="headerlink" title="CSmith"></a>CSmith</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> csmith</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line"></span><br><span class="line">csmith  --no-arrays  --no-structs --no-unions --no-safe-math --no-pointers --no-longlong --no-float --max-expr-complexity 5 --max-funcs 3 &gt; example.c</span><br><span class="line"></span><br><span class="line">csmith &gt; example.c</span><br><span class="line">clang -I ../csmith-2.3.0/runtime example.c</span><br></pre></td></tr></table></figure>
+
+<h4 id="Z3-Solver"><a href="#Z3-Solver" class="headerlink" title="Z3 Solver"></a>Z3 Solver</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">python scripts/mk_make.py --java</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<h5 id="Z3-for-Java"><a href="#Z3-for-Java" class="headerlink" title="Z3 for Java"></a>Z3 for Java</h5><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/60403775/how-to-setup-a-java-development-environment-for-z3">https://stackoverflow.com/questions/60403775/how-to-setup-a-java-development-environment-for-z3</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.10/z3-4.8.10-x64-ubuntu-18.04.zip</span><br><span class="line">unzip z3-4.8.10-x64-ubuntu-18.04.zip</span><br><span class="line"><span class="built_in">export</span> Z3_DIR=&lt;some_path&gt;/z3-4.8.10-x64-ubuntu-18.04</span><br><span class="line"></span><br><span class="line"><span class="comment"># install maven by apt</span></span><br><span class="line">sudo apt install maven</span><br><span class="line"><span class="comment"># install maven manually</span></span><br><span class="line">wget https://apache.website-solution.net/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">tar -xvzf apache-maven-3.6.3-bin.tar.gz</span><br><span class="line"><span class="built_in">mv</span> apache-maven-3.6.3 /opt</span><br><span class="line"><span class="built_in">export</span> PATH=/opt/apache-maven-3.6.3/bin:<span class="variable">$PATH</span></span><br><span class="line"></span><br><span class="line">mvn install:install-file \</span><br><span class="line">   -Dfile=<span class="variable">$Z3_DIR</span>/bin/com.microsoft.z3.jar \</span><br><span class="line">   -DgroupId=com.microsoft \</span><br><span class="line">   -DartifactId=z3 \</span><br><span class="line">   -Dversion=4.8.7 \</span><br><span class="line">   -Dpackaging=jar \</span><br><span class="line">   -DgeneratePom=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>Add the following source to maven pom.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.microsoft<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>z3<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.8.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/Z3Prover/z3/tree/z3-4.8.7/src/api/java">https://github.com/Z3Prover/z3/tree/z3-4.8.7/src/api/java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Z3Helper.z3Utility;</span><br><span class="line"><span class="keyword">import</span> com.microsoft.z3.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">z3Test1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Context</span> <span class="variable">z3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Context</span>();</span><br><span class="line">        <span class="type">IntExpr</span> <span class="variable">zero</span> <span class="operator">=</span> z3.mkInt(<span class="number">0</span>);</span><br><span class="line">        <span class="type">IntExpr</span> <span class="variable">one</span> <span class="operator">=</span> z3.mkInt(<span class="number">1</span>);</span><br><span class="line">        <span class="type">IntExpr</span> <span class="variable">variable</span> <span class="operator">=</span> z3.mkIntConst(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">        <span class="type">IntExpr</span> <span class="variable">variable2</span> <span class="operator">=</span> z3.mkIntConst(<span class="string">&quot;c&quot;</span>);</span><br><span class="line">        <span class="type">IntExpr</span> <span class="variable">variable3</span> <span class="operator">=</span> z3.mkIntConst(<span class="string">&quot;b&quot;</span>);</span><br><span class="line">        System.out.println(variable.toString());</span><br><span class="line">        <span class="type">BoolExpr</span> <span class="variable">greater</span> <span class="operator">=</span> z3.mkGe(variable,zero);</span><br><span class="line">        <span class="type">BoolExpr</span> <span class="variable">lessthan</span> <span class="operator">=</span> z3.mkLt(variable2,one);</span><br><span class="line">        <span class="type">BoolExpr</span> <span class="variable">formula</span> <span class="operator">=</span> z3.mkAnd(greater,lessthan);</span><br><span class="line">        System.out.println(greater);</span><br><span class="line">        Expr[] copy =<span class="keyword">new</span> <span class="title class_">Expr</span>[<span class="number">2</span>];</span><br><span class="line">        copy[<span class="number">0</span>] = variable;</span><br><span class="line">        copy[<span class="number">1</span>] = variable2;</span><br><span class="line">        Expr[] beCopied =<span class="keyword">new</span> <span class="title class_">Expr</span>[<span class="number">2</span>];</span><br><span class="line">        beCopied[<span class="number">0</span>] = variable3;</span><br><span class="line">        beCopied[<span class="number">1</span>] = variable3;</span><br><span class="line">        System.out.println(formula);</span><br><span class="line">        System.out.println(z3Utility.constructFreshExpr(formula,z3));</span><br><span class="line">        <span class="type">Solver</span> <span class="variable">s</span> <span class="operator">=</span> z3.mkSolver();</span><br><span class="line">        s.add(greater);</span><br><span class="line">        <span class="type">Status</span> <span class="variable">result</span> <span class="operator">=</span> s.check();</span><br><span class="line">        System.out.println(result);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>没有Main时打包为Jar</p>
+<img src="https://i.loli.net/2021/03/29/tQp6R1PJfAes7HT.png" alt="image-20210329131754749" style="zoom: 67%;" />
+
+<img src="https://i.loli.net/2021/03/29/hVAi8I6LTmkbBx3.png" alt="image-20210329131811471" style="zoom:67%;" />
+
+<img src="https://i.loli.net/2021/03/29/FEkNvZGIHoOJcy2.png" alt="image-20210329131847136" style="zoom: 67%;" />
+
+<img src="https://i.loli.net/2021/03/29/ftCoO2QKmHc5eIs.png" alt="image-20210329131900567" style="zoom:67%;" />
+
+<h5 id="Z3-for-Python"><a href="#Z3-for-Python" class="headerlink" title="Z3 for Python"></a>Z3 for Python</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install z3-solver</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">s = z3.Solver()</span><br><span class="line">s.from_string(constraint1)</span><br><span class="line">res = s.check()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;constraint 1:&#x27;</span>, res)</span><br><span class="line"><span class="built_in">print</span>(s.model())</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">s = z3.Solver()</span><br><span class="line">s.from_string(constraint2)</span><br><span class="line">res = s.check()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;constraint 2:&#x27;</span>, res)</span><br><span class="line"><span class="built_in">print</span>(s.model())</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">s = z3.Solver()</span><br><span class="line">s.from_string(constraint3)</span><br><span class="line">res = s.check()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;constraint 3:&#x27;</span>, res)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Combined-Constraints"><a href="#Combined-Constraints" class="headerlink" title="Combined Constraints"></a>Combined Constraints</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">csmith --no-arrays </span><br><span class="line">       --no-structs </span><br><span class="line">       --no-unions </span><br><span class="line">       --no-safe-math </span><br><span class="line">       --no-pointers </span><br><span class="line">       --no-longlong </span><br><span class="line">       --no-float </span><br><span class="line">       --max-expr-complexity 5 </span><br><span class="line">       --max-funcs 3 &gt; example.c</span><br></pre></td></tr></table></figure>
+
+<p>Add the following statements before main to symbolize the global variables</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">klee_make_symbolic</span>(&amp;g_21, <span class="keyword">sizeof</span> g_21, <span class="string">&quot;g_21&quot;</span>);</span><br><span class="line"><span class="built_in">klee_make_symbolic</span>(&amp;g_125, <span class="keyword">sizeof</span> g_125, <span class="string">&quot;g_125&quot;</span>);</span><br><span class="line"><span class="built_in">klee_make_symbolic</span>(&amp;g_22, <span class="keyword">sizeof</span> g_22, <span class="string">&quot;g_22&quot;</span>);</span><br><span class="line"><span class="built_in">klee_make_symbolic</span>(&amp;g_184, <span class="keyword">sizeof</span> g_184, <span class="string">&quot;g_184&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Compile the code to LLVM bitcode for symbolic execution</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://clang.llvm.org/docs/ClangCommandLineReference.html</span></span><br><span class="line"><span class="comment"># -emit-llvm -c for bitcode generation</span></span><br><span class="line"><span class="comment"># -g for debug information</span></span><br><span class="line"><span class="comment"># -O0 -Xclang -disable-O0-optnone for optimal level</span></span><br><span class="line"><span class="comment"># generate example_1.bc</span></span><br><span class="line">clang -I ../csmith-2.3.0/runtime/ -I ../klee/include/ -emit-llvm -c -g -O0 -Xclang -disable-O0-optnone example_1.c</span><br><span class="line"><span class="comment"># generate a.out</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/home/wchenbt/Projects/klee/build/lib/:<span class="variable">$LD_LIBRARY_PATH</span></span><br><span class="line">clang -I ../csmith-2.3.0/runtime/ -I ../klee/include/ -L ../klee/build/lib -g -O0 -Xclang -disable-O0-optnone example_1.c -lkleeRuntest</span><br><span class="line">KTEST_FILE=klee-last/test000001.ktest ./a.out</span><br></pre></td></tr></table></figure>
+
+<p>Run klee on generate bitcode</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -write-smt2s: Write .smt2 (SMT-LIBv2) files for each test case (default=false)</span></span><br><span class="line"></span><br><span class="line">klee --libc=uclibc \</span><br><span class="line">     --posix-runtime \</span><br><span class="line">     --debug-z3-dump-queries=./z3_queries \</span><br><span class="line">     --solver-backend=z3 \</span><br><span class="line">     --write-paths \</span><br><span class="line">     --write-smt2s \</span><br><span class="line">     --external-calls=all \</span><br><span class="line">     --check-overshift=0 \</span><br><span class="line">     --check-div-zero=0 example_1.bc</span><br></pre></td></tr></table></figure>
+
+<p>solve the generated Klee constraint</p>
+<p><a target="_blank" rel="noopener" href="http://smtlib.cs.uiowa.edu/logics-all.shtml">http://smtlib.cs.uiowa.edu/logics-all.shtml</a></p>
+<p><a target="_blank" rel="noopener" href="https://ericpony.github.io/z3py-tutorial/guide-examples.htm">https://ericpony.github.io/z3py-tutorial/guide-examples.htm</a></p>
+<p><a target="_blank" rel="noopener" href="https://ericpony.github.io/z3py-tutorial/advanced-examples.htm">https://ericpony.github.io/z3py-tutorial/advanced-examples.htm</a></p>
+<p><a target="_blank" rel="noopener" href="https://rise4fun.com/z3/tutorialcontent/guide">https://rise4fun.com/z3/tutorialcontent/guide</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cs.tau.ac.il/~msagiv/courses/asv/z3py/guide-examples.htm">https://www.cs.tau.ac.il/~msagiv/courses/asv/z3py/guide-examples.htm</a></p>
+<p><a target="_blank" rel="noopener" href="https://theory.stanford.edu/~nikolaj/programmingz3.html">https://theory.stanford.edu/~nikolaj/programmingz3.html</a></p>
+<p><img src="https://i.loli.net/2021/04/07/ksj3bMpxwAK95FX.png" alt="image-20210407231220676"></p>
+<img src="https://i.loli.net/2021/04/07/vNAPZGxJFKdbBOD.png" alt="image-20210407231300975" style="zoom: 50%;" />
+
+
+
+
+
+<p><a target="_blank" rel="noopener" href="https://z3prover.github.io/api/html/classz3py_1_1_solver.html#ad1255f8f9ba8926bb04e1e2ab38c8c15">https://z3prover.github.io/api/html/classz3py_1_1_solver.html#ad1255f8f9ba8926bb04e1e2ab38c8c15</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/03/22/Side-Channel/" rel="prev" title="Side Channel">
+                  <i class="fa fa-angle-left"></i> Side Channel
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/03/28/Symbolic-Execution/" rel="next" title="Symbolic Execution">
+                  Symbolic Execution <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

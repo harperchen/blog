@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="AbstractOperating system kernels are appealing attack targets: compromising the kernel usually allows attackers to bypass all deployed security mechanisms and take control over the entire system. Comm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[NDSS&#39;18] K-miner: Uncovering memory corruption in linux">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/02/01/NDSS-18-K-miner-Uncovering-memory-corruption-in-linux/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="AbstractOperating system kernels are appealing attack targets: compromising the kernel usually allows attackers to bypass all deployed security mechanisms and take control over the entire system. Comm">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-02-01T07:39:37.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.061Z">
+<meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Static Analysis">
+<meta property="article:tag" content="Kernel">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/02/01/NDSS-18-K-miner-Uncovering-memory-corruption-in-linux/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2021/02/01/NDSS-18-K-miner-Uncovering-memory-corruption-in-linux/","path":"2021/02/01/NDSS-18-K-miner-Uncovering-memory-corruption-in-linux/","title":"[NDSS'18] K-miner: Uncovering memory corruption in linux"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>[NDSS'18] K-miner: Uncovering memory corruption in linux | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-number">2.</span> <span class="nav-text">Outline</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Difficulties-of-OS-Kernel-Fuzzing"><span class="nav-number">2.1.</span> <span class="nav-text">1. Difficulties of OS Kernel Fuzzing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Drawbacks-of-previous-work"><span class="nav-number">2.2.</span> <span class="nav-text">2. Drawbacks of previous work</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Why-this-paper-is-accepted"><span class="nav-number">2.3.</span> <span class="nav-text">3. Why this paper is accepted</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-How-it-works"><span class="nav-number">2.4.</span> <span class="nav-text">4. How it works</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Technique-details"><span class="nav-number">2.5.</span> <span class="nav-text">5. Technique details</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Evaluation"><span class="nav-number">2.6.</span> <span class="nav-text">6. Evaluation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Examples"><span class="nav-number">2.7.</span> <span class="nav-text">7. Examples</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Reflection"><span class="nav-number">2.8.</span> <span class="nav-text">8. Reflection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-Bug-report"><span class="nav-number">2.9.</span> <span class="nav-text">9. Bug report</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/02/01/NDSS-18-K-miner-Uncovering-memory-corruption-in-linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="[NDSS'18] K-miner: Uncovering memory corruption in linux | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [NDSS'18] K-miner: Uncovering memory corruption in linux
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-02-01 15:39:37" itemprop="dateCreated datePublished" datetime="2021-02-01T15:39:37+08:00">2021-02-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>Operating system kernels are appealing attack targets: compromising the kernel usually allows attackers to bypass all deployed security mechanisms and take control over the entire system. Commodity kernels, like Linux, are written in low-level programming languages that offer only limited type and memory-safety guarantees, enabling adversaries to launch sophisticated run-time attacks against the kernel by exploiting memory-corruption vulnerabilities.</p>
+<span id="more"></span>
+
+<p>Many defenses have been proposed to protect operating systems at run time, such as control-flow integrity (CFI). However, the goal of these runtime monitors is to prevent exploitation as a symptom of memory corruption, rather than eliminating the underlying root cause, i.e., bugs in the kernel code. While finding bugs can be automated, e.g., using static analysis, all existing approaches are limited to local, intra-procedural checks, and face severe scalability challenges due to the large kernel code base. Consequently, there currently exist no tools for conducting global static analysis of operating system kernels.</p>
+<p>In this paper, we present <em>K-Miner</em>, a new framework to efficiently analyze large, commodity operating system kernels like Linux. Our novel approach exploits the highly standardized interface structure of the kernel code to enable scalable pointer analysis and conduct global, context-sensitive analysis. Through our inter-procedural analysis we show that K-Miner systematically and reliably uncovers several different classes of memory-corruption vulnerabilities, such as dangling pointers, user-after-free, double-free, and double-lock vulnerabilities. We thoroughly evaluate our extensible analysis framework, which leverages the popular and widely used LLVM compiler suite, for the current Linux kernel and demonstrate its effectiveness by reporting several memory-corruption vulnerabilities.</p>
+<h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><h4 id="1-Difficulties-of-OS-Kernel-Fuzzing"><a href="#1-Difficulties-of-OS-Kernel-Fuzzing" class="headerlink" title="1. Difficulties of OS Kernel Fuzzing"></a>1. Difficulties of OS Kernel Fuzzing</h4><p>Currently, Linux comprises over 24 million lines of code. The huge size and complexity of its monolithic code base makes precise data-flow analysis for kernel code difficult. The number of possible paths grows exponentially with the code size, and hence, static analysis approaches face severe scalability problems</p>
+<h4 id="2-Drawbacks-of-previous-work"><a href="#2-Drawbacks-of-previous-work" class="headerlink" title="2. Drawbacks of previous work"></a>2. Drawbacks of previous work</h4><ol>
+<li>Run-time monitors are designed to defend against a specific class of attacks. A combination of many different defenses is required to protect the kernel against multiple classes of adversaries.</li>
+<li>Compile-time verification is feasible for small model, but impractical for commodity monolithic kernels due to their size and extensive use of machine-level code</li>
+<li>Static analysis safely over-approximates program execution, allowing for strong statements in the case of negative analysis results.</li>
+<li>All analysis frameworks for kernel code (Coccinelle&#x2F;Smatch&#x2F;TypeChef&#x2F;APISAN&#x2F;EBA) are limited to <em>intra-procedural</em> analysis, i.e., local checks per function, or simple file-based analysis.</li>
+<li>None of existing static analysis framework supports <em>inter-procedural</em> data-flow analyses therefore they cannot uncover memory corruption caused by global pointer relationships.</li>
+<li>scalable static analysis designed for user space programs cannot simply be applied in kernel setting due to the non-trivial entry point</li>
+</ol>
+<h4 id="3-Why-this-paper-is-accepted"><a href="#3-Why-this-paper-is-accepted" class="headerlink" title="3. Why this paper is accepted"></a>3. Why this paper is accepted</h4><ul>
+<li>Observation<ul>
+<li>the interface to user space is highly standardized </li>
+<li>partition the kernel code along separate execution paths using the system call interface as a starting point</li>
+</ul>
+</li>
+<li>Challenge of partition the kernel code<ul>
+<li>frequent reuse of global data structures</li>
+<li>the synchronization between the per-system call</li>
+<li>global memory states (contexts)</li>
+<li>complicated and deeply nested aliasing relationships of pointers</li>
+</ul>
+</li>
+<li><strong>Enable global static analysis for kernel code:</strong> The observation significantly reduces the number of relevant paths, allowing us to conduct even complex, inter-procedural data-flow analysis in the kernel.</li>
+</ul>
+<h4 id="4-How-it-works"><a href="#4-How-it-works" class="headerlink" title="4. How it works"></a>4. How it works</h4><p>Because randomly selecting system calls from existing program traces do not result in any coverage improvement over hand-coded rules, this paper leverages light-weight static analysis for efficiently detecting dependencies across different system calls.</p>
+<h4 id="5-Technique-details"><a href="#5-Technique-details" class="headerlink" title="5. Technique details"></a>5. Technique details</h4><p>Built on top of LLVM Pass to analyze system calls simultaneously</p>
+<p>For every system call, K-Miner generates a call graph (CG), a value- flow graph (VFG), a pointer-analysis graph (PAG), and several other internal data structures by taking the entry point of the system call function as a starting point.</p>
+<p>compute a list of all globally allocated kernel objects, are reachable by any single system call. </p>
+<h4 id="6-Evaluation"><a href="#6-Evaluation" class="headerlink" title="6. Evaluation"></a>6. Evaluation</h4><p>Applying the proposed static analysis framework to all system calls across many different Linux versions</p>
+<p>Uncover several known memory-corruption vulnerabilities that previously required manual inspection of the code</p>
+<h4 id="7-Examples"><a href="#7-Examples" class="headerlink" title="7. Examples"></a>7. Examples</h4><p>integer overflows (IO), use-after-free (UAF), </p>
+<p><strong>dangling pointers (DP):</strong>  A memory location is freed but the pointer is still accessible.</p>
+<p>double free (DF), buffer overflow (BO), missing pointer checks (MPC), uninitialized data (UD), type errors (TE), or synchronization errors (SE)</p>
+<h4 id="8-Reflection"><a href="#8-Reflection" class="headerlink" title="8. Reflection"></a>8. Reflection</h4><h4 id="9-Bug-report"><a href="#9-Bug-report" class="headerlink" title="9. Bug report"></a>9. Bug report</h4>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Static-Analysis/" rel="tag"># Static Analysis</a>
+              <a href="/blog/tags/Kernel/" rel="tag"># Kernel</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/01/30/USENIX-18-MoonShine-Optimizing-OS-Fuzzer-Seed-Selection-with-Trace-Distillation/" rel="prev" title="[USENIX'18] MoonShine: Optimizing OS Fuzzer Seed Selection with Trace Distillation">
+                  <i class="fa fa-angle-left"></i> [USENIX'18] MoonShine: Optimizing OS Fuzzer Seed Selection with Trace Distillation
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/02/02/RLTrace-Related/" rel="next" title="RLTrace Related">
+                  RLTrace Related <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

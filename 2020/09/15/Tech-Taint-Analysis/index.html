@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="1. Tool CategoriesExisting taint analysis tools can be divided into three categories.  a. Dynamic Taint AnalysisThe first category of tools track the information flow from taint source to taint sink a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Usages and problems of Taint Tools">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/09/15/Tech-Taint-Analysis/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="1. Tool CategoriesExisting taint analysis tools can be divided into three categories.  a. Dynamic Taint AnalysisThe first category of tools track the information flow from taint source to taint sink a">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/09/16/Y9oqw1cV3UAasPS.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/16/oH6Yqmh8RkAfgd2.png">
+<meta property="og:image" content="http://harperchen.qiniudn.com/image-20200926235948282.png">
+<meta property="og:image" content="http://harperchen.qiniudn.com/image-20200927000434633.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/v25azExLrdseBJ8.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/2eVtNhBX8jC9HAo.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/YI4PwTR73UEqWSh.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/fiCyMKr2sIEBSzn.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/ficbyROY3ntDUZV.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/HPzSNKxCvVayBjU.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/y4P6zwo8DcAB5R3.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/wfVJax3QIPOFNsr.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/VJC8tbmI9RxZN6r.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/IsV7lnCDGdjkeYf.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/21/MQPI8vWODSmocf1.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/22/yzIhduSG5k7xw6i.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/22/XqsBbYnF7wihrv3.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/22/gehaNQpXklCjnbs.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/22/kbvLpgYRq6XPSfM.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/22/3lx1IHiL5VJfMKW.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/22/CrF9YpiZR37jXeT.png">
+<meta property="article:published_time" content="2020-09-15T15:18:16.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.064Z">
+<meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Taint Analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/16/Y9oqw1cV3UAasPS.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/09/15/Tech-Taint-Analysis/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2020/09/15/Tech-Taint-Analysis/","path":"2020/09/15/Tech-Taint-Analysis/","title":"Usages and problems of Taint Tools"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Usages and problems of Taint Tools | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Tool-Categories"><span class="nav-number">1.</span> <span class="nav-text">1. Tool Categories</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#a-Dynamic-Taint-Analysis"><span class="nav-number">1.1.</span> <span class="nav-text">a. Dynamic Taint Analysis</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#b-Static-Taint-Analysis-but-Emulate-the-Execution"><span class="nav-number">1.2.</span> <span class="nav-text">b. Static Taint Analysis but Emulate the Execution</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#c-Static-Taint-Analysis"><span class="nav-number">1.3.</span> <span class="nav-text">c. Static Taint Analysis</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Dynamic-Analysis-Tool-Taintgrind"><span class="nav-number">2.</span> <span class="nav-text">2. Dynamic Analysis Tool: Taintgrind</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Dynamic-Analysis-Tool-PolyTracker"><span class="nav-number">3.</span> <span class="nav-text">3. Dynamic Analysis Tool: PolyTracker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Static-Analysis-Tool-but-Emulate-Execution-Bincat"><span class="nav-number">4.</span> <span class="nav-text">4. Static Analysis Tool but Emulate Execution: Bincat</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Static-Analysis-Tool-Psalm"><span class="nav-number">5.</span> <span class="nav-text">5. Static Analysis Tool: Psalm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Static-Analysis-Tool-Pysa"><span class="nav-number">6.</span> <span class="nav-text">6. Static Analysis Tool: Pysa</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Conclusion"><span class="nav-number">7.</span> <span class="nav-text">7. Conclusion</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/15/Tech-Taint-Analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Usages and problems of Taint Tools | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Usages and problems of Taint Tools
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-09-15 23:18:16" itemprop="dateCreated datePublished" datetime="2020-09-15T23:18:16+08:00">2020-09-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Taint/" itemprop="url" rel="index"><span itemprop="name">Taint</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="1-Tool-Categories"><a href="#1-Tool-Categories" class="headerlink" title="1. Tool Categories"></a>1. Tool Categories</h4><p>Existing taint analysis tools can be divided into three categories. </p>
+<h5 id="a-Dynamic-Taint-Analysis"><a href="#a-Dynamic-Taint-Analysis" class="headerlink" title="a. Dynamic Taint Analysis"></a>a. Dynamic Taint Analysis</h5><p>The first category of tools track the information flow from taint source to taint sink at runtime following the execution trace. Most of these dynamic analysis tools are built on the top of dynamic binary instrumentation (DBI) framework such as Pin and Valgrind. These tools dynamically insert analysis code into the target executable while the executable is running. Some other tools like PolyTracker work as an LLVM Pass that instruments taint tracking logic into the programs during compilation to perform taint analysis with lower overhead. Such tools always ship with their own compiler, for example, <code>polybuild</code> and <code>polybuild++</code> of Tool PolyTracker. Given a specific input, the dynamic analysis tools will track how the taint is propagated along the executed path.</p>
+<span id="more"></span>
+
+<table>
+<thead>
+<tr>
+<th align="left">Tools</th>
+<th>Foundation</th>
+<th>Data Dependency</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Dytan</td>
+<td>DBI Platform: Pin</td>
+<td>Explicit and Implicit</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://github.com/JonathanSalwan/Triton">Triton</a></td>
+<td>DBI Platform: Pin</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.cs.columbia.edu/~vpk/research/libdft/">LibDFT</a></td>
+<td>DBI Platform: Pin</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://github.com/AngoraFuzzer/libdft64">LibDFT64</a></td>
+<td>DBI Platform: Pin</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://github.com/wmkhoo/taintgrind">Taintgrind</a></td>
+<td>DBI Platform: Valgrind</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/DataFlowSanitizer.html">DataFlow Sanitizer</a></td>
+<td>LLVM Pass</td>
+<td></td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://github.com/trailofbits/polytracker">PolyTracker</a></td>
+<td>LLVM Pass</td>
+<td>Explicit and Implicit</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://taintinduce.github.io/">TaintInduce</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h5 id="b-Static-Taint-Analysis-but-Emulate-the-Execution"><a href="#b-Static-Taint-Analysis-but-Emulate-the-Execution" class="headerlink" title="b. Static Taint Analysis but Emulate the Execution"></a>b. Static Taint Analysis but Emulate the Execution</h5><p>The second category of tools work as an interpreter or a CPU emulator, which means these tools do not execute the target program, but emulate the functionalities and collect the essential information for analysis. Usually, we need to set up the environment such as stack, heap, the content of memory, and program input before performing analysis. During analysis, these tools process machine code one by one and transform the code into their pre-defined intermediate language, then the memory and register will be manipulated based on the intermediate language, with the taint propagated at the same time. At each program point during execution, the value of registers and memory cells can be monitored to check if they are tainted or not. As we can see, tools in this category also maintain an execution trace and only take care of the data and instructions along this execution trace, which is the same as dynamic taint analysis.</p>
+<table>
+<thead>
+<tr>
+<th>Tools</th>
+<th>Description</th>
+<th>Data Dependency</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/airbus-seclab/bincat">Bincat</a></td>
+<td>Plugin for IDA</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/JonathanSalwan/Triton">Triton</a></td>
+<td>Convert instruction to IR to emulate execution</td>
+<td>Explicit</td>
+</tr>
+</tbody></table>
+<h5 id="c-Static-Taint-Analysis"><a href="#c-Static-Taint-Analysis" class="headerlink" title="c. Static Taint Analysis"></a>c. Static Taint Analysis</h5><p>The third category of tools analyze the target program statically and wholly. All paths are taken into consideration. The taint source and sink are specified using annotations. Generally speaking, the sources are the return value of user-controllable functions, like <code>input()</code>,  and the sinks are the parameters of functions that should be treated carefully or may lead to potential security issues,  like <code>os.command()</code>. The tracking granularity of tools in this category is quite larger compared with the two before mentioned. Except for the taint source and sink, the tools in this category also support for sanitizing functions. Especially, Psalm, a tool mainly aiming for security analysis of web applications, will automatically remove the taint from data when executing functions like <code>stripslashes</code>, which removes backslashes used to prevent cross-site-scripting attacks.</p>
+<table>
+<thead>
+<tr>
+<th>Tools</th>
+<th>Description</th>
+<th>Data Dependency</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://pyre-check.org/docs/pysa-basics">Pysa</a></td>
+<td>reasons about data flows in Python applications</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://psalm.dev/docs/security_analysis/">Psalm</a></td>
+<td>find errors in PHP applications</td>
+<td>Explicit</td>
+</tr>
+</tbody></table>
+<p>In the following sections, I will demonstrate the usage of several tools to illustrate the difference between these three kinds of tools. In the end, with the guidance of the idea that if the output changes with the different inputs, the output should be tainted once the input is tainted, I will show the potential difficulties in testing these analysis tools.</p>
+<h4 id="2-Dynamic-Analysis-Tool-Taintgrind"><a href="#2-Dynamic-Analysis-Tool-Taintgrind" class="headerlink" title="2. Dynamic Analysis Tool: Taintgrind"></a>2. Dynamic Analysis Tool: Taintgrind</h4><p>This tool Taintgrind is built on the top of Valgrind. There are two ways to track taint. One is using <code>TNT_TAINT</code> client request to introduce taint into a variable or memory location in the program. Take the following program as an example, we taint variable <code>a</code>, then pass it to <code>get_sign</code> function. The return value of <code>get_sign</code> implicitly depends on the parameter. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;taintgrind.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">get_sign</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (x &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span>&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> t;</span><br><span class="line">    <span class="type">int</span> a = atoi(argv[<span class="number">1</span>]);</span><br><span class="line">    <span class="comment">//Defines int as tainted</span></span><br><span class="line">    TNT_TAINT(&amp;a,<span class="keyword">sizeof</span>(a));</span><br><span class="line">    <span class="type">int</span> s = get_sign(a);</span><br><span class="line">    TNT_IS_TAINTED(t, &amp;s, <span class="keyword">sizeof</span>(s));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (t)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;s is_tainted: %08x\n&quot;</span>, t);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;s is not tainted\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Compile the above program and run it with input 1. We check if the return value of get_sign is tainted using the client request <code>TNT_IS_TAINT</code>. The output of dynamic analysis shows how taint flows in the execution path through instructions one by one in the following form.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Location | Assembly instruction | Instruction <span class="built_in">type</span> | Runtime value(s) | Information flow</span><br></pre></td></tr></table></figure>
+
+<p>However, we can see that Taintgrind does not support to analyze the implicit information flow, even though the taint has flowed into the conditional expression.</p>
+<img src="https://i.loli.net/2020/09/16/Y9oqw1cV3UAasPS.png">
+
+<p>As to the explicit information flow like below, the return value of get_sign can be successfully tainted.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">get_sign</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="https://i.loli.net/2020/09/16/oH6Yqmh8RkAfgd2.png">
+
+<p>Another usage of Taintgrind is to taint the file input given an executable, such as gzip, and show how taint flows along the execution path.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./build/bin/taintgrind --file-filter=FAQ.txt gzip -c FAQ.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-Dynamic-Analysis-Tool-PolyTracker"><a href="#3-Dynamic-Analysis-Tool-PolyTracker" class="headerlink" title="3. Dynamic Analysis Tool: PolyTracker"></a>3. Dynamic Analysis Tool: PolyTracker</h4><p>Unlike Taintgrind, PolyTracker instruments the taint analysis logic into programs during compilation to track which bytes of an input file are operated by which functions. Therefore, compared with dynamic binary instrumentation, such tools impose negligible performance overhead for almost all inputs, and is capable of tracking every byte of input at once. PolyTracker is built on the top of the LLVM DataFlowSanitizer.</p>
+<p>PolyTrack works as <a target="_blank" rel="noopener" href="https://llvm.org/docs/WritingAnLLVMPass.html">LLVM Pass</a>. The generated shared object <code>.so</code> can be loaded either through <code>opt</code> tool to instrument the LLVM bitcode, or through <code>clang</code> when the source code is avaliable. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Through opt tool</span></span><br><span class="line">opt -<span class="built_in">local</span> -mypass.so -mypass code.bc</span><br><span class="line"><span class="comment"># Through clang</span></span><br><span class="line">clang -Xclang -load -Xclang mypass.so code.c</span><br></pre></td></tr></table></figure>
+
+<p>PolyTracker provides compilers <code>polybuild</code> and <code>polybuild++</code>, which are wrappers around <code>gclang</code> and <code>gclang++</code>. When the source code is avaiable, we can instrument it by simply replacing the compiler with PolyTracker and passing <code>--instrument-target</code> option before the cflags during the normal build process.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># export CC=`which polybuild`</span></span><br><span class="line"><span class="variable">$&#123;CC&#125;</span> --instrument-target -g -o my_target my_target.c</span><br><span class="line"><span class="comment"># export CXX=`which polybuild++`</span></span><br><span class="line"><span class="variable">$&#123;CXX&#125;</span> --instrument-target -g -o my_target my_target.cpp</span><br></pre></td></tr></table></figure>
+
+<p>If only the binary executable is given, we can first extract the bitcode from the target, then instrument it by passing <code>--instrument-bitcode</code> option.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">get-bc -b target</span><br><span class="line"><span class="variable">$&#123;CC&#125;</span>/&#123;CXX&#125; --instrument-bitcode target.bc -o target_track --libs &lt;any libs go here&gt; </span><br></pre></td></tr></table></figure>
+
+<p>To run the instrumented program, <code>POLYPATH</code> environment variable is requited to specify which input file’s bytes are meant to be tracked. Currently, polytracker only expose the capability to specify a single file as the tainted input. Assume we have the following C program. Given an input file, this program computes a key based on the first three strings, then compares the key with <code>0x80000000</code>, and finally outputs the result. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/utsname.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">user_info</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> *company;</span><br><span class="line">    <span class="type">char</span> *dep;</span><br><span class="line">    <span class="type">char</span> *name;</span><br><span class="line">    <span class="type">char</span> *progname;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">custom_crc32</span><span class="params">(<span class="type">int</span> len, <span class="type">char</span> *buf)</span> &#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> poly = <span class="number">0x04C11DB7</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> sr = ~<span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> i, j, k;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; <span class="number">8</span>; j++) &#123;</span><br><span class="line">            k = sr &gt;&gt; <span class="number">31</span>;</span><br><span class="line">            sr &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> ((k ^ *buf) &amp; <span class="number">1</span>) &#123;</span><br><span class="line">                sr ^= poly;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        buf++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">compute_key</span><span class="params">(<span class="keyword">struct</span> user_info *info)</span> &#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> k_comp, k_dept, k_name, k_progname;</span><br><span class="line"></span><br><span class="line">    k_comp = custom_crc32(<span class="built_in">strlen</span>(info-&gt;company), info-&gt;company);</span><br><span class="line">    k_dept = custom_crc32(<span class="built_in">strlen</span>(info-&gt;dep), info-&gt;dep);</span><br><span class="line">    k_name = custom_crc32(<span class="built_in">strlen</span>(info-&gt;name), info-&gt;name);</span><br><span class="line">    k_progname = custom_crc32(<span class="built_in">strlen</span>(info-&gt;progname), info-&gt;progname);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> k_comp*k_name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> &#123;</span><br><span class="line">    <span class="type">int</span> fd, i = <span class="number">0</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> key;</span><br><span class="line">    <span class="type">char</span> *provided_lic, *ptr, *temp[<span class="number">5</span>];</span><br><span class="line">    <span class="type">char</span> str[<span class="number">128</span>], delim[] = <span class="string">&quot; &quot;</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">user_info</span> <span class="title">info</span>;</span></span><br><span class="line"></span><br><span class="line">    info.company = info.name = info.dep = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(argc &lt; <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Usage: %s inputfile\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// if use fopen and fread, polytracker will fail</span></span><br><span class="line">    fd = open(argv[<span class="number">1</span>], O_RDONLY);  </span><br><span class="line">    read(fd, str, <span class="number">128</span>);</span><br><span class="line">    ptr = strtok(str, delim);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// example file content:</span></span><br><span class="line">    <span class="comment">// company department name 419B0F77970C4AC453973A5D99B995C989EBF204</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// spilt the file content on whitespace</span></span><br><span class="line">    <span class="keyword">while</span> (ptr != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        temp[i] = <span class="built_in">malloc</span>(<span class="built_in">strlen</span>(ptr));</span><br><span class="line">        <span class="built_in">memcpy</span>(temp[i], ptr, <span class="built_in">strlen</span>(ptr));</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, temp[i]);</span><br><span class="line">        ptr = strtok(<span class="literal">NULL</span>, delim);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    info.progname = argv[<span class="number">0</span>];</span><br><span class="line">    info.company = temp[<span class="number">0</span>];</span><br><span class="line">    info.dep = temp[<span class="number">1</span>];</span><br><span class="line">    info.name = temp[<span class="number">2</span>];</span><br><span class="line">    provided_lic = temp[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// compute the key</span></span><br><span class="line">    key = compute_key(&amp;info);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Key=&gt;[0x%x]\n&quot;</span>, key);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// output result</span></span><br><span class="line">    <span class="keyword">if</span> (key &gt;= <span class="number">0x8000000</span>)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Invalid serial %s\n&quot;</span>, provided_lic);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Thank you for registering !\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>We can find that the last string (provided_lic) is actually not used when computing the key. Further, the three strings are only used in the condition statement (line 25) at function custom_crc32. We compile it using <code>polybuild</code>, the output shows several functions are instrumented.</p>
+<img src="http://harperchen.qiniudn.com/image-20200926235948282.png" alt="image-20200926235948282" style="zoom: 75%;" />
+
+<p>With the instrumented binary <code>my_target</code>，run the binary with POLYPATH environment to taint the input file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POLYPATH=inputfile ./my_target inputfile</span><br><span class="line"></span><br><span class="line"><span class="comment"># inputfile:</span></span><br><span class="line"><span class="comment"># company department name 419B0F77970C4AC453973A5D99B995C989EBF204</span></span><br></pre></td></tr></table></figure>
+
+<p> The binary is executed as normal, also two artifacts <code>polytracker_process_set.json</code> and <code>polytracker_forest.bin</code> are created in current directory at the same time.</p>
+<img src="http://harperchen.qiniudn.com/image-20200927000434633.png" alt="image-20200927000434633" style="zoom:80%;" />
+
+<p>The analysis results are saved in<code>polytracker_process_set.json</code>, which contains the information of <code>taint_sources</code>,  <code>runtime_cfg</code>, <code>tainted_function</code>, etc. The json file generated by <code>my_target</code> is shown as below:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;canonical_mapping&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="comment">// mapping [taint label, original file offset]</span></span><br><span class="line">        <span class="attr">&quot;inputfile&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span>     <span class="comment">// Totoally 65 bytes in inputfile</span></span><br><span class="line">            <span class="punctuation">[</span><span class="number">65</span><span class="punctuation">,</span> <span class="number">64</span><span class="punctuation">]</span><span class="punctuation">,</span>  </span><br><span class="line">            <span class="punctuation">[</span><span class="number">64</span><span class="punctuation">,</span> <span class="number">63</span><span class="punctuation">]</span><span class="punctuation">,</span>  </span><br><span class="line">            ...</span><br><span class="line">            <span class="punctuation">[</span><span class="number">2</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">[</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">0</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;runtime_cfg&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="comment">// the control flow graph made of instrumented function</span></span><br><span class="line">        <span class="attr">&quot;dfs$custom_crc32&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;dfs$compute_key&quot;</span> <span class="comment">// caller</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;dfs$compute_key&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span> </span><br><span class="line">            <span class="string">&quot;main&quot;</span>            <span class="comment">// caller</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;&quot;</span>  <span class="comment">// no caller for main</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;taint_sources&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span>  <span class="comment">// taint source</span></span><br><span class="line">        <span class="attr">&quot;inputfile&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span>   </span><br><span class="line">            <span class="attr">&quot;end_byte&quot;</span><span class="punctuation">:</span> <span class="number">64</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;start_byte&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="comment">// stdin is the default taint source, </span></span><br><span class="line">        <span class="comment">// however, without environment POLYPATH, the                      </span></span><br><span class="line">        <span class="comment">// program cannot be executed, which leaves </span></span><br><span class="line">        <span class="comment">// no space for tracking the taint from stdin</span></span><br><span class="line">        <span class="attr">&quot;stdin&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span>   </span><br><span class="line">            <span class="attr">&quot;end_byte&quot;</span><span class="punctuation">:</span> <span class="number">2147483646</span><span class="punctuation">,</span>  </span><br><span class="line">            <span class="attr">&quot;start_byte&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;tainted_functions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span>  <span class="comment">// how the tainted function process taint label</span></span><br><span class="line">        <span class="attr">&quot;dfs$custom_crc32&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;cmp_bytes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span>  <span class="comment">// the taint label are used at condition statements (line 25)</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                ...   <span class="comment">// 1-7: company</span></span><br><span class="line">                <span class="number">7</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">9</span><span class="punctuation">,</span></span><br><span class="line">                ...   <span class="comment">// 9-18: department</span></span><br><span class="line">                <span class="number">18</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">20</span><span class="punctuation">,</span></span><br><span class="line">                ...   <span class="comment">// 20-23: name</span></span><br><span class="line">                <span class="number">23</span></span><br><span class="line">            <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;input_bytes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span>  <span class="comment">// the taint labels are the input of function</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                ...   <span class="comment">// 1-7: company </span></span><br><span class="line">                <span class="number">7</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">9</span><span class="punctuation">,</span></span><br><span class="line">                ...   <span class="comment">// 9-18: department</span></span><br><span class="line">                <span class="number">18</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">20</span><span class="punctuation">,</span></span><br><span class="line">                ...   <span class="comment">// 20-23: name</span></span><br><span class="line">                <span class="number">23</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;input_bytes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">                <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">                ...</span><br><span class="line">                <span class="number">65</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;tainted_input_blocks&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;inputfile&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="punctuation">[</span><span class="number">0</span><span class="punctuation">,</span> <span class="number">64</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.2.0&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Polytrack outputs function-to-input-bytes mapping to indicate which bytes of an input file are operated on by which functions and how. If an input byte flows into a function as parameter but has never been read by the function, the function will not be counted as a tainted function. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">testfunc</span><span class="params">(<span class="type">int</span> len, <span class="type">char</span> *buf)</span> &#123; <span class="comment">// not a tainted function</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">        *buf = <span class="number">1</span>; <span class="comment">// only write into the memory location buf</span></span><br><span class="line">        buf++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Besides, Polytracker can identify whether the input bytes are used in condition statements (listed under the key <code>tainted_functions/function/cmp_bytes</code> in JSON file). However, there are some exceptions. The following function uses the length of <code>buf</code> to decide the value of <code>a</code>, then returns <code>a</code> to its caller. Polytracker will not label this function as tainted, even if the value of <code>a</code> is implicitly depends on input <code>buf</code>.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">testfunc</span><span class="params">(<span class="type">char</span> *buf)</span> &#123; <span class="comment">// not be labeled as tainted</span></span><br><span class="line">    <span class="type">int</span> a = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strlen</span>(buf) &gt; <span class="number">5</span>)&#123;</span><br><span class="line">        a = <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        a = <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In fact, Polytrack is designed to be used in conjunction with <a target="_blank" rel="noopener" href="https://github.com/trailofbits/polyfile">PolyFile</a> to automatically determine the semantic purpose of the functions in a parser. PolyFile is a file identification utility to parse the file structure and map each byte of the file into the corresponding semantic. Take PDF file as an example, PolyFile first identifies that the given file is in PDF format, then outputs the sematic of each byte in the file, such as PDFComment, PDFObject. </p>
+<p>Assume we want to reverse-engineer the PDF parser <a target="_blank" rel="noopener" href="https://mupdf.com/">MuPDF</a>. PolyTracker is used to instrument the parser to output the associate each byte of PDF file with each function in that parser. With the file format parsed by PolyFile as ground truth, we can easily infer the sematic purpose of each function in MuPDF by merging the two mappings (function &lt;-&gt; input byte &lt;-&gt; semantic).  Based on this design consideration, it’s straightforward to answer why Polytracker only use function as taint sink granularity to perform analysis.</p>
+<h4 id="4-Static-Analysis-Tool-but-Emulate-Execution-Bincat"><a href="#4-Static-Analysis-Tool-but-Emulate-Execution-Bincat" class="headerlink" title="4. Static Analysis Tool but Emulate Execution: Bincat"></a>4. Static Analysis Tool but Emulate Execution: Bincat</h4><p>The following keygen-me-style program takes a few arguments as command-line parameters, then generates a hash depending on these parameters, and compares it to an expected license value.</p>
+<img src="https://i.loli.net/2020/09/21/v25azExLrdseBJ8.png" style="zoom:45%;" >
+
+<p>Open executable <code>get_key_x86</code> in IDA Pro. We can see address <code>0x93B</code> is the start point of main function.</p>
+<img src="https://i.loli.net/2020/09/21/2eVtNhBX8jC9HAo.jpg"  style="zoom:65%;">
+
+<p>Focus on the <strong>BinCAT Configuration</strong> pane, set the start address as <code>0x93B</code> as the start address. Edit the configuration to initialize the stack, setup the content of command-line parameters, and corresponding memory.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mem[0xb8000000*4099] = |00|?0xFF <span class="comment"># initialize the stack to unknown value</span></span><br><span class="line">mem[0xb8001004] = 5         <span class="comment"># argc = 5</span></span><br><span class="line">mem[0xb8001008] = 0x200000  <span class="comment"># argv = 0x200000</span></span><br><span class="line"></span><br><span class="line">mem[0x200000] = 0x300100 <span class="comment"># argv[0] </span></span><br><span class="line">mem[0x200004] = 0x300140 <span class="comment"># argv[1]</span></span><br><span class="line">mem[0x200008] = 0x300180 <span class="comment"># argv[2]</span></span><br><span class="line">mem[0x20000C] = 0x3001C0 <span class="comment"># argv[3]</span></span><br><span class="line">mem[0x200010] = 0x300200 <span class="comment"># argv[4]</span></span><br><span class="line"></span><br><span class="line">mem[0x300100] = |6c6f6c3300|       <span class="comment"># argv[0] = &quot;lol3&quot;</span></span><br><span class="line">mem[0x300140] = |636f6d70616e7900| <span class="comment"># argv[1] = &quot;company&quot;</span></span><br><span class="line">mem[0x300180] = |64657000|   <span class="comment"># argv[2] = &quot;dep&quot;</span></span><br><span class="line">mem[0x3001C0] = |6c6f6c3100| <span class="comment"># argv[3] = &quot;lol1&quot;</span></span><br><span class="line">mem[0x300200] = |6c6f6c2100| <span class="comment"># argv[4] = &quot;lol!&quot;</span></span><br></pre></td></tr></table></figure>
+
+<img src="https://i.loli.net/2020/09/21/YI4PwTR73UEqWSh.png" alt="image-20200921214609971" style="zoom:60%;" />
+
+<p>Click start to perform analysis. When analysis finishes, open the <strong>BinCAT Memory</strong> view, we can see the five parameters are located at the corresponding memory addresses.</p>
+<img src="https://i.loli.net/2020/09/21/fiCyMKr2sIEBSzn.png" alt="image-20200921220518093" style="zoom:45%;" />
+
+<p>Switch to the <strong>IDA View-A</strong> view, go to an arbitrary address such as <code>0x98C</code>,  we can check the value of each register. From the <strong>BinCAT IL</strong> view, the intermediate language of instruction <code>mov [ebp+var_22C], edi</code> is <code>(32)[ebp+0xfffffdd4]&lt;-edi</code>.</p>
+<img src="https://i.loli.net/2020/09/21/ficbyROY3ntDUZV.png" alt="image-20200921222843992" style="zoom:45%;" />
+
+<p>Override the taint of every byte at addresses <code>0x300140</code>-<code>0x300147</code> which contains the null-terminated <code>company</code> string.</p>
+<img src="https://i.loli.net/2020/09/21/HPzSNKxCvVayBjU.png" alt="image-20200921220721353" style="zoom:37%;" />
+
+<p>Set it to <code>!|FF|</code> (this fully taints the byte, without changing its value). </p>
+<img src="https://i.loli.net/2020/09/21/y4P6zwo8DcAB5R3.png" alt="image-20200921220823674" style="zoom:37%;" />
+
+<p>We can check that the user-defined taint overrides at <strong>BinCAT Overrides</strong> view. Re-run the analysis.</p>
+<img src="https://i.loli.net/2020/09/21/wfVJax3QIPOFNsr.png" alt="image-20200921221039291" style="zoom:37%;" />
+
+<p>Advance to the instruction at address <code>0x93F</code>, and observe that this memory range is indeed tainted: both the ASCII and hexadecimal representations of this string are displayed as green text.</p>
+<img src="https://i.loli.net/2020/09/21/VJC8tbmI9RxZN6r.png" alt="image-20200921221127514" style="zoom: 40%;" />
+
+<p>In the <strong>IDA View-A</strong> view, notice that some instructions are displayed against a non-gray background, since they manipulate tainted data. For example, the instruction at address <code>0x9E6</code> (<code>push eax</code>) is highlighted because <code>eax</code>is tainted.</p>
+<img src="https://i.loli.net/2020/09/21/IsV7lnCDGdjkeYf.png" alt="image-20200921221444701" style="zoom:43%;" />
+
+<p>In the <strong>IDA View-A</strong> view, we can see some instructions are displayed with a white background, since these instructions are not executed with the given parameters.</p>
+<img src="https://i.loli.net/2020/09/21/MQPI8vWODSmocf1.png" alt="image-20200921224200323" style="zoom:33%;" />
+
+<h4 id="5-Static-Analysis-Tool-Psalm"><a href="#5-Static-Analysis-Tool-Psalm" class="headerlink" title="5. Static Analysis Tool: Psalm"></a>5. Static Analysis Tool: Psalm</h4><p>Psalm is a static analysis tool for PHP applications. Assume we plan to analyze the following <code>target.php</code> program using Psalm. <code>$_POST</code> is user-controlled input, which is defined as a taint source by default. <code>echo</code> is the place that we don’t want untrusted user data to end up, which is also defined as taint sink by default. In this program, the data explicitly flows from <code>$_POST</code> to <code>echo $name</code> and implicitly from <code>$_POST</code> to <code>echo $a</code>.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$a</span> = <span class="number">0</span>;</span><br><span class="line"><span class="variable">$name</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="variable">$input</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$_SERVER</span>[<span class="string">&quot;REQUEST_METHOD&quot;</span>] == <span class="string">&quot;POST&quot;</span>) &#123;</span><br><span class="line">    <span class="variable">$input</span> = <span class="variable">$_POST</span>[<span class="string">&quot;name&quot;</span>];</span><br><span class="line">    <span class="variable">$name</span> = <span class="title function_ invoke__">test_input</span>(<span class="variable">$input</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">strlen</span>(<span class="variable">$input</span>) &gt;= <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="variable">$a</span> = <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$a</span> = <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$a</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$name</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test_input</span>(<span class="params"><span class="variable">$data</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$data</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$data</span>);</span><br><span class="line">    <span class="variable">$data</span> = <span class="title function_ invoke__">stripslashes</span>(<span class="variable">$data</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>In the directory of the above program, run the following command to add a <code>psalm.xml</code> config file. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./vendor/bin/psalm --init</span><br></pre></td></tr></table></figure>
+
+<p>Psalm will scan the project, set the project files to be analyzed and figure out an appropriate error level for the codebase.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">psalm</span></span></span><br><span class="line"><span class="tag">    <span class="attr">errorLevel</span>=<span class="string">&quot;3&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">...</span></span></span><br><span class="line"><span class="tag">&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">projectFiles</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">file</span> <span class="attr">name</span>=<span class="string">&quot;target.php&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ignoreFiles</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">directory</span> <span class="attr">name</span>=<span class="string">&quot;vendor&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">ignoreFiles</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">projectFiles</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">psalm</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>To perform taint analysis, run the <code>./vendor/bin/psalm</code> with flag <code>--taint-analysis</code>. However, the analysis shows that no errors found in the <code>target.php</code> program.</p>
+<img src="https://i.loli.net/2020/09/22/yzIhduSG5k7xw6i.png" alt="image-20200922144006760" style="zoom:50%;" />
+
+<p>There are two reasons. First, Psalm not support implicit data flow tracking. Second, operation <code>stripslashes</code> remove taints from data because this function removes backslashes in the string, which eliminates the risk of suffering cross-site-scripting attacks. In that case, there is no need to track how taint flows anymore. We can feel that Psalm is developed mainly for security analysis of web applications. However, this is not consistent with our idea: If the output changes with the different inputs, the output should be tainted once the input is tainted. </p>
+<p>If we put <code>echo $data</code> ahead of <code>stripslashes</code> function, the error can be detected.</p>
+<img src="https://i.loli.net/2020/09/22/XqsBbYnF7wihrv3.png" alt="image-20200922145913877" style="zoom:45%;" />
+
+<p>Except for the three default taint sources <code>$_POST/$_GET/$_COOKIE</code>, we can define our custom taint sources using annotations <code>@psalm-taint-source &lt;taint-type&gt;</code>, which are always the return value of user-controlled functions. The following example defines the return value of <code>getUser</code> function as a taint source whose type is <code>input</code>. When the taint flows into the taint sink <code>echo</code>, an error will be reported.</p>
+<img src="https://i.loli.net/2020/09/22/gehaNQpXklCjnbs.png" alt="image-20200922151007945" style="zoom: 43%;" />
+
+<p>Also, except for a number of default builtin taint sinks such as <code>echo</code>, we can define our custom taint sinks using annotation <code>@psalm-taint-sink &lt;taint-type&gt; &lt;param-name&gt;</code>, which are always the parameters of functions that should be carefully treated. The following example defines the parameter <code>$str</code> of <code>myExec</code> function as taint sink whose type is <code>shell</code>.</p>
+<img src="https://i.loli.net/2020/09/22/kbvLpgYRq6XPSfM.png" alt="image-20200922152410422" style="zoom:43%;" />
+
+<h4 id="6-Static-Analysis-Tool-Pysa"><a href="#6-Static-Analysis-Tool-Pysa" class="headerlink" title="6. Static Analysis Tool: Pysa"></a>6. Static Analysis Tool: Pysa</h4><p>Pysa is a static analysis tool for python. We first define different types of taint sources and sink in <code>taint.config</code> file. In the following config, we define source type <code>UserControlled</code>, sink type <code>RemoteCodeExecution</code>, as well as a rule showing that we concern about the data flows from source <code>UserControlled</code> to sink <code>RemoteCodeExecution</code>.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;sources&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;UserControlled&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;comment&quot;</span><span class="punctuation">:</span> <span class="string">&quot;use to annotate user input&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;sinks&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;RemoteCodeExecution&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;comment&quot;</span><span class="punctuation">:</span> <span class="string">&quot;use to annotate execution of code&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">&quot;rules&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Possible shell injection&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">5001</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;sources&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span> <span class="string">&quot;UserControlled&quot;</span> <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;sinks&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span> <span class="string">&quot;RemoteCodeExecution&quot;</span> <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;message_format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Data from [&#123;$sources&#125;] source(s) may reach [&#123;$sinks&#125;] sink(s)&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Then we need to link the source and sink type with target program. The following <code>.pysa</code> file using python annotation syntax indicates that the return value of <code>input</code> is taint source with type <code>UserControlled</code>, and the parameter of <code>print</code> is taint sink with type <code>RemoteCodeExecution</code>. Once there is a data flow path from <code>input</code> to <code>print</code>, Pysa will report the potential issue. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># taint/general.pysa</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># model for raw_input</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">input</span>(<span class="params">__prompt = ...</span>) -&gt; TaintSource[UserControlled]: ...</span><br><span class="line"></span><br><span class="line"><span class="comment"># model for print</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">print</span>(<span class="params">values: TaintSink[ReturnSign], sep = ..., end = ..., file = ...</span>) : ...</span><br></pre></td></tr></table></figure>
+
+<p>Therefore, for the target program, the <code>input</code> function is a taint source since it gets input directly from the user. The <code>print</code> function is a taint sink, since we do not want user-controlled values to flow into it.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    a = <span class="built_in">input</span>()</span><br><span class="line">    <span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+
+<p>Execute command <code>pyre analyze</code> to perform taint analysis, here are the results. The information shows that the taint source <code>a</code> flows into sink at line 3, in which <code>a</code> is used as the parameter of print function. The message also shows that the detected issue points to function <code>source.func</code>. Note that Pysa only analyzes data flow in functions, which means if the following statement 2 and 3 are in <code>main</code> function or even not any function, then Pysa will say that there is no issue.</p>
+<img src="https://i.loli.net/2020/09/22/3lx1IHiL5VJfMKW.png" alt="image-20200922172253744" style="zoom:43%;" />
+
+<p>Pysa cannot track implicit information flow, currently, only conditional tests are supported. In the following case, the taint source <code>a</code> is used in conditional test expression in line 4. Pysa can report this problem, but cannot detect that the taint has implicitly flowed into sink <code>print</code> at line 5 and line 7.</p>
+<img src="https://i.loli.net/2020/09/22/CrF9YpiZR37jXeT.png" alt="image-20200922223740657" style="zoom:43%;" />
+
+<h4 id="7-Conclusion"><a href="#7-Conclusion" class="headerlink" title="7. Conclusion"></a>7. Conclusion</h4><p>We can feel that even though there are a bunch of taint analysis tools, they are developed for different purposes, which leads to different user interfaces, different taint granularity, different features. We may need to be careful to infer the taint “ground truth” based on the output of the program. Furthermore, these taint tools prefer to under-taint and even make efforts to reduce false positive. In details, the implicit dependence such as <code>if(x)&#123; y = 2; &#125;</code> are not supported by majority tools. Besides, for dynamic tools and those static tools that simulate execution, they only focus on one path that depends on the user input.  Mutations that don’t affect the information flow of that path may not be useful to test the analysis tool. Therefore, test case construction is another aspect that should be treated seriously.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Taint-Analysis/" rel="tag"># Taint Analysis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/09/13/Science-Writing/" rel="prev" title="Science Writing">
+                  <i class="fa fa-angle-left"></i> Science Writing
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2020/09/15/Taint-Benchmark/" rel="next" title="Usages and problems of Taint Tools">
+                  Usages and problems of Taint Tools <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="I read this paper before (in about 5 mins or less). And like I mentioned to you, although I don’t remember the technical details, but I remember 1) key idea is to ensemble multiple fuzzers together an">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rebuttal">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/04/04/Rebuttal/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="I read this paper before (in about 5 mins or less). And like I mentioned to you, although I don’t remember the technical details, but I remember 1) key idea is to ensemble multiple fuzzers together an">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-04-03T17:53:50.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.071Z">
+<meta property="article:author" content="Wei CHEN">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/04/04/Rebuttal/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2021/04/04/Rebuttal/","path":"2021/04/04/Rebuttal/","title":"Rebuttal"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Rebuttal | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#Rebuttal-1"><span class="nav-number">1.</span> <span class="nav-text">Rebuttal 1</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Rebuttal-2"><span class="nav-number">2.</span> <span class="nav-text">Rebuttal 2</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/04/04/Rebuttal/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Rebuttal | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Rebuttal
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-04-04 01:53:50" itemprop="dateCreated datePublished" datetime="2021-04-04T01:53:50+08:00">2021-04-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>I read this paper before (in about 5 mins or less). And like I mentioned to you, although I don’t remember the technical details, but I remember 1) key idea is to ensemble multiple fuzzers together and boost the performance, that’s new and should be appreciated, although, well, I wonder if we shall trust their reported results (we should believe unless we have concrete evidence), 2) it’s very important to remember who published this paper, although it might be difficult to remember the “name”, you at least need to remember the institute.</p>
+<span id="more"></span>
+
+<p>What’s important is to let people know they are worse, by either:</p>
+<ol>
+<li><p>after manually checking their findings, that’s not as signaficant as us, say, if that’s not a real vulnerability or so.</p>
+</li>
+<li><p>if that’s infeasible, we have to report their findings, although it’s as well vulnerabilities, have been reported already or so.</p>
+</li>
+</ol>
+<h5 id="Rebuttal-1"><a href="#Rebuttal-1" class="headerlink" title="Rebuttal 1"></a>Rebuttal 1</h5><p>On Review 1,</p>
+<p>On the concern about incorrect classification of multi-package libraries (say “from the same developer”, using “the same prefix”), it is possible that our tool will identify each combination as a different library. However, we believe this is essentially a problem shared by all library identification methods. LibD might be able to identify different “versions have different structures”. If LibD cannot detect the relation, they will be classified as different libraries. We will consider this in our future work.</p>
+<p>On Review 2,</p>
+<p>The number of identified libraries reported over the whole sample set (1.4 million apps) is indeed not the ground truth. We lack the manpower to verify all positives and negatives manually. However, to validate the credibility of our results, we did manually verify the results over a subset of the samples (1000 apps). Since this set is large and randomly selected, the false positive and false negative rates should be approximately applicable to the overall results.</p>
+<p>We report the number of packages in a library because some previous work only consider single-package libraries. Our results indicate that failing to consider cross-package dependencies can lead to significant mis-classifications.</p>
+<p>Google has published multiple Android security white papers [1][2] and explicitly states that apps will be analyzed both statically and dynamically before publication. There are also unofficial technical reports [3][4] reveling the details of the vetting process.</p>
+<p>We didn’t run WuKong because LibRadar is essentially the improved version of WuKong’s library identification part.</p>
+<p>Reporting the number of obfuscated libraries is a clear indication of the improvement made by our tool comparing to previous work, for they cannot correctly cluster these obfuscated libraries with other unobfuscated versions.</p>
+<p>We do not claim LibD can directly identify vulnerable or malicious libraries. Instead, we identify different instances of the same library such that when one of the instances is considered vulnerable or malicious, the other instances can be quickly identified.</p>
+<p>We did compare LibD with LibRadar, one of the state-of-the-art Android library detectors (Table IV). There are other similar tools, but we cannot get access to them. Our false positive rate seems high, but it is already significant improvement compared with LibRadar.</p>
+<p>On Review 3,</p>
+<p>We would like to emphasize that our experiments are not subjective. It is true that every library detection method has its advantages and disadvantages over certain obfuscation techniques. However, our experiment results are <strong>manually</strong> validated, with all obfuscations known to us considered. Therefore, the experiments will not offer us unfair advantages over other tools. The results suggest that focusing on library name obfuscation significantly boosts the overall performance. A possible reason may be that library name obfuscation is one of the most widely used obfuscation techniques.</p>
+<p>Per our investigation, most of “ghost calls” are calling functions from customized Android frameworks. For example, there is a call invoking com.samsung.android.SsdkInterface.getVersionCode which exists only on Samsung Android phones. The decompiler failed to consider these cases, leading to dangling function targets.</p>
+<p>[1]<a target="_blank" rel="noopener" href="https://goo.gl/50HCk2">https://goo.gl/50HCk2</a></p>
+<p>[2]<a target="_blank" rel="noopener" href="https://goo.gl/JwmAvZ">https://goo.gl/JwmAvZ</a></p>
+<p>[3]<a target="_blank" rel="noopener" href="https://goo.gl/fUPQZ">https://goo.gl/fUPQZ</a></p>
+<p>[4]<a target="_blank" rel="noopener" href="https://goo.gl/5O6c5T">https://goo.gl/5O6c5T</a></p>
+<h5 id="Rebuttal-2"><a href="#Rebuttal-2" class="headerlink" title="Rebuttal 2"></a>Rebuttal 2</h5><p>Our submitted vulnerability reports are still waiting for confirmation from the Linux developers. Generally speaking, it takes XXX to confirm each reported defects and we are anticipating to hear from them later this year. </p>
+<p>On the other hand, we have conducted further analysis of those <code>unknown</code> vulnerabilities reported by our tool and comprehend each cases. </p>
+<p>We report that for the first case, it indicates a XXXX (e.g., use-after-free) bug in the <em>XXX module</em> of the Linux kernel. Generally speaking, this bug can jeopardize heap code pointers, and likely to enable remote code control and heap memory overread, violating the confidentiality and integrity of Linux kernel.</p>
+<p>We report that for the second case, it indicates a XXXX (e.g., use-after-free) bug in the <em>XXX module</em> of the Linux kernel. Generally speaking, this bug can jeopardize heap code pointers, and likely to enable remote code control and heap memory overread, violating the confidentiality and integrity of Linux kernel.</p>
+<p>We confirm that by searching such code pattern cannot online, we cannot find any relavent bug reports. Therefore, to our best knowledge, XXX outperforms Moonshine and YYY by findings these new issues.</p>
+<p>We note that it usually takes a while for the open source community to confirm bugs or vulnerabilities. However, manual study have shown promising findings, adding confidence and significance of our research. Also, the findings can be treated as “vulnerabilities”, since we not only find critical memory abusing bugs (use-after-free), and also know  what user-input can indeed trigger that bug. </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/03/28/Symbolic-Execution/" rel="prev" title="Symbolic Execution">
+                  <i class="fa fa-angle-left"></i> Symbolic Execution
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/04/10/Tech-Linux-Program-Startup/" rel="next" title="Linux Program Startup">
+                  Linux Program Startup <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

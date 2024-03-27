@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 http:&#x2F;&#x2F;seclab.cs.sunysb.edu&#x2F;sekar&#x2F;papers&#x2F;syscallclassif.htm  进程管理模块 内存管理模块 文件系统模块 file system 设备控制模块 device driver 网络模块 network">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Overview of Linux kernel">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/27/Overview-of-Linux-kernel/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 http:&#x2F;&#x2F;seclab.cs.sunysb.edu&#x2F;sekar&#x2F;papers&#x2F;syscallclassif.htm  进程管理模块 内存管理模块 文件系统模块 file system 设备控制模块 device driver 网络模块 network">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/12/27/mgGj6SIcwTAOnxk.png">
+<meta property="article:published_time" content="2020-12-27T12:47:53.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.073Z">
+<meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Kernel">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/12/27/mgGj6SIcwTAOnxk.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/27/Overview-of-Linux-kernel/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2020/12/27/Overview-of-Linux-kernel/","path":"2020/12/27/Overview-of-Linux-kernel/","title":"Overview of Linux kernel"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Overview of Linux kernel | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#File-Access"><span class="nav-number">1.</span> <span class="nav-text">File Access</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Setup"><span class="nav-number">1.1.</span> <span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#File-Attributes"><span class="nav-number">1.2.</span> <span class="nav-text">File Attributes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Read-Write"><span class="nav-number">1.3.</span> <span class="nav-text">Read&#x2F;Write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Directory-Operations"><span class="nav-number">1.4.</span> <span class="nav-text">Directory Operations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Miscellaneous"><span class="nav-number">1.5.</span> <span class="nav-text">Miscellaneous</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Network-Access"><span class="nav-number">2.</span> <span class="nav-text">Network Access</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Setup-1"><span class="nav-number">2.1.</span> <span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Send-Receive"><span class="nav-number">2.2.</span> <span class="nav-text">Send&#x2F;Receive</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Naming"><span class="nav-number">2.3.</span> <span class="nav-text">Naming</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Message-Queues"><span class="nav-number">3.</span> <span class="nav-text">Message Queues</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shared-Memory"><span class="nav-number">4.</span> <span class="nav-text">Shared Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#File-Descriptor-Operations"><span class="nav-number">5.</span> <span class="nav-text">File Descriptor Operations</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Setup-2"><span class="nav-number">5.1.</span> <span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Read-Write-1"><span class="nav-number">5.2.</span> <span class="nav-text">Read&#x2F;Write</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#File-Descriptor-Control"><span class="nav-number">5.3.</span> <span class="nav-text">File Descriptor Control</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Time-Related"><span class="nav-number">6.</span> <span class="nav-text">Time-Related</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Process-Control"><span class="nav-number">7.</span> <span class="nav-text">Process Control</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-Creation-and-Termination"><span class="nav-number">7.1.</span> <span class="nav-text">Process Creation and Termination</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Signals"><span class="nav-number">7.2.</span> <span class="nav-text">Signals</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Synchronization"><span class="nav-number">7.3.</span> <span class="nav-text">Synchronization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#User-Group-Id"><span class="nav-number">7.4.</span> <span class="nav-text">User&#x2F;Group Id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Resource-Control"><span class="nav-number">7.5.</span> <span class="nav-text">Resource Control</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Virtual-Memory"><span class="nav-number">7.6.</span> <span class="nav-text">Virtual Memory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Miscellaneous-1"><span class="nav-number">7.7.</span> <span class="nav-text">Miscellaneous</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#System-Wide"><span class="nav-number">8.</span> <span class="nav-text">System-Wide</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Unprivileged-%E2%80%93-Filesystem"><span class="nav-number">8.1.</span> <span class="nav-text">Unprivileged – Filesystem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Unprivileged-%E2%80%93-Miscellaneous"><span class="nav-number">8.2.</span> <span class="nav-text">Unprivileged – Miscellaneous</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Privileged-%E2%80%93-Filesystem"><span class="nav-number">8.3.</span> <span class="nav-text">Privileged – Filesystem</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-Scheduling"><span class="nav-number">8.4.</span> <span class="nav-text">Process Scheduling</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Privileged-%E2%80%93-Time"><span class="nav-number">8.5.</span> <span class="nav-text">Privileged – Time</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Loadable-Modules"><span class="nav-number">8.6.</span> <span class="nav-text">Loadable Modules</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Accounting-and-Quota"><span class="nav-number">8.7.</span> <span class="nav-text">Accounting and Quota</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Privileged-%E2%80%93-Miscellaneous"><span class="nav-number">8.8.</span> <span class="nav-text">Privileged – Miscellaneous</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/27/Overview-of-Linux-kernel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Overview of Linux kernel | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Overview of Linux kernel
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-12-27 20:47:53" itemprop="dateCreated datePublished" datetime="2020-12-27T20:47:53+08:00">2020-12-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Surveys/" itemprop="url" rel="index"><span itemprop="name">Surveys</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Linux内核、驱动程序和硬件的关系，从中可以看出，内核的几个模块，相应的系统调用也可以分为这几类 <a target="_blank" rel="noopener" href="http://seclab.cs.sunysb.edu/sekar/papers/syscallclassif.htm">http://seclab.cs.sunysb.edu/sekar/papers/syscallclassif.htm</a></p>
+<ol>
+<li>进程管理模块</li>
+<li>内存管理模块</li>
+<li>文件系统模块 file system</li>
+<li>设备控制模块 device driver</li>
+<li>网络模块 network</li>
+</ol>
+<span id="more"></span>
+
+<img src="https://i.loli.net/2020/12/27/mgGj6SIcwTAOnxk.png" alt="image-20201227204911819" style="zoom:60%;" />
+
+<p>Coq Formal Verification for kernel</p>
+<h3 id="File-Access"><a href="#File-Access" class="headerlink" title="File Access"></a>File Access</h3><h4 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h4><p>WriteOpen (path) - open and possibly create a file for write &#x3D; { open(path, flags) | (flags &amp; (O_WRONLY | O_APPEND | O_TRUNC)), open(path, flags, mode) | (flags &amp; (O_WRONLY | O_APPEND | O_TRUNC)), creat(path, mode); }</p>
+<p>ReadOpen(path) - open a file for read &#x3D; { open(path,flags) | (flags &amp; O_RONLY), open(path,flags,mode) | (flags &amp; O_RONLY), }</p>
+<p>open_2(path) - open a file &#x3D; { ReadOpen(path), WriteOpen(path), }</p>
+<p>truncate_2(path, len) - truncate a file to a specified length &#x3D; { truncate(path, len), ftruncate(fd, len) | path &#x3D; fdToName(fd) }</p>
+<p>creat - create a file(3)<br>int creat(const char *pathname, mode_t mode);</p>
+<p>open - open and possibly create a file or device<br>int open(const char *pathname, int flags);<br>int open(const char *pathname, int flags, mode_t mode);</p>
+<p>truncate, ftruncate - truncate a file to a specified length(11)<br>int truncate(const char *path, size_t length);<br>int ftruncate(int fd, size_t length);</p>
+<p>pipe - create pipe<br>int pipe(int filedes[2]);</p>
+<h4 id="File-Attributes"><a href="#File-Attributes" class="headerlink" title="File Attributes"></a>File Attributes</h4><p>filePermCheck(path) - check file permission &#x3D; { stat(path,buf) fstat(fd, buf) | path &#x3D; fdToName(fd) lstat(path, buf) access(path, mode) }</p>
+<p>fileAttrCheck(path) - check any file attribute &#x3D; { stat(path, buf) fstat(fd, buf) | path &#x3D; fdToName(fd) lstat(path, buf) }</p>
+<p>*<strong>filePermChange(path) - change file permissions &#x3D; {<br>chmod_2(path, mode)<br>chown_2(path, owner, group)<br>}*</strong></p>
+<p>*<strong>fileAttrChange(path) - change file attributes &#x3D; {<br>filePermChange(path)<br>*</strong></p>
+<p>stat_2(path, buf) - get file status &#x3D; { stat(path, buf) fstat(fd, buf) | path &#x3D; fdToName(fd) }</p>
+<p>chmod_2(path, mode) - change permissions of a file &#x3D; { chmod(path, mode), fchmod(fd, mode) | path &#x3D; fdToName(fd); }</p>
+<p>chown_2(path, owner, group) - change ownership of a file &#x3D; { chown(path, owner, group), fchown(fd, owner, group) | path &#x3D; fdToName(fd) }</p>
+<p>link_2 (oldpath, newpath) - make a new name for a file &#x3D; { link(oldpath, newpath), symlink(topath, frompath) }</p>
+<p>access - check user’s permissions for a file<br>int access(const char *pathname, int mode);</p>
+<p>stat, fstat, lstat - get file status<br>int stat(const char *file_name, struct stat *buf);<br>int fstat(int filedes, struct stat *buf);<br>int lstat(const char *file_name, struct stat *buf);</p>
+<p>umask - set file creation mask<br>int umask(int mask);</p>
+<p>utime, utimes - change access and&#x2F;or modification times of an inode(32)<br>int utime(const char *filename, struct utimbuf *buf);<br>int utimes(char *filename, struct timeval *tvp);</p>
+<p>chmod, fchmod - change permissions of a file<br>int chmod(const char *path, mode_t mode);<br>int fchmod(int fildes, mode_t mode);</p>
+<p>chown, fchown - change ownership of a file<br>int chown(const char *path, uid_t owner, gid_t group);<br>int fchown(int fd, uid_t owner, gid_t group);</p>
+<p>link - make a new name for a file<br>int link(const char *oldpath, const char *newpath);</p>
+<p>symlink - make a new name for a file<br>int symlink(const char *topath, const char *frompath);</p>
+<p>rename - change the name or location of a file<br>int rename(const char *oldpath, const char *newpath);</p>
+<p>unlink - delete a name and possibly the file it refers to<br>int unlink(const char *pathname);</p>
+<h4 id="Read-Write"><a href="#Read-Write" class="headerlink" title="Read&#x2F;Write"></a>Read&#x2F;Write</h4><p>_llseek,lseek - reposition read&#x2F;write file offset<br>int _llseek(unsigned int fd, unsigned long offset_high, unsigned long offset_low, loff_t * result, unsigned int whence);<br>off_t lseek(int fildes, off_t offset, int whence);</p>
+<p>lseek_2(fd, offset, whence) - reposition read&#x2F;write file offset &#x3D; { _llseek(fd, offset_high, offset_low, * , whence) | offset &#x3D; (offset_high&lt;&lt;32) | offset_low, lseek(fd, offset, whence) }</p>
+<p>readlink - read value of a symbolic link<br>int readlink(const char *path, char *buf, size_t bufsiz);</p>
+<h4 id="Directory-Operations"><a href="#Directory-Operations" class="headerlink" title="Directory Operations"></a>Directory Operations</h4><p>mkdir - create a directory<br>int mkdir(const char *pathname, mode_t mode);</p>
+<p>mknod - create a directory<br>int mknod(const char *pathname, mode_t mode, dev_t dev);</p>
+<p>mkdir_2(path, mode) - create a directory &#x3D; { mkdir(path, mode), mknod(path, mode, *) }</p>
+<p>rmdir - delete a directory<br>int rmdir(const char *pathname);</p>
+<p>getdents - get directory entries<br>int getdents(unsigned int fd, struct dirent *dirp, unsigned int count);</p>
+<p>readdir - read directory entry<br>int readdir(unsigned int fd, struct dirent *dirp, unsigned int count);</p>
+<h4 id="Miscellaneous"><a href="#Miscellaneous" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h4><p>fdatasync - synchronize a file’s in-core data with that on disk<br>int fdatasync(int fd);</p>
+<p>fsync - synchronize a file’s complete in-core state with that on disk<br>int fsync(int fd);</p>
+<p>msync - synchronize a file with a memory map<br>int msync(const void *start, size_t length, int flags);</p>
+<p>chroot - change root directory<br>int chroot(const char *path);</p>
+<p>chdir, fchdir - change working directory(2)<br>int chdir(const char *path);<br>int fchdir(int fd);</p>
+<p>chdir_2(path)- change working directory &#x3D; { chdir(path), fchdir(fd) | path &#x3D; fdToName(fd) }</p>
+<h3 id="Network-Access"><a href="#Network-Access" class="headerlink" title="Network Access"></a>Network Access</h3><h4 id="Setup-1"><a href="#Setup-1" class="headerlink" title="Setup"></a>Setup</h4><p>socket - create an endpoint for communication<br>int socket(int domain, int type, int protocol);</p>
+<p>socketpair - create a pair of connected sockets<br>int socketpair(int d, int type, int protocol, int sv[2]);</p>
+<p>getsockopt - get options on sockets<br>int getsockopt(int s, int level, int optname, void *optval, int *optlen);</p>
+<p>setsockopt - set options on sockets<br>int setsockopt(int s, int level, int optname, const void *optval, int optlen);</p>
+<p>bind - bind a name to a socket<br>int bind(int sockfd, struct sockaddr *my_addr, int addrlen);</p>
+<p>getsockname - get socket name<br>int getsockname(int s , struct sockaddr * name , int * namelen )</p>
+<p>listen - listen for connections on a socket<br>int listen(int s, int backlog);</p>
+<p>accept - accept a connection on a socket<br>int accept(int s, struct sockaddr *addr, int *addrlen);</p>
+<p>connect - initiate a connection on a socket<br>int connect(int sockfd, struct sockaddr *serv_addr, int addrlen );</p>
+<p>shutdown - shut down part of a full-duplex connection<br>int shutdown(int s, int how);</p>
+<h4 id="Send-Receive"><a href="#Send-Receive" class="headerlink" title="Send&#x2F;Receive"></a>Send&#x2F;Receive</h4><p>recv, recvfrom, recvmsg - receive a message from a socket<br>int recv(int s, void *buf, int len, unsigned int flags);<br>int recvfrom(int s, void *buf, int len, unsigned int flags, struct sockaddr *from, int *fromlen);<br>int recvmsg(int s, struct msghdr *msg, unsigned int flags);</p>
+<p>recv_2 (s, buf, len, flag) - receive a message from a socket &#x3D; { recv(s, buf, len, flag), recvfrom( s, buf, len, flag, *), recvmsg(s, msg, flag) | buf &#x3D; FUN get_buf(*msg) len &#x3D; FUN get_len(*msg) } *</p>
+<p>send, sendto, sendmsg - send a message from a socket(25)<br>int send(int s, const void *msg, int len, unsigned int flags);<br>int sendto(int s, const void *msg, int len, unsigned int flags, const struct sockaddr *to, int tolen);<br>int sendmsg(int s, const struct msghdr *msg, unsigned int flags);</p>
+<p>send_2 (s, msg, len, flag) - send a message to a socket &#x3D; { send(s, msg, len, flag), sendto( s, msg, len, flag, *), sendmsg(s, msg, flag) | len &#x3D; FUN get_len(*msg) } *</p>
+<h4 id="Naming"><a href="#Naming" class="headerlink" title="Naming"></a>Naming</h4><p>getdomainname – get domain name<br>int getdomainname(char *name, size_t len);</p>
+<p>setdomainname - set domain name<br>int setdomainname(const char *name, size_t len);</p>
+<p>gethostid - get the unique identifier of the current host<br>long int gethostid(void);</p>
+<p>gethostname - get host name<br>int gethostname(char *name, size_t len);</p>
+<p>gethostid_2() - get the unique identifier of the current host &#x3D; { gethostid(void), gethostname(name, len) | return_value &#x3D; NameToId(name) } *</p>
+<p>sethostid - set the unique identifier of the current host<br>int sethostid(long int hostid);</p>
+<p>sethostname - set host name(28)<br>int sethostname(const char *name, size_t len);</p>
+<p>sethostid_2() - set the unique identifier of the current host &#x3D; { sethostid(void), sethostname(name, len) | return_value &#x3D; NameToId(name) } *</p>
+<p>getpeername - get name of connected peer<br>int getpeername(int s, struct sockaddr *name, int *namelen)</p>
+<h3 id="Message-Queues"><a href="#Message-Queues" class="headerlink" title="Message Queues"></a>Message Queues</h3><p>msgctl - message control operations<br>int msgctl(int msqid, int cmd, struct msqid_ds *buf )</p>
+<p>msgget - get a message queue identifier<br>int msgget(key_t key, int msgflg)</p>
+<p>msgsnd - send message<br>int msgsnd(int msqid, struct msgbuf *msgp, int msgsz, int msgflg )</p>
+<p>msgrcv - receive messsage<br>int msgrcv(int msqid, struct msgbuf *msgp, int msgsz, long msgtyp, int msgflg )</p>
+<h3 id="Shared-Memory"><a href="#Shared-Memory" class="headerlink" title="Shared Memory"></a>Shared Memory</h3><p>shmctl - shared memory control<br>int shmctl(int shmid, int cmd, struct shmid_ds *buf);</p>
+<p>shmat - shared memory operations<br>char *shmat(int shmid, char *shmaddr, int shmflg )</p>
+<p>shmdt - shared memory operations<br>int shmdt(char *shmaddr)</p>
+<p>shmget - allocates a shared memory segment<br>int shmget(key_t key, int size, int shmflg);</p>
+<h3 id="File-Descriptor-Operations"><a href="#File-Descriptor-Operations" class="headerlink" title="File Descriptor Operations"></a>File Descriptor Operations</h3><h4 id="Setup-2"><a href="#Setup-2" class="headerlink" title="Setup"></a>Setup</h4><p>close - close a file descriptor<br>int close(int fd);</p>
+<p>mmap - map files or devices into memory<br>void * mmap(void *start, size_t length, int prot , int flags, int fd, off_t offset);</p>
+<p>munmap - unmap files or devices into memory<br>int munmap(void *start, size_t length);</p>
+<p>getdtablesize - get descriptor table size<br>int getdtablesize(void);</p>
+<p>dup, dup2 - duplicate a file descriptor<br>int dup(int oldfd);<br>int dup2(int oldfd, int newfd);</p>
+<p>dup_2(fd) - duplicate a file descriptor &#x3D; { dup(fd), dup2(oldfd, newfd) | return_value &#x3D; newfd, } *</p>
+<h4 id="Read-Write-1"><a href="#Read-Write-1" class="headerlink" title="Read&#x2F;Write"></a>Read&#x2F;Write</h4><p>read - read from a file descriptor<br>ssize_t read(int fd, void *buf, size_t count);</p>
+<p>readv - read a vector<br>int readv(int fd, const struct iovec * vector, size_t count);</p>
+<p>read_2(fd,buf,count) &#x3D; { read(fd, buf,count), readv(fd, vector, count) |buf &#x3D; FUN get_buf(vector) }</p>
+<p>read_3(fd,buf, count) &#x3D; { read_2(fd, buf,count), <a target="_blank" rel="noopener" href="http://seclab.cs.sunysb.edu/sekar/papers/classifbody.htm#recv2">recv_2 (fd, buf, count, *)</a> }</p>
+<p>write - write to a file descriptor<br>ssize_t write(int fd, const void *buf, size_t count);<br>int writev(int fd, const struct iovec * vector, size_t count);</p>
+<p>write_2(fd,buf,len) &#x3D; { write(fd, buf,count), writev(fd, vector, count) |buf &#x3D; FUN get_buf(vector) }</p>
+<p>write_3(fd,buf,len) &#x3D; { write_2(fd, buf, len), <a target="_blank" rel="noopener" href="http://seclab.cs.sunysb.edu/sekar/papers/classifbody.htm#send2">send_2(fd, buf, len, *)</a> }</p>
+<h4 id="File-Descriptor-Control"><a href="#File-Descriptor-Control" class="headerlink" title="File Descriptor Control"></a>File Descriptor Control</h4><p>flock - apply or remove an advisory lock on an open file<br>int flock(int fd, int operation)</p>
+<p>fcntl - manipulate file descriptor<br>int fcntl(int fd, int cmd);<br>int fcntl(int fd, int cmd, long arg);</p>
+<p>fcntl_2(fd, cmd) - manipulate file descriptor &#x3D; { fcntl(fd, cmd), fcntl(fd, cmd, arg) } *</p>
+<p>ioctl - control device<br>int ioctl(int d, int request, …)</p>
+<h3 id="Time-Related"><a href="#Time-Related" class="headerlink" title="Time-Related"></a>Time-Related</h3><p>nanosleep - pause execution for a specified time<br>int nanosleep(const struct timespec *req, struct timespec *rem);</p>
+<p>alarm - set an alarm clock for delivery of a signal<br>unsigned int alarm(unsigned int seconds);</p>
+<p>getitimer - get value of an interval timer<br>int getitimer(int which, struct itimerval *value);</p>
+<p>setitimer - set value of an interval timer<br>int setitimer(int which, const struct itimerval *value, struct itimerval *ovalue);</p>
+<p>gettimeofday - get time<br>int gettimeofday(struct timeval *tv, struct timezone *tz);</p>
+<p>settimeofday - set time<br>int settimeofday(const struct timeval *tv , const struct timezone *tz);</p>
+<p>time - get time in seconds<br>time_t time(time_t *t);</p>
+<p>times - get process times<br>clock_t times(struct tms *buf);</p>
+<h3 id="Process-Control"><a href="#Process-Control" class="headerlink" title="Process Control"></a>Process Control</h3><h4 id="Process-Creation-and-Termination"><a href="#Process-Creation-and-Termination" class="headerlink" title="Process Creation and Termination"></a>Process Creation and Termination</h4><p>_exit - terminate the current process<br>void _exit(int status);</p>
+<p>clone - create a child process<br>pid_t clone(void *sp, unsigned long flags)</p>
+<p>execve - execute program<br>int execve(const char *filename, const char *argv [], const char *envp[]);</p>
+<p>fork, vfork - create a child process<br>pid_t fork(void);<br>pid_t vfork(void);</p>
+<p> fork_2() - create a child process &#x3D; { fork(void), vfork(void); } *</p>
+<p>wait, waitpid - wait for process termination(34)<br>pid_t wait(int *status)<br>pid_t waitpid(pid_t pid, int *status, int options);</p>
+<p>wait_2 (status) &#x3D; { wait (status), waitpid(pid, status, *) | pid &#x3D; 0; } *</p>
+<p>pid_t wait4(pid_t pid, int *status, int options,<br>struct rusage *rusage)</p>
+<p>wait3, wait4 - wait for process termination, BSD style(35)<br>pid_t wait3(int *status, int options, struct rusage *rusage)</p>
+<p>getpid - get current process identification<br>pid_t getpid(void);</p>
+<p>getppid - get parent process identification<br>pid_t getppid(void);</p>
+<h4 id="Signals"><a href="#Signals" class="headerlink" title="Signals"></a>Signals</h4><p>kill - send signal to a process(16)<br>int kill(pid_t pid, int sig);</p>
+<p>killpg - send signal to a process group<br>int killpg(int pgrp, int sig);</p>
+<p>kill_2(pid,sig) - send signal to a process &#x3D; { kill(pid, sig), killpg(pgrp, sig) | pid &#x3D; pgrp } *</p>
+<p>sigblock - manipulate the signal mask<br>int sigblock(int mask);</p>
+<p>sigmask - manipulate the signal mask<br>int sigmask(int signum);</p>
+<p>siggetmask - manipulate the signal mask<br>int siggetmask(void);</p>
+<p>sigsetmask - manipulate the signal mask<br>int sigsetmask(int mask);</p>
+<p>signal - ANSI C signal handling<br>void(*signal(int signum, void(*handler)(int)))(int);</p>
+<p>sigvec - BSD software signal facilities<br>int sigvec(int sig, struct sigvec *vec, struct sigvec *ovec);</p>
+<p>sigaction - POSIX signal handling functions.<br>int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);</p>
+<p>sigprocmask - POSIX signal handling functions.<br>int sigprocmask(int how, const sigset_t *set, sigset_t *oldset);</p>
+<p>sigpending - POSIX signal handling functions.<br>int sigpending(sigset_t *set);</p>
+<p>sigsuspend - POSIX signal handling functions.<br>int sigsuspend(const sigset_t *mask);</p>
+<p>sigpause - atomically release blocked signals and wait for interrupt<br>int sigpause(int sigmask);</p>
+<p>pause - wait for signal<br>int pause(void);</p>
+<p>sigreturn - return from signal handler and cleanup stack frame<br>int sigreturn(unsigned long __unused);</p>
+<h4 id="Synchronization"><a href="#Synchronization" class="headerlink" title="Synchronization"></a>Synchronization</h4><p>poll - wait for some event on a file descriptor<br>int poll(struct pollfd *ufds, unsigned int nfds, int timeout);</p>
+<p>select - synchronous I&#x2F;O multiplexing<br>int select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);</p>
+<p>semctl - semaphore control operations<br>int semctl(int semid, int semnun, int cmd, union semun arg )</p>
+<p>semget - get a semaphore set identifier<br>int semget(key_t key, int nsems, int semflg )</p>
+<p>semop - semaphore operations<br>int semop(int semid, struct sembuf *sops, unsigned nsops)</p>
+<h4 id="User-Group-Id"><a href="#User-Group-Id" class="headerlink" title="User&#x2F;Group Id"></a>User&#x2F;Group Id</h4><p>getuid - get user real ID<br>uid_t getuid(void);</p>
+<p>getgid - returns the real group ID of the current process.<br>gid_t getgid(void);</p>
+<p>getegid - returns the effective group ID of the current process.<br>gid_t getegid(void);</p>
+<p>geteuid - returns the effective user ID of the current process.<br>uid_t geteuid(void);</p>
+<p>getresuid - get real, effective and saved user ID(14)<br>int getresuid(uid_t *ruid, uid_t *euid, uid_t *suid);</p>
+<p>getuid_2() - get real user ID &#x3D; { geteuid(void), getresuid(ruid, euid, suid) | return_value &#x3D; ruid } </p>
+<p>geteuid_2() - get effective user ID &#x3D; { geteuid(void), getresuid(ruid, euid, suid) | return_value &#x3D; euid } </p>
+<p>getgid_2() - get real group ID &#x3D; { getgid(), getresgid(rgid, egid, sgid) | return_value &#x3D; rgid } </p>
+<p>getegid_2() - get effective group ID &#x3D; { getegid(), getresgid(rgid, egid, sgid) | return_value &#x3D; egid } </p>
+<p>getresgid - get real, effective and saved group ID(15)<br>int getresgid(gid_t *rgid, gid_t *egid, gid_t *sgid);</p>
+<p>getsid - getsid - get session ID<br>pid_t getsid(void);</p>
+<p>getpgid - get process group ID<br>pid_t getpgid(pid_t pid);</p>
+<p>getpgrp -get process group ID<br>pid_t getpgrp(void);<br>getpgrp is equivalent to getpgid(0).</p>
+<p>getpgid_2 (pid) - get process group ID &#x3D; { getpgid(pid), getpgrp(void) | pid &#x3D; 0 } </p>
+<p>getgroups - get group access list<br>int getgroups(int size, gid_t list[])</p>
+<p>setegid - set effective group ID<br>int setegid(gid_t egid);</p>
+<p>seteuid - set effective user ID<br>int seteuid(uid_t euid);</p>
+<p>setfsgid - set group identity used for file system checks<br>int setfsgid(uid_t fsgid)</p>
+<p>setfsuid - set user identity used for file system checks<br>int setfsuid(uid_t fsuid)</p>
+<p>setgid - set group identity<br>int setgid(gid_t gid)</p>
+<p>setregid - set real and &#x2F; or effective group ID<br>int setregid(gid_t rgid, gid_t egid);</p>
+<p>setreuid - set real and &#x2F; or effective user ID<br>int setreuid(uid_t ruid, uid_t euid);</p>
+<p>setresgid - set real, effective and saved group ID(30)<br>int setresgid(gid_t rgid, gid_t egid, gid_t sgid);</p>
+<p>setresuid - set real, effective and saved user ID(29)<br>int setresuid(uid_t ruid, uid_t euid, uid_t suid);</p>
+<p>setuid_2() - set real user ID ) &#x3D; { seteuid(void), setresuid(ruid, euid, suid) | return_value &#x3D; ruid } </p>
+<p>seteuid_2() - set effective user ID &#x3D; { seteuid(void), setresuid(ruid, euid, suid) | return_value &#x3D; euid } </p>
+<p>setgid_2() - set real group ID &#x3D; { setgid(), setresgid(rgid, egid, sgid) | return_value &#x3D; rgid } *</p>
+<p>setegid_2() - set effective group ID &#x3D; { setegid(), setresgid(rgid, egid, sgid) | return_value &#x3D; egid } *</p>
+<p>setgroups - set group access list<br>int setgroups(size_t size, const gid_t *list);</p>
+<p>setsid - creates a session and sets the process group ID<br>pid_t setsid(void);</p>
+<p>setuid - set user identity<br>int setuid(uid_t uid)</p>
+<h4 id="Resource-Control"><a href="#Resource-Control" class="headerlink" title="Resource Control"></a>Resource Control</h4><p>getrlimit - get resource limit<br>int getrlimit(int resource, struct rlimit *rlim)</p>
+<p>setrlimit - set resource limits<br>int setrlimit(int resource, const struct rlimit *rlim);</p>
+<p>getrusage - get resource usage<br>int getrusage(int who, struct rusage *usage);</p>
+<p>getpriority - get program scheduling priority<br>int getpriority(int which, int who);</p>
+<p>nice - change process priority<br>int nice(int inc);</p>
+<p>setpriority - set program scheduling priority<br>int getpriority(int which, int who);</p>
+<h4 id="Virtual-Memory"><a href="#Virtual-Memory" class="headerlink" title="Virtual Memory"></a>Virtual Memory</h4><p>brk {,sbrk} - change data segment size<br>int brk(void *end_data_segment);<br>void *sbrk(ptrdiff_t increment);</p>
+<p>mlock - disable paging for some parts of memory(20)<br>int mlock(const void *addr, size_t len);</p>
+<p>mlockall - disable paging for calling process<br>int mlockall(int flags);</p>
+<p>munlock - reenable paging for some parts of memory(21)<br>int munlock(const void *addr, size_t len);</p>
+<p>munlockall - reenable paging for calling process<br>int munlockall(void);</p>
+<p>mprotect - control allowable accesses to a region of memory<br>int mprotect(const void *addr, size_t len, int prot);</p>
+<p>mremap - re-map a virtual memory address<br>void * mremap(void * old_address, size_t old_size , size_t<br>new_size, unsigned long flags);</p>
+<p>modify_ldt - get or set local descriptor table, a per-process memory management table used by the i386 processor<br>int modify_ldt(int func, void *ptr, unsigned long bytecount);</p>
+<h4 id="Miscellaneous-1"><a href="#Miscellaneous-1" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h4><p>uselib - select shared library<br>int uselib(const char *library);</p>
+<p>profil - execution time profile<br>int profil(char *buf, int bufsiz, int offset, int scale);</p>
+<p>ptrace - process trace<br>int ptrace(int request, int pid, int addr, int data);</p>
+<h3 id="System-Wide"><a href="#System-Wide" class="headerlink" title="System-Wide"></a>System-Wide</h3><h4 id="Unprivileged-–-Filesystem"><a href="#Unprivileged-–-Filesystem" class="headerlink" title="Unprivileged – Filesystem"></a>Unprivileged – Filesystem</h4><p>sync - commit buffer cache to disk.<br>int sync(void);</p>
+<p>ustat - get file system statistics<br>int ustat(dev_t dev, struct ustat * ubuf);</p>
+<p>statfs, fstatfs - get file system statistics(10)<br>int statfs(const char *path, struct statfs *buf);<br>int fstatfs(int fd, struct statfs *buf);</p>
+<p>sysfs - get file system type information(31)<br>int sysfs(int option, const char * fsname);<br>int sysfs(int option, unsigned int fs_index, char * buf);<br>int sysfs(int option);</p>
+<h4 id="Unprivileged-–-Miscellaneous"><a href="#Unprivileged-–-Miscellaneous" class="headerlink" title="Unprivileged – Miscellaneous"></a>Unprivileged – Miscellaneous</h4><p>getpagesize - get system page size<br>size_t getpagesize(void);</p>
+<p>sysinfo - returns information on overall system statistics<br>int sysinfo(struct sysinfo *info);</p>
+<p>uname - get name and information about current kernel<br>int uname(struct utsname *buf);</p>
+<h4 id="Privileged-–-Filesystem"><a href="#Privileged-–-Filesystem" class="headerlink" title="Privileged – Filesystem"></a>Privileged – Filesystem</h4><p>setup - setup devices and file systems, mount root file system<br>int setup(void);</p>
+<p>swapoff - stop swapping to file&#x2F;device<br>int swapoff(const char *path);</p>
+<p>swapon - start swapping to file&#x2F;device<br>int swapon(const char *path, int swapflags);</p>
+<p>nfsservctl - syscall interface to kernel nfs daemon<br>nfsservctl(int cmd, struct nfsctl_arg *argp, union nfsctl_res *resp);</p>
+<p>mount - mount filesystem<br>int mount(const char *specialfile, const char * dir ,<br>const char * filesystemtype, unsigned long rwflag , const void * data);</p>
+<p>umount - unmount filesystems.<br>int umount(const char *specialfile);<br>int umount(const char *dir);</p>
+<h4 id="Process-Scheduling"><a href="#Process-Scheduling" class="headerlink" title="Process Scheduling"></a>Process Scheduling</h4><p>sched_get_priority_max - get the max static priority<br>int sched_get_priority_max(int policy);</p>
+<p>sched_get_priority_min - get the min static priority<br>int sched_get_priority_min(int policy);</p>
+<p>sched_getparam - get scheduling parameters<br>int sched_getparam(pid_t pid, struct sched_param *p);</p>
+<p>sched_setparam - set scheduling parameters<br>int sched_setparam(pid_t pid, const struct sched_param *p);</p>
+<p>sched_getscheduler - get scheduling algorithm&#x2F;parameters<br>int sched_getscheduler(pid_t pid);</p>
+<p>sched_setscheduler - set scheduling algorithm&#x2F;parameters<br>int sched_setscheduler(pid_t pid, int policy, const struct sched_param *p);</p>
+<p>sched_rr_get_interval - get the SCHED_RR interval for the named process<br>int sched_rr_get_interval(pid_t pid, struct timespec *tp);</p>
+<p>sched_yield - yield the processor<br>int sched_yield(void);</p>
+<h4 id="Privileged-–-Time"><a href="#Privileged-–-Time" class="headerlink" title="Privileged – Time"></a>Privileged – Time</h4><p>stime - set time<br>int stime(time_t *t);</p>
+<p>adjtimex - tune kernel clock<br>int adjtimex(struct timex *buf);</p>
+<h4 id="Loadable-Modules"><a href="#Loadable-Modules" class="headerlink" title="Loadable Modules"></a>Loadable Modules</h4><p>create_module - create a loadable module entry<br>caddr_t create_module(const char *name, size_t size);</p>
+<p>delete_module - delete a loadable module entry<br>int delete_module(const char *name);</p>
+<p>init_module - initialize a loadable module entry<br>int init_module(const char *name, struct module *image);</p>
+<p>query_module - query the kernel for various bits pertaining to modules.<br>int query_module(const char *name, int which, void *buf, size_t bufsize, size_t *ret);</p>
+<p>get_kernel_syms - retrieve exported kernel and module symbols<br>int get_kernel_syms(struct kernel_sym *table);</p>
+<h4 id="Accounting-and-Quota"><a href="#Accounting-and-Quota" class="headerlink" title="Accounting and Quota"></a>Accounting and Quota</h4><p>acct - switch process accounting on or off<br>int acct(const char *filename);</p>
+<p>quotactl - manipulate disk quotas<br>int quotactl(cmd, special, uid, addr)</p>
+<h4 id="Privileged-–-Miscellaneous"><a href="#Privileged-–-Miscellaneous" class="headerlink" title="Privileged – Miscellaneous"></a>Privileged – Miscellaneous</h4><p>sysctl - read&#x2F;write system parameters<br>int _sysctl(struct __sysctl_args *args);</p>
+<p>syslog - read and&#x2F;or clear kernel message ring buffer<br>int syslog(int type, char *bufp, int len);</p>
+<p>idle - make process 0 idle<br>void idle(void);</p>
+<p>reboot - reboot or disable Ctrl-Alt-Del<br>int reboot(int magic, int magic_too, int flag);</p>
+<p>ioperm - set port input&#x2F;output permissions<br>int ioperm(unsigned long from, unsigned long num, int<br>turn_on);</p>
+<p>iopl - change I&#x2F;O privilege level<br>int iopl(int level);</p>
+<p>bdflush - start, flush, or tune buffer-dirty-flush daemon(1)<br>int bdflush(int func, long *address);<br>int bdflush(int func, long data);</p>
+<p>cacheflush - flush contents of instruction and&#x2F;or data cache<br>int cacheflush(char *addr, int nbytes, int cache);</p>
+<p>ipc - System V IPC system calls<br>int ipc(unsigned int call, int first, int second, int<br>third, void *ptr, long fifth);</p>
+<p>socketcall - socket system calls<br>int socketcall(int call, unsigned long *args);</p>
+<p>personality - set the process execution domain<br>int personality(unsigned long persona);</p>
+<p>vhangup - virtually hangup the current tty<br>int vhangup(void);</p>
+<p>vm86old, vm86 - enter virtual 8086 mode<br>int vm86old(struct vm86_struct * info);<br>int vm86(unsigned long fn, struct vm86plus_struct * v86);</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Kernel/" rel="tag"># Kernel</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/12/27/S-P-20-Ex-vivo-dynamic-analysis-framework-for-Android-device-drivers/" rel="prev" title="[S&P'20] Ex-vivo dynamic analysis framework for Android device drivers">
+                  <i class="fa fa-angle-left"></i> [S&P'20] Ex-vivo dynamic analysis framework for Android device drivers
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2020/12/29/USENIX-18-Charm-Facilitating-Dynamic-Analysis-of-Device-Drivers-of-Mobile-Systems/" rel="next" title="[USENIX'18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems">
+                  [USENIX'18] Charm: Facilitating Dynamic Analysis of Device Drivers of Mobile Systems <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

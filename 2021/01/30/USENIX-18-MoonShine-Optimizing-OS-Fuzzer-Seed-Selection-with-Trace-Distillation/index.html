@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="AbstractOS fuzzers primarily test the system-call interface between the OS kernel and user-level applications for security vulnerabilities. The effectiveness of all existing evolutionary OS fuzzers de">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[USENIX&#39;18] MoonShine: Optimizing OS Fuzzer Seed Selection with Trace Distillation">
+<meta property="og:url" content="https://harperchen.github.io/blog/2021/01/30/USENIX-18-MoonShine-Optimizing-OS-Fuzzer-Seed-Selection-with-Trace-Distillation/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="AbstractOS fuzzers primarily test the system-call interface between the OS kernel and user-level applications for security vulnerabilities. The effectiveness of all existing evolutionary OS fuzzers de">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/01/31/b3wy1IDqFQeEadO.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/31/2wF9KAlj3yWvz4k.png">
+<meta property="article:published_time" content="2021-01-30T12:29:28.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.075Z">
+<meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Static Analysis">
+<meta property="article:tag" content="Fuzz Testing">
+<meta property="article:tag" content="Kernel">
+<meta property="article:tag" content="Seeds Generation">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/01/31/b3wy1IDqFQeEadO.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2021/01/30/USENIX-18-MoonShine-Optimizing-OS-Fuzzer-Seed-Selection-with-Trace-Distillation/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2021/01/30/USENIX-18-MoonShine-Optimizing-OS-Fuzzer-Seed-Selection-with-Trace-Distillation/","path":"2021/01/30/USENIX-18-MoonShine-Optimizing-OS-Fuzzer-Seed-Selection-with-Trace-Distillation/","title":"[USENIX'18] MoonShine: Optimizing OS Fuzzer Seed Selection with Trace Distillation"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>[USENIX'18] MoonShine: Optimizing OS Fuzzer Seed Selection with Trace Distillation | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Outline"><span class="nav-number">2.</span> <span class="nav-text">Outline</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Difficulties-of-OS-Kernel-Fuzzing"><span class="nav-number">2.1.</span> <span class="nav-text">1. Difficulties of OS Kernel Fuzzing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Drawbacks-of-previous-work"><span class="nav-number">2.2.</span> <span class="nav-text">2. Drawbacks of previous work</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Why-this-paper-is-accepted"><span class="nav-number">2.3.</span> <span class="nav-text">3. Why this paper is accepted</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-How-it-works"><span class="nav-number">2.4.</span> <span class="nav-text">4. How it works</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Technique-details"><span class="nav-number">2.5.</span> <span class="nav-text">5. Technique details</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1-Explicit-Dependencies"><span class="nav-number">2.5.1.</span> <span class="nav-text">5.1 Explicit Dependencies</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-Implicit-Dependencies"><span class="nav-number">2.5.2.</span> <span class="nav-text">5.2 Implicit Dependencies</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Evaluation"><span class="nav-number">2.6.</span> <span class="nav-text">6. Evaluation</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#6-1-New-Vulnerabilities"><span class="nav-number">2.6.1.</span> <span class="nav-text">6.1 New Vulnerabilities?</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-2-Improve-code-coverage"><span class="nav-number">2.6.2.</span> <span class="nav-text">6.2 Improve code coverage?</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-3-Efficiency-in-distilling-traces-while-preserving-coverage"><span class="nav-number">2.6.3.</span> <span class="nav-text">6.3 Efficiency in distilling traces while preserving coverage?</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Examples"><span class="nav-number">2.7.</span> <span class="nav-text">7. Examples</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#7-1-inotify-buffer-overflow"><span class="nav-number">2.7.1.</span> <span class="nav-text">7.1 inotify buffer overflow</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-2-Integer-Overflow-in-fcntl"><span class="nav-number">2.7.2.</span> <span class="nav-text">7.2 Integer Overflow in fcntl</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Reflection"><span class="nav-number">2.8.</span> <span class="nav-text">8. Reflection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-Bug-report"><span class="nav-number">2.9.</span> <span class="nav-text">9. Bug report</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2021/01/30/USENIX-18-MoonShine-Optimizing-OS-Fuzzer-Seed-Selection-with-Trace-Distillation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="[USENIX'18] MoonShine: Optimizing OS Fuzzer Seed Selection with Trace Distillation | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [USENIX'18] MoonShine: Optimizing OS Fuzzer Seed Selection with Trace Distillation
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-01-30 20:29:28" itemprop="dateCreated datePublished" datetime="2021-01-30T20:29:28+08:00">2021-01-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>OS fuzzers primarily test the system-call interface between the OS kernel and user-level applications for security vulnerabilities. The effectiveness of all existing evolutionary OS fuzzers depends heavily on the quality and diversity of their seed system call sequences. However, generating good seeds for OS fuzzing is a hard problem as the behavior of each system call depends heavily on the OS kernel state created by the previously executed system calls. Therefore, popular evolutionary OS fuzzers often rely on hand-coded rules for generating valid seed sequences of system calls that can bootstrap the fuzzing process. Unfortunately, this approach severely restricts the diversity of the seed system call sequences and therefore limits the effectiveness of the fuzzers.</p>
+<span id="more"></span>
+
+<p> In this paper, we develop MoonShine, a novel strategy for distilling seeds for OS fuzzers from system call traces of real-world programs while still preserving the dependencies across the system calls. MoonShine leverages light-weight static analysis for efficiently detecting dependencies across different system calls. </p>
+<p>We designed and implemented MoonShine as an extension to Syzkaller, a state-of-the-art evolutionary fuzzer for the Linux kernel. Starting from traces containing 2.8 million system calls gathered from 3,220 real-world programs, MoonShine distilled down to just over 14,000 calls while preserving 86% of the original code coverage. Using these distilled seed system call sequences, MoonShine was able to improve Syzkaller’s achieved code coverage for the Linux kernel by 13% on average. MoonShine also found 17 new vulnerabilities in the Linux kernel that were not found by Syzkaller.</p>
+<h3 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h3><h4 id="1-Difficulties-of-OS-Kernel-Fuzzing"><a href="#1-Difficulties-of-OS-Kernel-Fuzzing" class="headerlink" title="1. Difficulties of OS Kernel Fuzzing"></a>1. Difficulties of OS Kernel Fuzzing</h4><p>Generating good seeds for OS fuzzing is a hard problem as the behavior of each system call depends heavily on the OS kernel state created by the previously executed system calls.</p>
+<h4 id="2-Drawbacks-of-previous-work"><a href="#2-Drawbacks-of-previous-work" class="headerlink" title="2. Drawbacks of previous work"></a>2. Drawbacks of previous work</h4><p>OS fuzzers, Trinity and Syzkaller, rely on hand-coded rules for generating valid seed sequences of system calls that can bootstrap the fuzzing process. Unfortunately, this approach severely restricts the diversity of the seed system call sequences and therefore limits the effectiveness of the fuzzers.</p>
+<h4 id="3-Why-this-paper-is-accepted"><a href="#3-Why-this-paper-is-accepted" class="headerlink" title="3. Why this paper is accepted"></a>3. Why this paper is accepted</h4><ul>
+<li>Introduce the concept of seed distillation for kernel, i.e., distilling traces from real world programs while maintaining both the system call dependencies and achieved code coverage </li>
+<li>Instead of traversing all possible distill option, this paper propose to gather system call traces from diverse existing programs and use them to generate synthetic seed programs. This is because real programs are required to satisfy these dependencies in order to function correctly.</li>
+</ul>
+<h4 id="4-How-it-works"><a href="#4-How-it-works" class="headerlink" title="4. How it works"></a>4. How it works</h4><p>Because randomly selecting system calls from existing program traces do not result in any coverage improvement over hand-coded rules, this paper leverages light-weight static analysis for efficiently detecting dependencies across different system calls.</p>
+<h4 id="5-Technique-details"><a href="#5-Technique-details" class="headerlink" title="5. Technique details"></a>5. Technique details</h4><p>MoonShine first executes a set a real-world programs and captures their system call traces along with the coverage achieved by each call. </p>
+<p>Next, it greedily selects the calls that contribute the most new coverage and for each such call, identifies all its dependencies using <strong>lightweight static analysis</strong> and groups them into seed programs.</p>
+<p>Finally, those seed programs are fed as the seed of Syzkaller to fuzz the kernel.</p>
+<img src="https://i.loli.net/2021/01/31/b3wy1IDqFQeEadO.png" alt="image-20210131155144875" style="zoom:50%;" />
+
+<h5 id="5-1-Explicit-Dependencies"><a href="#5-1-Explicit-Dependencies" class="headerlink" title="5.1 Explicit Dependencies"></a>5.1 Explicit Dependencies</h5><p>MoonShine builds a dependency graph that consists of two types of nodes, results and arguments, to capture explicit dependencies.</p>
+<h5 id="5-2-Implicit-Dependencies"><a href="#5-2-Implicit-Dependencies" class="headerlink" title="5.2 Implicit Dependencies"></a>5.2 Implicit Dependencies</h5><p>A call c<del>a</del> is an implicit dependency of c<del>b</del> if the intersection of c<del>a</del>’s write dependencies and c<del>b</del>’s read dependencies is nonempty. MoonShine’s implicit dependency tracker is build on Smatch.</p>
+<h4 id="6-Evaluation"><a href="#6-Evaluation" class="headerlink" title="6. Evaluation"></a>6. Evaluation</h4><p>Starting from traces containing 2.8 million system calls gathered from 3,220 real-world programs, MoonShine distilled down to just over 14,000 calls while preserving 86% of the original code coverage.</p>
+<p>Combine KASAN, UBSAN and Lock dependency tracker for deadlock and KMEMLEAK for memory leaks.</p>
+<p>During each experiment, we restricted Syzkaller to only fuzz the calls contained in our traces to more accurately track the impact of our seeds.</p>
+<h5 id="6-1-New-Vulnerabilities"><a href="#6-1-New-Vulnerabilities" class="headerlink" title="6.1 New Vulnerabilities?"></a>6.1 New Vulnerabilities?</h5><p> MoonShine found 17 new vulnerabilities in the Linux kernel that were not found by Syzkaller, out of which 10 vulnerabilities can only be found using implicit dependency distillation. Of the 17 bugs found by MoonShine, 6 were from the network subsystem, and 8 from file systems. </p>
+<p><font color="red">Each of the bugs discovered using Moonshine(I+E) alone were concurrency bugs that were triggered by Syzkaller scheduling calls on different threads.</font>  果真检查implicit pair的方式和检查concurrency bug pair的方式是一样的。</p>
+<h5 id="6-2-Improve-code-coverage"><a href="#6-2-Improve-code-coverage" class="headerlink" title="6.2 Improve code coverage?"></a>6.2 Improve code coverage?</h5><p>Moonshine improves Syzkaller’s achieved code coverage for the Linux kernel by 13% on average.</p>
+<h5 id="6-3-Efficiency-in-distilling-traces-while-preserving-coverage"><a href="#6-3-Efficiency-in-distilling-traces-while-preserving-coverage" class="headerlink" title="6.3 Efficiency in distilling traces while preserving coverage?"></a>6.3 Efficiency in distilling traces while preserving coverage?</h5><img src="https://i.loli.net/2021/01/31/2wF9KAlj3yWvz4k.png" alt="image-20210131172627453" style="zoom: 67%;" />
+
+<h4 id="7-Examples"><a href="#7-Examples" class="headerlink" title="7. Examples"></a>7. Examples</h4><h5 id="7-1-inotify-buffer-overflow"><a href="#7-1-inotify-buffer-overflow" class="headerlink" title="7.1 inotify buffer overflow"></a>7.1 inotify buffer overflow</h5><p>Concurrency bug</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mmap</span>(...)</span><br><span class="line">r0 = <span class="built_in">inotify_init</span>()</span><br><span class="line">r1 = <span class="built_in">inotify_add_watch</span>(r0, &amp;(<span class="number">0x7f0000000000</span>)=<span class="string">&quot;2e&quot;</span>, <span class="number">0xfff</span>)</span><br><span class="line"><span class="built_in">chmod</span>(&amp;(<span class="number">0x7f0000001000</span>)=<span class="string">&quot;2e&quot;</span>, <span class="number">0x1ed</span>)</span><br><span class="line">r2 = <span class="built_in">creat</span>(&amp;(<span class="number">0x7f0000002000</span>)=<span class="string">&quot;short&quot;</span>, <span class="number">0x1ed</span>) </span><br><span class="line"><span class="built_in">close</span>(r2)</span><br><span class="line"><span class="built_in">rename</span>(&amp;(<span class="number">0x7f000000a000</span>)=<span class="string">&quot;short&quot;</span>, &amp;(<span class="number">0x7f0000006000</span><span class="number">-0xa</span>)=<span class="string">&quot;long_name&quot;</span>)</span><br><span class="line"><span class="built_in">close</span>(r0)</span><br></pre></td></tr></table></figure>
+
+<p>Lines 2 and 3 initialize an inotify instance to watch the current directory for all events.</p>
+<p>inotify_add_watch is an implicit dependency of both rename and close so the calls were merged into one program</p>
+<p>Syzkaller will randomly schedule calls on different threads. In this case, the rename and close were run in parallel.</p>
+<h5 id="7-2-Integer-Overflow-in-fcntl"><a href="#7-2-Integer-Overflow-in-fcntl" class="headerlink" title="7.2 Integer Overflow in fcntl"></a>7.2 Integer Overflow in fcntl</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">long</span> <span class="title">pipe_fcntl</span><span class="params">(...)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">case</span> F_SETPIPE_SZ:</span><br><span class="line">        <span class="built_in">pipe_set_size</span>(pipe, size); <span class="comment">// size = 0</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">long</span> <span class="title">pipe_set_size</span><span class="params">(pipe, size)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">round_pipe_size</span>(size);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">unsigned</span> <span class="type">int</span> <span class="title">round_pipe_size</span><span class="params">(size)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    nr_pages = (size + PAGE_SIZE - <span class="number">1</span>) &gt;&gt; PAGE_SHIFT; <span class="comment">// = 0 UL</span></span><br><span class="line">    <span class="keyword">return</span> (<span class="number">1UL</span> &lt;&lt; <span class="built_in">fls_long</span>(size - <span class="number">1</span>)) &lt;&lt; PAGE_SHIFT; <span class="comment">// fls_long (-1) returns 64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-Reflection"><a href="#8-Reflection" class="headerlink" title="8. Reflection"></a>8. Reflection</h4><p>False Positives from Static Analysis. This problem is solved by HFL, which further perform concolic execution on runtime, to check if two syscalls read and write from the same struct field.</p>
+<h4 id="9-Bug-report"><a href="#9-Bug-report" class="headerlink" title="9. Bug report"></a>9. Bug report</h4><p>Our reports include a description of the bug, our kernel configs, and a Proof-ofConcept (POC) test input. </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Static-Analysis/" rel="tag"># Static Analysis</a>
+              <a href="/blog/tags/Fuzz-Testing/" rel="tag"># Fuzz Testing</a>
+              <a href="/blog/tags/Kernel/" rel="tag"># Kernel</a>
+              <a href="/blog/tags/Seeds-Generation/" rel="tag"># Seeds Generation</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/01/24/NDSS-20-HFL-Hybrid-Fuzzing-on-the-Linux-Kernel/" rel="prev" title="[NDSS'20] HFL: Hybrid Fuzzing on the Linux Kernel">
+                  <i class="fa fa-angle-left"></i> [NDSS'20] HFL: Hybrid Fuzzing on the Linux Kernel
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/02/01/NDSS-18-K-miner-Uncovering-memory-corruption-in-linux/" rel="next" title="[NDSS'18] K-miner: Uncovering memory corruption in linux">
+                  [NDSS'18] K-miner: Uncovering memory corruption in linux <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

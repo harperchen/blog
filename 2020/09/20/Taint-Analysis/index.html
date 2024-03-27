@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="Taint Analysis Classification  Explicit AnalysisHow taint propagates based on the data dependencies between variables.  Implicit AnalysisHow taint propogates through condition instructions based on th">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Tech] Taint Analysis">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/09/20/Taint-Analysis/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="Taint Analysis Classification  Explicit AnalysisHow taint propagates based on the data dependencies between variables.  Implicit AnalysisHow taint propogates through condition instructions based on th">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/15/KbfkLZHJRtndPg4.png">
+<meta property="article:published_time" content="2020-09-20T11:15:57.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.076Z">
+<meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Taint Analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/09/20/Taint-Analysis/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2020/09/20/Taint-Analysis/","path":"2020/09/20/Taint-Analysis/","title":"[Tech] Taint Analysis"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>[Tech] Taint Analysis | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Taintgrind"><span class="nav-number">1.</span> <span class="nav-text">1. Taintgrind</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Triton"><span class="nav-number">2.</span> <span class="nav-text">2. Triton</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Pyre"><span class="nav-number">3.</span> <span class="nav-text">3. Pyre</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Psalm"><span class="nav-number">4.</span> <span class="nav-text">4. Psalm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-LibDFT"><span class="nav-number">5.</span> <span class="nav-text">5. LibDFT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Bincat-or-Ponce"><span class="nav-number">6.</span> <span class="nav-text">6. Bincat or Ponce</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-PolyTracker"><span class="nav-number">7.</span> <span class="nav-text">7. PolyTracker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Tigress"><span class="nav-number">8.</span> <span class="nav-text">8. Tigress</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-DECAF-DECAF"><span class="nav-number">9.</span> <span class="nav-text">9. DECAF&#x2F;DECAF++</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-TaintInduce"><span class="nav-number">10.</span> <span class="nav-text">10. TaintInduce</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-DFSan"><span class="nav-number">11.</span> <span class="nav-text">11. DFSan</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Doop"><span class="nav-number">12.</span> <span class="nav-text">12. Doop</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/09/20/Taint-Analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="[Tech] Taint Analysis | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Tech] Taint Analysis
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-09-20 19:15:57" itemprop="dateCreated datePublished" datetime="2020-09-20T19:15:57+08:00">2020-09-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Taint/" itemprop="url" rel="index"><span itemprop="name">Taint</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><strong>Taint Analysis Classification</strong></p>
+<ol>
+<li><p>Explicit Analysis<br>How taint propagates based on the data dependencies between variables.</p>
+</li>
+<li><p>Implicit Analysis<br>How taint propogates through condition instructions based on the control dependencies between variables.</p>
+</li>
+</ol>
+<span id="more"></span>
+
+<p><strong>Taint Analysis Tools</strong></p>
+<img src="https://i.loli.net/2020/09/13/ugi6m98rTHxklX1.png">
+
+<h4 id="1-Taintgrind"><a href="#1-Taintgrind" class="headerlink" title="1. Taintgrind"></a>1. Taintgrind</h4><p><a target="_blank" rel="noopener" href="https://github.com/wmkhoo/taintgrind">github</a> 动态分析工具</p>
+<p><code>Valgrind</code> is a dynamic instrumentation framework for building dynamic analysis tools, just like Pin. Taintgrind is built on the top of Valgrind, we need first to build and install Valgrind. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># build, install valgrind</span></span><br><span class="line">wget -O https://sourceware.org/pub/valgrind/valgrind-3.16.0.tar.bz2</span><br><span class="line">tar jxf valgrind-3.16.0.tar.bz2</span><br><span class="line"><span class="built_in">mv</span> valgrind-3.16.0 valgrind</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> valgrind</span><br><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=`<span class="built_in">pwd</span>`/build</span><br><span class="line"></span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<p><code>Capstone</code> is a disassembly framework with the target of becoming the ultimate disasm engine for binary analysis and reversing in the security community. Like many taint analysis tools, <code>capstone</code> is also needed by Taintgrind.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/aquynh/capstone/archive/3.0.4.tar.gz -O capstone.tar.gz</span><br><span class="line">tar xf capstone.tar.gz</span><br><span class="line">sh configure_capstone.sh `<span class="built_in">pwd</span>`/../build</span><br><span class="line"><span class="built_in">cd</span> capstone-3.0.4</span><br><span class="line">sh make_capstone.sh</span><br></pre></td></tr></table></figure>
+
+<p>For the simple example test&#x2F;sign32.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;taintgrind.h&quot;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">get_sign</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (x == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (x &lt; <span class="number">0</span>)  <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">1000</span>;</span><br><span class="line">    <span class="comment">// Defines int a as tainted</span></span><br><span class="line">    TNT_TAINT(&amp;a,<span class="keyword">sizeof</span>(a));</span><br><span class="line">    <span class="type">int</span> s = get_sign(a);</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Run tool Taintgrind with Valgrind</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">../build/bin/valgrind --tool=taintgrind tests/sign32</span><br><span class="line"></span><br><span class="line"><span class="comment"># or simply</span></span><br><span class="line">../build/bin/taintgrind tests/sign32</span><br></pre></td></tr></table></figure>
+
+<p>The output is of the form</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Address/Location | Assembly instruction | Instruction <span class="built_in">type</span> | Runtime value(s) | Information flow</span><br><span class="line">0x108982: main (sign32.c:12) | mov eax, dword ptr [rbp - 0x50] | Load:4 | 0x3e8 | t15_9412 &lt;- a:1ffeffff10</span><br></pre></td></tr></table></figure>
+
+<p>Taintgrind borrows the bit-precise shadow memory from MemCheck and only propagates explicit data flow. This means that Taintgrind will not propagate taint in control structures such as if-else, for-loops and while-loops. Taintgrind will also not propagate taint in dereferenced tainted pointers. </p>
+<p>Regarding control-flow dependency and pointer dependence, please refer to <a target="_blank" rel="noopener" href="https://github.com/wmkhoo/taintgrind/wiki/Control-flow-and-Pointer-tainting">https://github.com/wmkhoo/taintgrind/wiki/Control-flow-and-Pointer-tainting</a>.</p>
+<p>Taint file input example</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./build/bin/taintgrind --file-filter=/home/wchenbt/Projects/Taint/valgrind/FAQ.txt ~/Projects/Taint/benchmark/gzip-1.6/build/bin/gzip -c FAQ.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-Triton"><a href="#2-Triton" class="headerlink" title="2. Triton"></a>2. Triton</h4><p><a target="_blank" rel="noopener" href="https://github.com/JonathanSalwan/Triton">github</a> <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/documentation/doxygen/">documentation</a> (这个工具使用成本好像有点高，需要自己设置taint source) </p>
+<p>既可以模拟执行静态分析，也能利用Python Binding动态运行分析结果 </p>
+<p><a target="_blank" rel="noopener" href="https://triton.quarkslab.com/">Triton</a> is a <a target="_blank" rel="noopener" href="https://software.intel.com/en-us/articles/pin-a-dynamic-binary-instrumentation-tool">Pin</a>-based concolic execution framework that  provides components like a <a target="_blank" rel="noopener" href="http://shell-storm.org/blog/Taint-analysis-and-pattern-matching-with-Pin/#1.1">taint</a> engine, a dynamic <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Symbolic_execution">symbolic execution</a> engine, a snapshot engine, translation of x64 instruction into <a target="_blank" rel="noopener" href="http://smtlib.cs.uiowa.edu/">SMT2-LIB</a>, a <a target="_blank" rel="noopener" href="https://z3.codeplex.com/">Z3</a> interface to solve constraints and Python bindings. Based on these components, you can build tools for automated reverse engineering or vulnerability research.</p>
+<p>The Triton project itself generate an .so file to be used by python, an example is showed as below.  <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/5093">tutorial</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">## -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment">## Output:</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment">##  $ python src/examples/python/disass.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"><span class="keyword">from</span> triton     <span class="keyword">import</span> TritonContext, ARCH, Instruction, OPERAND</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span>  sys</span><br><span class="line"></span><br><span class="line">code = [</span><br><span class="line">    (<span class="number">0x40000</span>, <span class="string">b&quot;\x40\xf6\xee&quot;</span>),      <span class="comment"># imul   sil</span></span><br><span class="line">    (<span class="number">0x40003</span>, <span class="string">b&quot;\x66\xf7\xe9&quot;</span>),      <span class="comment"># imul   cx</span></span><br><span class="line">    (<span class="number">0x40006</span>, <span class="string">b&quot;\x48\xf7\xe9&quot;</span>),      <span class="comment"># imul   rcx</span></span><br><span class="line">    (<span class="number">0x40009</span>, <span class="string">b&quot;\x6b\xc9\x01&quot;</span>),      <span class="comment"># imul   ecx,ecx,0x1</span></span><br><span class="line">    (<span class="number">0x4000c</span>, <span class="string">b&quot;\x0f\xaf\xca&quot;</span>),      <span class="comment"># imul   ecx,edx</span></span><br><span class="line">    (<span class="number">0x4000f</span>, <span class="string">b&quot;\x48\x6b\xd1\x04&quot;</span>),  <span class="comment"># imul   rdx,rcx,0x4</span></span><br><span class="line">    (<span class="number">0x40013</span>, <span class="string">b&quot;\xC6\x00\x01&quot;</span>),      <span class="comment"># mov    BYTE PTR [rax],0x1</span></span><br><span class="line">    (<span class="number">0x40016</span>, <span class="string">b&quot;\x48\x8B\x10&quot;</span>),      <span class="comment"># mov    rdx,QWORD PTR [rax]</span></span><br><span class="line">    (<span class="number">0x40019</span>, <span class="string">b&quot;\xFF\xD0&quot;</span>),          <span class="comment"># call   rax</span></span><br><span class="line">    (<span class="number">0x4001b</span>, <span class="string">b&quot;\xc3&quot;</span>),              <span class="comment"># ret</span></span><br><span class="line">    (<span class="number">0x4001c</span>, <span class="string">b&quot;\x80\x00\x01&quot;</span>),      <span class="comment"># add    BYTE PTR [rax],0x1</span></span><br><span class="line">    (<span class="number">0x4001f</span>, <span class="string">b&quot;\x64\x48\x8B\x03&quot;</span>),  <span class="comment"># mov    rax,QWORD PTR fs:[rbx]</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    Triton = TritonContext()</span><br><span class="line"></span><br><span class="line">    <span class="comment">#Set the arch</span></span><br><span class="line">    Triton.setArchitecture(ARCH.X86_64)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (addr, opcode) <span class="keyword">in</span> code:</span><br><span class="line">        <span class="comment"># Build an instruction</span></span><br><span class="line">        inst = Instruction()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Setup opcode</span></span><br><span class="line">        inst.setOpcode(opcode)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Setup Address</span></span><br><span class="line">        inst.setAddress(addr)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Process everything</span></span><br><span class="line">        Triton.processing(inst)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Display instruction</span></span><br><span class="line">        <span class="built_in">print</span>(inst)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;    ---------------&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;    Is memory read :&#x27;</span>, inst.isMemoryRead())</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;    Is memory write:&#x27;</span>, inst.isMemoryWrite())</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;    ---------------&#x27;</span>)</span><br><span class="line">        <span class="keyword">for</span> op <span class="keyword">in</span> inst.getOperands():</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;    Operand:&#x27;</span>, op)</span><br><span class="line">            <span class="keyword">if</span> op.getType() == OPERAND.MEM:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;    - segment :&#x27;</span>, op.getSegmentRegister())</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;    - base    :&#x27;</span>, op.getBaseRegister())</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;    - index   :&#x27;</span>, op.getIndexRegister())</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;    - scale   :&#x27;</span>, op.getScale())</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;    - disp    :&#x27;</span>, op.getDisplacement())</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;    ---------------&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">    sys.exit(<span class="number">0</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>Pin</code> is a dynamic binary instrumentation framework for the IA-32, x86-64 and MIC instruction-set architectures that enables the creation of dynamic program analysis tools, there is a tutorial of Pin for us <a target="_blank" rel="noopener" href="http://shell-storm.org/blog/Taint-analysis-and-pattern-matching-with-Pin/">tutorial</a> to refer to.</p>
+<p>This project is also shipped with a <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/documentation/doxygen/Tracer_page.html">Pintool tracer</a> and may be compiled with these following commands:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get and install the latest z3 relesae   </span></span><br><span class="line">    git <span class="built_in">clone</span> https://github.com/Z3Prover/z3.git &amp;&amp; <span class="built_in">cd</span> z3 </span><br><span class="line">    CC=clang CXX=clang++ python scripts/mk_make.py</span><br><span class="line">    <span class="built_in">cd</span> build &amp;&amp; make &amp;&amp; sudo make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install capstone     </span></span><br><span class="line">    curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/3.0.4.tar.gz</span><br><span class="line">    tar xvf cap.tgz &amp;&amp; <span class="built_in">cd</span> capstone-3.0.4/ &amp;&amp; sudo ./make.sh install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install pintool</span></span><br><span class="line">    curl -o pin.tgz -L http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz</span><br><span class="line">    tar zxf pin.tgz</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install Triton (Python Binding)</span></span><br><span class="line">    <span class="built_in">cd</span> pin-2.14-71313-gcc.4.4.7-linux/source/tools/</span><br><span class="line">    git <span class="built_in">clone</span> https://github.com/JonathanSalwan/Triton.git</span><br><span class="line">    <span class="built_in">cd</span> Triton &amp;&amp; <span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build </span><br><span class="line">    cmake -G <span class="string">&quot;Unix Makefiles&quot;</span> -DPINTOOL=on -DKERNEL4=on -DPYTHON36=off .. </span><br><span class="line">    make -j2</span><br><span class="line">    sudo make install</span><br><span class="line">    </span><br><span class="line"><span class="comment"># test Triton PinTool</span></span><br><span class="line">    <span class="built_in">cd</span> ..</span><br><span class="line">    ./build/triton ./src/examples/pin/ir.py /usr/bin/id</span><br></pre></td></tr></table></figure>
+
+<p>There are several tutorials about the usage of python bindings.  The interface in this <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/blog/first-approach-with-the-framework/">tutorial1</a> is quite old, the high-level ideas should be ok, but please refer to the <code>src/examples</code> and <a target="_blank" rel="noopener" href="https://triton.quarkslab.com/documentation/doxygen/Tracer_page.html">toturial2</a> for the correct usage. Also attach <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/5100">tutorial3</a> here for reference.</p>
+<img src="https://i.loli.net/2020/09/15/KbfkLZHJRtndPg4.png" style="zoom:45%;">
+
+<p>Here is an example to count the number of executed instructions using PinTool.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python2</span></span><br><span class="line"><span class="comment">## -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pintool <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> triton  <span class="keyword">import</span> ARCH</span><br><span class="line"></span><br><span class="line">count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">mycb</span>(<span class="params">inst</span>):</span><br><span class="line">    <span class="keyword">global</span> count</span><br><span class="line">    count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fini</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Instruction count : &quot;</span>, count)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    ctx = getTritonContext()</span><br><span class="line">    <span class="comment"># for better performance, disable symbolic execution and taint analysis</span></span><br><span class="line">    ctx.enableSymbolicEngine(<span class="literal">False</span>)</span><br><span class="line">    ctx.enableTaintEngine(<span class="literal">False</span>)</span><br><span class="line">    startAnalysisFromEntry()</span><br><span class="line">    insertCall(mycb, INSERT_POINT.BEFORE)</span><br><span class="line">    insertCall(fini, INSERT_POINT.FINI)</span><br><span class="line">    runProgram()</span><br></pre></td></tr></table></figure>
+
+<p>Run the above program and check the output.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  Triton git:(master) ✗ ./build/triton src/examples/pin/count_inst.py src/samples/crackmes/crackme_xor</span><br><span class="line">(<span class="string">&#x27;Instruction count : &#x27;</span>, 914)</span><br></pre></td></tr></table></figure>
+
+<p>The example of performing taint analysis for a specfic program is shown as below.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python2</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> triton <span class="keyword">import</span> ARCH, MemoryAccess, OPERAND</span><br><span class="line"><span class="keyword">from</span> pintool <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">Triton = getTritonContext()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cbeforeSymProc</span>(<span class="params">instruction</span>):</span><br><span class="line">    <span class="keyword">if</span> instruction.getAddress() == <span class="number">0x400556</span>:</span><br><span class="line">        rdi = getCurrentRegisterValue(Triton.registers.rdi)</span><br><span class="line">        <span class="comment"># 内存要对齐</span></span><br><span class="line">        Triton.taintMemory(MemoryAccess(rdi, <span class="number">8</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cafter</span>(<span class="params">inst</span>):</span><br><span class="line">    <span class="keyword">if</span> inst.isTainted():</span><br><span class="line">        <span class="comment"># print(&#x27;[tainted] %s&#x27; % (str(inst)))</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> inst.isMemoryRead():</span><br><span class="line">            <span class="keyword">for</span> op <span class="keyword">in</span> inst.getOperands():</span><br><span class="line">                <span class="keyword">if</span> op.getType() == OPERAND.MEM:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&quot;read:0x&#123;:08x&#125;, size:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(</span><br><span class="line">                        op.getAddress(), op.getSize()))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> inst.isMemoryWrite():</span><br><span class="line">            <span class="keyword">for</span> op <span class="keyword">in</span> inst.getOperands():</span><br><span class="line">                <span class="keyword">if</span> op.getType() == OPERAND.MEM:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&quot;write:0x&#123;:08x&#125;, size:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(</span><br><span class="line">                        op.getAddress(), op.getSize()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    startAnalysisFromSymbol(<span class="string">&#x27;check&#x27;</span>)</span><br><span class="line">    insertCall(cbeforeSymProc,  INSERT_POINT.BEFORE_SYMPROC)</span><br><span class="line">    insertCall(cafter,          INSERT_POINT.AFTER)</span><br><span class="line">    runProgram()</span><br></pre></td></tr></table></figure>
+
+<p>The order of executed inserted callback is listed as below:</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BEFORE_SYMPROC</span><br><span class="line">ir processing, <span class="keyword">perform</span> taint analysis <span class="keyword">and</span> symbolic execution</span><br><span class="line"><span class="keyword">BEFORE</span></span><br><span class="line">Pin ctx <span class="keyword">update</span>, <span class="keyword">execute</span> the instruction，modify the runtime <span class="keyword">info</span> <span class="keyword">in</span> TritonContext</span><br><span class="line"><span class="keyword">AFTER</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-Pyre"><a href="#3-Pyre" class="headerlink" title="3. Pyre"></a>3. Pyre</h4><p><a target="_blank" rel="noopener" href="https://github.com/facebook/pyre-check">github</a> 针对python的类型检查和静态分析工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> my_project &amp;&amp; <span class="built_in">cd</span> my_project</span><br><span class="line">python3 -m venv ~/.venvs/venv</span><br><span class="line"><span class="built_in">source</span> ~/.venvs/venv/bin/activate</span><br><span class="line">(venv) $ pip install pyre-check==0.0.52</span><br><span class="line">(venv) $ pyre init</span><br><span class="line">(venv) $ <span class="built_in">echo</span> <span class="string">&quot;i: int = &#x27;string&#x27;&quot;</span> &gt; test.py</span><br><span class="line">(venv) $ pyre</span><br><span class="line"> ƛ Found 1 <span class="built_in">type</span> error!</span><br><span class="line">test.py:1:0 Incompatible variable <span class="built_in">type</span> [9]: i is declared to have <span class="built_in">type</span> `int` but is used as <span class="built_in">type</span> `str`.</span><br></pre></td></tr></table></figure>
+
+<p>Pyre ships with <strong>Pysa</strong>, a security focused static analysis tool we’ve built on top of Pyre that reasons about data flows in Python applications. Please refer to the <a target="_blank" rel="noopener" href="https://pyre-check.org/docs/pysa-basics.html">documentation</a> to get started with security analysis.</p>
+<h4 id="4-Psalm"><a href="#4-Psalm" class="headerlink" title="4. Psalm"></a>4. Psalm</h4><p><a target="_blank" rel="noopener" href="https://github.com/vimeo/psalm">github</a> 针对php的静态分析工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install composer</span></span><br><span class="line">curl -sS https://getcomposer.org/installer -o composer-setup.php</span><br><span class="line">sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer</span><br><span class="line"><span class="comment"># check </span></span><br><span class="line">composer</span><br><span class="line"></span><br><span class="line"><span class="comment">#install psalm</span></span><br><span class="line">sudo apt-get install php7.2-xml</span><br><span class="line">composer require --dev vimeo/psalm</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-LibDFT"><a href="#5-LibDFT" class="headerlink" title="5. LibDFT"></a>5. LibDFT</h4><p>基于Pin的动态分析工具 <a target="_blank" rel="noopener" href="https://www.cs.columbia.edu/~vpk/research/libdft/">source</a> for x86</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.cs.columbia.edu/~vpk/research/libdft/libdft-3.1415alpha.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PIN_HOME=..../pin-2.14</span><br><span class="line"><span class="built_in">cd</span> ..../libdft/libdft_linux-i386/src &amp;&amp; make</span><br><span class="line"><span class="built_in">cd</span> ..../libdft/libdft_linux-i386/tools &amp;&amp; make tools</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/AngoraFuzzer/libdft64">source</a> for x86_64 used by <a target="_blank" rel="noopener" href="https://www.cs.ucdavis.edu/~hchen/paper/chen2018angora.pdf">Angora</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/AngoraFuzzer/libdft64.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> libdft64</span><br><span class="line"><span class="built_in">mkdir</span> build</span><br><span class="line">PREFIX=`<span class="built_in">pwd</span>`/build ./install_pin.sh</span><br><span class="line"><span class="comment"># change wget to curl like below</span></span><br><span class="line"><span class="comment"># curl -o $&#123;TAR_NAME&#125;.tar.gz -L https://software.intel.com/sites/landingpage/pintool/downloads/$&#123;TAR_NAME&#125;.tar.gz</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PIN_ROOT=..../libdft64/build/pin-3.7-97619-g0d0c92f4f-gcc-linux</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-Bincat-or-Ponce"><a href="#6-Bincat-or-Ponce" class="headerlink" title="6. Bincat or Ponce"></a>6. Bincat or Ponce</h4><p>IDA插件 静态分析工具 <a target="_blank" rel="noopener" href="https://github.com/airbus-seclab/bincat">github</a></p>
+<p>BinCAT is a <em>static</em> Binary Code Analysis Toolkit, designed to help reverse engineers, directly from IDA or using Python for automation.</p>
+<p><a target="_blank" rel="noopener" href="https://airbus-seclab.github.io/bincat/RECON-MTL-2017-bincat-biondi_rigo_zennou_mehrenberger.pdf">https://airbus-seclab.github.io/bincat/RECON-MTL-2017-bincat-biondi_rigo_zennou_mehrenberger.pdf</a></p>
+<h4 id="7-PolyTracker"><a href="#7-PolyTracker" class="headerlink" title="7. PolyTracker"></a>7. PolyTracker</h4><p><a target="_blank" rel="noopener" href="https://github.com/trailofbits/polytracker">github</a> 动态分析 binary tree (二叉森林？)</p>
+<p>Polytracker is an LLVM pass that instruments the programs it compiles to track which bytes of an input file are operated on by which functions. It outputs a JSON file containing the function-to-input-bytes mapping.</p>
+<p>The blog instroduce Polytracker and PolyFile <a target="_blank" rel="noopener" href="https://blog.trailofbits.com/2019/11/01/two-new-tools-that-tame-the-treachery-of-files/">https://blog.trailofbits.com/2019/11/01/two-new-tools-that-tame-the-treachery-of-files/</a>.</p>
+<h4 id="8-Tigress"><a href="#8-Tigress" class="headerlink" title="8. Tigress"></a>8. Tigress</h4><p><a target="_blank" rel="noopener" href="https://github.com/JonathanSalwan/Tigress_protection">https://github.com/JonathanSalwan/Tigress_protection</a></p>
+<h4 id="9-DECAF-DECAF"><a href="#9-DECAF-DECAF" class="headerlink" title="9. DECAF&#x2F;DECAF++"></a>9. DECAF&#x2F;DECAF++</h4><h4 id="10-TaintInduce"><a href="#10-TaintInduce" class="headerlink" title="10. TaintInduce"></a>10. TaintInduce</h4><p><a target="_blank" rel="noopener" href="https://taintinduce.github.io/">https://taintinduce.github.io/</a></p>
+<h4 id="11-DFSan"><a href="#11-DFSan" class="headerlink" title="11. DFSan"></a>11. DFSan</h4><h4 id="12-Doop"><a href="#12-Doop" class="headerlink" title="12. Doop"></a>12. Doop</h4><p>Android <a target="_blank" rel="noopener" href="https://bitbucket.org/yanniss/doop/src/master/">https://bitbucket.org/yanniss/doop/src/master/</a></p>
+<p>Pyt <a target="_blank" rel="noopener" href="https://github.com/python-security/pyt">https://github.com/python-security/pyt</a></p>
+<p><strong>Pixy</strong> <a target="_blank" rel="noopener" href="https://github.com/oliverklee/pixy">https://github.com/oliverklee/pixy</a></p>
+<p><strong>Phosphor</strong> <a target="_blank" rel="noopener" href="https://github.com/gmu-swe/phosphor">github</a> taint analysis for JVM</p>
+<p><strong>Neuzz&#x2F;NeuTaint</strong> <a target="_blank" rel="noopener" href="https://github.com/Dongdongshe/neuzz">github</a> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.05620">paper</a></p>
+<p><strong>Dytan</strong> 找不到GitHub 嘤嘤嘤 备用<a target="_blank" rel="noopener" href="https://github.com/dytan-taint-tracking/dytan-taint-tracking/blob/master/Dytan.zip">github</a> <a target="_blank" rel="noopener" href="https://github.com/behzad-a/Dytan">github2</a> 基于Pin</p>
+<p><strong>DataTracker</strong> <a target="_blank" rel="noopener" href="https://github.com/m000/dtracker">github</a></p>
+<p><strong>DataTracker-EWAH</strong> <a target="_blank" rel="noopener" href="https://github.com/vusec/vuzzer">github</a> used by <a target="_blank" rel="noopener" href="https://www.cs.vu.nl/~giuffrida/papers/vuzzer-ndss-2017.pdf">Vuzzer</a></p>
+<p><strong>DFSan</strong> <a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/DataFlowSanitizer.html">github</a></p>
+<p><strong>Taintdroid</strong></p>
+<p><strong>FlowDroid</strong> <a target="_blank" rel="noopener" href="https://blogs.uni-paderborn.de/sse/tools/flowdroid/">https://blogs.uni-paderborn.de/sse/tools/flowdroid/</a></p>
+<p><strong>Apposcopy</strong></p>
+<p><strong>Scandroid</strong></p>
+<p>[ISSTA’11] Saving the World Wide Web from Vulnerable JavaScript <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/pdf/10.1145/2001420.2001442">https://dl.acm.org/doi/pdf/10.1145/2001420.2001442</a></p>
+<p>[PLDI’09] TAJ: effective taint analysis of web applications <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/1542476.1542486">https://dl.acm.org/doi/10.1145/1542476.1542486</a></p>
+<p>[FSE’19] Nodest: feedback-driven static analysis of Node.js applications</p>
+<p>Bap <a target="_blank" rel="noopener" href="https://github.com/BinaryAnalysisPlatform/bap">https://github.com/BinaryAnalysisPlatform/bap</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Taint-Analysis/" rel="tag"># Taint Analysis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/09/15/Taint-Benchmark/" rel="prev" title="Usages and problems of Taint Tools">
+                  <i class="fa fa-angle-left"></i> Usages and problems of Taint Tools
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2020/09/23/Tech-Gdb-Debugging/" rel="next" title="Gdb Usage">
+                  Gdb Usage <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

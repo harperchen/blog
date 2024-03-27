@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="1. Clang Santizer Coverage给定如下程序test.c，该程序有三个边： 123456789101112131415161718#include &lt;stdio.h&gt;void foo(int *a) &#123;    if (a) &#123;        *a &#x3D; 0;    &#125;&#125;int main(int argc, char const">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kernel Coverage Analysis">
+<meta property="og:url" content="https://harperchen.github.io/blog/2022/04/29/Kernel-Coverage-Analysis/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="1. Clang Santizer Coverage给定如下程序test.c，该程序有三个边： 123456789101112131415161718#include &lt;stdio.h&gt;void foo(int *a) &#123;    if (a) &#123;        *a &#x3D; 0;    &#125;&#125;int main(int argc, char const">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="c:%5CUsers%5Charpe%5CAppData%5CRoaming%5Cmarktext%5Cimages%5C2022-05-08-19-24-42-image.png">
+<meta property="article:published_time" content="2022-04-29T06:27:43.000Z">
+<meta property="article:modified_time" content="2024-03-27T08:08:56.827Z">
+<meta property="article:author" content="Wei CHEN">
+<meta property="article:tag" content="Kernel">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:%5CUsers%5Charpe%5CAppData%5CRoaming%5Cmarktext%5Cimages%5C2022-05-08-19-24-42-image.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2022/04/29/Kernel-Coverage-Analysis/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2022/04/29/Kernel-Coverage-Analysis/","path":"2022/04/29/Kernel-Coverage-Analysis/","title":"Kernel Coverage Analysis"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kernel Coverage Analysis | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Clang-Santizer-Coverage"><span class="nav-number">1.</span> <span class="nav-text">1. Clang Santizer Coverage</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Kernel-Kcov"><span class="nav-number">2.</span> <span class="nav-text">2. Kernel Kcov</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Clang-%E7%BC%96%E8%AF%91%E5%86%85%E6%A0%B8"><span class="nav-number">3.</span> <span class="nav-text">3. Clang 编译内核</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E7%94%9F%E6%88%90%E5%86%85%E6%A0%B8Bitcode"><span class="nav-number">4.</span> <span class="nav-text">4. 生成内核Bitcode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E5%86%85%E6%A0%B8%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">5. 内核结构分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1-%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 内核模块分析</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Driver-kvm-arch-x86-kvm-built-in-bc"><span class="nav-number"></span> <span class="nav-text">Driver- kvm: arch&#x2F;x86&#x2F;kvm&#x2F;built-in.bc</span></a></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2022/04/29/Kernel-Coverage-Analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kernel Coverage Analysis | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kernel Coverage Analysis
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-04-29 14:27:43" itemprop="dateCreated datePublished" datetime="2022-04-29T14:27:43+08:00">2022-04-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 16:08:56" itemprop="dateModified" datetime="2024-03-27T16:08:56+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="1-Clang-Santizer-Coverage"><a href="#1-Clang-Santizer-Coverage" class="headerlink" title="1. Clang Santizer Coverage"></a>1. Clang Santizer Coverage</h4><p>给定如下程序<code>test.c</code>，该程序有三个边：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">(<span class="type">int</span> *a)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (a) &#123;</span><br><span class="line">        *a = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> a; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Please enter one numbers:&quot;</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;a);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">foo</span>(&amp;a);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, a);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>该函数有三个basic block，分别为A, B, C， 控制流程图如下所示：</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">A           A</span><br><span class="line">|<span class="string">\          </span>|<span class="string">\  </span></span><br><span class="line"><span class="string"></span>|<span class="string"> \         </span>|<span class="string"> \</span></span><br><span class="line"><span class="string"></span>|<span class="string">  B   ==&gt;  D  B</span></span><br><span class="line"><span class="string"></span>|<span class="string"> /         </span>|<span class="string"> /</span></span><br><span class="line"><span class="string"></span>|<span class="string">/          </span>|<span class="string">/</span></span><br><span class="line"><span class="string">C           C</span></span><br></pre></td></tr></table></figure>
+
+<p>如果<code>A, B, C</code>三个块都被覆盖，那么边<code>A-&gt;B</code>和<code>B-&gt;C</code>必定已执行，但不确定边<code>A-&gt;C</code>是否已经执行，因此LLVM会插入一些无用的block，比如D，来区分这种critical的边，接下来查看插桩后的代码。</p>
+<p>利用如下命令编译为<code>LLVM Bitcode</code>，<code>trace-pc</code>对应edge coverage，<code>no-prune</code>表示被认为重复的区块也会被插桩，并查看<code>LLVM IR</code>。ash</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clang-12 <span class="keyword">test</span>.c -o <span class="keyword">test</span>.bc -emit-llvm -c -fsanitize-coverage=edge,trace-pc-guard,<span class="keyword">no</span>-prune</span><br><span class="line">llvm-<span class="keyword">dis</span>-12 <span class="keyword">test</span>.bc -o <span class="keyword">test</span>.ll</span><br></pre></td></tr></table></figure>
+
+<p>编译后的<code>LLVM IR</code>如下所示，每个edge都有一个唯一的标识，区块5就是被额外插入的区块，没有任何额外的计算，只是用来区别critical的边是否被执行。</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; Function Attrs: noinline nounwind optnone uwtable</span></span><br><span class="line"><span class="keyword">define</span> dso_local void <span class="title">@foo</span>(<span class="type">i32</span>* <span class="variable">%0</span>) <span class="variable">#0</span> comdat &#123;</span><br><span class="line">  <span class="variable">%2</span> <span class="operator">=</span> <span class="keyword">alloca</span> <span class="type">i32</span>*<span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">8</span></span><br><span class="line">  <span class="keyword">call</span> void <span class="title">@__sanitizer_cov_trace_pc_guard</span>(<span class="type">i32</span>* <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> ([<span class="number">4</span> <span class="keyword">x</span> <span class="type">i32</span>]<span class="punctuation">,</span> [<span class="number">4</span> <span class="keyword">x</span> <span class="type">i32</span>]* <span class="title">@__sancov_gen_</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">0</span>)) <span class="variable">#2</span></span><br><span class="line">  <span class="keyword">store</span> <span class="type">i32</span>* <span class="variable">%0</span><span class="punctuation">,</span> <span class="type">i32</span>** <span class="variable">%2</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">8</span></span><br><span class="line">  <span class="variable">%3</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span>*<span class="punctuation">,</span> <span class="type">i32</span>** <span class="variable">%2</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">8</span></span><br><span class="line">  <span class="variable">%4</span> <span class="operator">=</span> <span class="keyword">icmp</span> <span class="keyword">ne</span> <span class="type">i32</span>* <span class="variable">%3</span><span class="punctuation">,</span> <span class="keyword">null</span></span><br><span class="line">  <span class="keyword">br</span> <span class="type">i1</span> <span class="variable">%4</span><span class="punctuation">,</span> label <span class="variable">%6</span><span class="punctuation">,</span> label <span class="variable">%5</span></span><br><span class="line"></span><br><span class="line"><span class="number">5</span>:                                                <span class="comment">; preds = %1</span></span><br><span class="line">  <span class="keyword">call</span> void <span class="title">@__sanitizer_cov_trace_pc_guard</span>(<span class="type">i32</span>* <span class="keyword">inttoptr</span> (<span class="type">i64</span> <span class="keyword">add</span> (<span class="type">i64</span> <span class="keyword">ptrtoint</span> ([<span class="number">4</span> <span class="keyword">x</span> <span class="type">i32</span>]* <span class="title">@__sancov_gen_</span> <span class="keyword">to</span> <span class="type">i64</span>)<span class="punctuation">,</span> <span class="type">i64</span> <span class="number">4</span>) <span class="keyword">to</span> <span class="type">i32</span>*)) <span class="variable">#2</span></span><br><span class="line">  <span class="keyword">br</span> label <span class="variable">%8</span></span><br><span class="line"></span><br><span class="line"><span class="number">6</span>:                                                <span class="comment">; preds = %1</span></span><br><span class="line">  <span class="keyword">call</span> void <span class="title">@__sanitizer_cov_trace_pc_guard</span>(<span class="type">i32</span>* <span class="keyword">inttoptr</span> (<span class="type">i64</span> <span class="keyword">add</span> (<span class="type">i64</span> <span class="keyword">ptrtoint</span> ([<span class="number">4</span> <span class="keyword">x</span> <span class="type">i32</span>]* <span class="title">@__sancov_gen_</span> <span class="keyword">to</span> <span class="type">i64</span>)<span class="punctuation">,</span> <span class="type">i64</span> <span class="number">8</span>) <span class="keyword">to</span> <span class="type">i32</span>*)) <span class="variable">#2</span></span><br><span class="line">  <span class="variable">%7</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span>*<span class="punctuation">,</span> <span class="type">i32</span>** <span class="variable">%2</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">8</span></span><br><span class="line">  <span class="keyword">store</span> <span class="type">i32</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%7</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">4</span></span><br><span class="line">  <span class="keyword">br</span> label <span class="variable">%8</span></span><br><span class="line"></span><br><span class="line"><span class="number">8</span>:                                                <span class="comment">; preds = %5, %6</span></span><br><span class="line">  <span class="keyword">call</span> void <span class="title">@__sanitizer_cov_trace_pc_guard</span>(<span class="type">i32</span>* <span class="keyword">inttoptr</span> (<span class="type">i64</span> <span class="keyword">add</span> (<span class="type">i64</span> <span class="keyword">ptrtoint</span> ([<span class="number">4</span> <span class="keyword">x</span> <span class="type">i32</span>]* <span class="title">@__sancov_gen_</span> <span class="keyword">to</span> <span class="type">i64</span>)<span class="punctuation">,</span> <span class="type">i64</span> <span class="number">12</span>) <span class="keyword">to</span> <span class="type">i32</span>*)) <span class="variable">#2</span></span><br><span class="line">  <span class="keyword">ret</span> void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>若查看块覆盖率，用以下命令编译程序：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clang-12 <span class="keyword">test</span>.c -o <span class="keyword">test</span>.bc -emit-llvm -c -fsanitize-coverage=bb,trace-pc-guard,<span class="keyword">no</span>-prune</span><br><span class="line">llvm-<span class="keyword">dis</span>-12 <span class="keyword">test</span>.bc -o <span class="keyword">test</span>.ll</span><br></pre></td></tr></table></figure>
+
+<p>插桩后的LLVM代码为，这里就只有三个区块。</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; Function Attrs: noinline nounwind optnone uwtable</span></span><br><span class="line"><span class="keyword">define</span> dso_local void <span class="title">@foo</span>(<span class="type">i32</span>* <span class="variable">%0</span>) <span class="variable">#0</span> comdat &#123;</span><br><span class="line">  <span class="variable">%2</span> <span class="operator">=</span> <span class="keyword">alloca</span> <span class="type">i32</span>*<span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">8</span></span><br><span class="line">  <span class="keyword">call</span> void <span class="title">@__sanitizer_cov_trace_pc_guard</span>(<span class="type">i32</span>* <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> ([<span class="number">3</span> <span class="keyword">x</span> <span class="type">i32</span>]<span class="punctuation">,</span> [<span class="number">3</span> <span class="keyword">x</span> <span class="type">i32</span>]* <span class="title">@__sancov_gen_</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">0</span>)) <span class="variable">#2</span></span><br><span class="line">  <span class="keyword">store</span> <span class="type">i32</span>* <span class="variable">%0</span><span class="punctuation">,</span> <span class="type">i32</span>** <span class="variable">%2</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">8</span></span><br><span class="line">  <span class="variable">%3</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span>*<span class="punctuation">,</span> <span class="type">i32</span>** <span class="variable">%2</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">8</span></span><br><span class="line">  <span class="variable">%4</span> <span class="operator">=</span> <span class="keyword">icmp</span> <span class="keyword">ne</span> <span class="type">i32</span>* <span class="variable">%3</span><span class="punctuation">,</span> <span class="keyword">null</span></span><br><span class="line">  <span class="keyword">br</span> <span class="type">i1</span> <span class="variable">%4</span><span class="punctuation">,</span> label <span class="variable">%5</span><span class="punctuation">,</span> label <span class="variable">%7</span></span><br><span class="line"></span><br><span class="line"><span class="number">5</span>:                                                <span class="comment">; preds = %1</span></span><br><span class="line">  <span class="keyword">call</span> void <span class="title">@__sanitizer_cov_trace_pc_guard</span>(<span class="type">i32</span>* <span class="keyword">inttoptr</span> (<span class="type">i64</span> <span class="keyword">add</span> (<span class="type">i64</span> <span class="keyword">ptrtoint</span> ([<span class="number">3</span> <span class="keyword">x</span> <span class="type">i32</span>]* <span class="title">@__sancov_gen_</span> <span class="keyword">to</span> <span class="type">i64</span>)<span class="punctuation">,</span> <span class="type">i64</span> <span class="number">4</span>) <span class="keyword">to</span> <span class="type">i32</span>*)) <span class="variable">#2</span></span><br><span class="line">  <span class="variable">%6</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span>*<span class="punctuation">,</span> <span class="type">i32</span>** <span class="variable">%2</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">8</span></span><br><span class="line">  <span class="keyword">store</span> <span class="type">i32</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%6</span><span class="punctuation">,</span> <span class="keyword">align</span> <span class="number">4</span></span><br><span class="line">  <span class="keyword">br</span> label <span class="variable">%7</span></span><br><span class="line"></span><br><span class="line"><span class="number">7</span>:                                                <span class="comment">; preds = %5, %1</span></span><br><span class="line">  <span class="keyword">call</span> void <span class="title">@__sanitizer_cov_trace_pc_guard</span>(<span class="type">i32</span>* <span class="keyword">inttoptr</span> (<span class="type">i64</span> <span class="keyword">add</span> (<span class="type">i64</span> <span class="keyword">ptrtoint</span> ([<span class="number">3</span> <span class="keyword">x</span> <span class="type">i32</span>]* <span class="title">@__sancov_gen_</span> <span class="keyword">to</span> <span class="type">i64</span>)<span class="punctuation">,</span> <span class="type">i64</span> <span class="number">8</span>) <span class="keyword">to</span> <span class="type">i32</span>*)) <span class="variable">#2</span></span><br><span class="line">  <span class="keyword">ret</span> void</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>LLVM提供了<code>__sanitizer_cov_trace_pc_guard</code>的简单实现，如果要使用<code>__sanitizer_cov_trace_pc</code>，就需要用户自己定义。若用户不定义该函数，编译会失败：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">➜</span>  edgeCounter clang <span class="operator">-</span>g <span class="operator">-</span>fsanitize<span class="operator">-</span>coverage<span class="operator">=</span>trace<span class="operator">-</span>pc test.c</span><br><span class="line"><span class="regexp">/usr/</span>bin<span class="regexp">/ld: /</span>tmp<span class="operator">/</span>test<span class="operator">-</span>75199c.o: <span class="keyword">in</span> function `foo&#x27;:</span><br><span class="line"><span class="regexp">/home/</span>weichen<span class="regexp">/edgeCounter/</span>test.c:<span class="number">4</span>: undefined reference to `__sanitizer_cov_trace_pc&#x27;</span><br><span class="line"><span class="regexp">/usr/</span>bin<span class="regexp">/ld: /</span>home<span class="regexp">/weichen/</span>edgeCounter<span class="operator">/</span>test.c:<span class="number">5</span>: undefined reference to `__sanitizer_cov_trace_pc&#x27;</span><br><span class="line"><span class="regexp">/usr/</span>bin<span class="regexp">/ld: /</span>home<span class="regexp">/weichen/</span>edgeCounter<span class="operator">/</span>test.c:<span class="number">6</span>: undefined reference to `__sanitizer_cov_trace_pc&#x27;</span><br><span class="line"><span class="regexp">/usr/</span>bin<span class="regexp">/ld: /</span>tmp<span class="operator">/</span>test<span class="operator">-</span>75199c.o: <span class="keyword">in</span> function `main&#x27;:</span><br><span class="line"><span class="regexp">/home/</span>weichen<span class="regexp">/edgeCounter/</span>test.c:<span class="number">10</span>: undefined reference to `__sanitizer_cov_trace_pc&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>定义该函数如下，输出当前PC地址，当前函数和行号：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// trace-pc.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sanitizer/coverage_interface.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="type">void</span> __sanitizer_cov_trace_pc() &#123;</span><br><span class="line">    <span class="type">void</span> *PC = __builtin_return_address(<span class="number">0</span>);</span><br><span class="line">    <span class="type">char</span> PcDescr[<span class="number">1024</span>];</span><br><span class="line">    __sanitizer_symbolize_pc(PC, <span class="string">&quot;%p %F %L&quot;</span>, PcDescr, <span class="built_in">sizeof</span>(PcDescr));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;PC: %s\n&quot;</span>, PcDescr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义好后，与用户编写的代码一起编译，就可以正常运行，输出相关信息。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➜  edgeCounter clang -g -fsanitize-coverage=trace-pc test<span class="selector-class">.c</span> trace-pc-guard<span class="selector-class">.cpp</span></span><br><span class="line">➜  edgeCounter ./<span class="selector-tag">a</span><span class="selector-class">.out</span>                                                        </span><br><span class="line">PC: <span class="number">0</span>x429133 <span class="keyword">in</span> <span class="selector-tag">main</span> /home/weichen/edgeCounter/test<span class="selector-class">.c</span>:<span class="number">10</span></span><br><span class="line">Please enter one numbers:<span class="number">12</span></span><br><span class="line">PC: <span class="number">0</span>x4290e0 <span class="keyword">in</span> foo /home/weichen/edgeCounter/test<span class="selector-class">.c</span>:<span class="number">4</span></span><br><span class="line">PC: <span class="number">0</span>x429102 <span class="keyword">in</span> foo /home/weichen/edgeCounter/test<span class="selector-class">.c</span>:<span class="number">6</span>:<span class="number">10</span></span><br><span class="line"><span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>Tips: DSO means dynamic shared object.</p>
+<p>Reference: <a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/SanitizerCoverage.html">SanitizerCoverage</a></p>
+<h4 id="2-Kernel-Kcov"><a href="#2-Kernel-Kcov" class="headerlink" title="2. Kernel Kcov"></a>2. Kernel Kcov</h4><p>Kcov implement <code>__sanitizer_cov_trace_pc</code> for Linux kernel.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Entry point from instrumented code.</span></span><br><span class="line"><span class="comment"> * This is called once per basic-block/edge.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> notrace __sanitizer_cov_trace_pc(<span class="type">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">task_struct</span> *t;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> *area;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> ip = <span class="built_in">canonicalize_ip</span>(_RET_IP_);</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> pos;</span><br><span class="line"></span><br><span class="line">    t = current;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">check_kcov_mode</span>(KCOV_MODE_TRACE_PC, t))</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    area = t-&gt;kcov_area;</span><br><span class="line">    <span class="comment">/* The first 64-bit word is the number of subsequent PCs. */</span></span><br><span class="line">    pos = <span class="built_in">READ_ONCE</span>(area[<span class="number">0</span>]) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">likely</span>(pos &lt; t-&gt;kcov_size)) &#123;</span><br><span class="line">        area[pos] = ip;</span><br><span class="line">        <span class="built_in">WRITE_ONCE</span>(area[<span class="number">0</span>], pos);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此函数将调用<code>__sanitizer_cov_trace_pc</code>时对应的返回地址写入<code>kcov</code>模块中，在Fuzzing过程中输出，例如地址<code>ffffffff849db21e</code>，查看反汇编代码可知，正好对应<code>r14 ffffffff849</code>处调用<code>__sanitizer_cov_trace_pc</code>函数的返回地址。</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">➜  linux<span class="number">-5.15</span> git:(<span class="number">64570</span>fbc<span class="number">14</span>f<span class="number">8</span>) ✗ grep &#x27;ffffffff<span class="number">849</span>db<span class="number">21</span>e&#x27; vmlinux.objdump -C <span class="number">5</span></span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">20</span><span class="keyword">c</span>:       <span class="number">74</span> <span class="number">08</span>                   je     ffffffff<span class="number">849</span>db<span class="number">216</span> &lt;tty_open<span class="number">+0</span><span class="keyword">x</span><span class="number">376</span>&gt;</span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">20</span>e:       <span class="number">4</span><span class="keyword">c</span> <span class="number">89</span> f<span class="number">7</span>                mov    <span class="variable">%r14</span><span class="punctuation">,</span><span class="variable">%rdi</span></span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">211</span>:       e<span class="number">8</span> <span class="number">7</span>a b<span class="number">0</span> <span class="number">36</span> fd          callq  ffffffff<span class="number">81</span>d<span class="number">46290</span> &lt;__asan_report_load<span class="number">8</span>_noabort&gt;</span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">216</span>:       <span class="number">4</span>d <span class="number">8</span>b <span class="number">36</span>                mov    (<span class="variable">%r14</span>)<span class="punctuation">,</span><span class="variable">%r14</span></span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">219</span>:       e<span class="number">8</span> <span class="number">62</span> <span class="number">26</span> e<span class="number">8</span> fc          callq  ffffffff<span class="number">8185</span>d<span class="number">880</span> &lt;__sanitizer_cov_trace_pc&gt;</span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">21</span>e:       <span class="number">49</span> <span class="number">81</span> fe <span class="number">00</span> f<span class="number">0</span> ff ff    cmp    $<span class="number">0xfffffffffffff000</span><span class="punctuation">,</span><span class="variable">%r14</span></span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">225</span>:       <span class="number">77</span> <span class="number">77</span>                   ja     ffffffff<span class="number">849</span>db<span class="number">29</span>e &lt;tty_open<span class="number">+0</span><span class="keyword">x</span><span class="number">3</span>fe&gt;</span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">227</span>:       <span class="number">4</span>d <span class="number">85</span> f<span class="number">6</span>                test   <span class="variable">%r14</span><span class="punctuation">,</span><span class="variable">%r14</span></span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">22</span>a:       <span class="number">74</span> <span class="number">72</span>                   je     ffffffff<span class="number">849</span>db<span class="number">29</span>e &lt;tty_open<span class="number">+0</span><span class="keyword">x</span><span class="number">3</span>fe&gt;</span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">22</span><span class="keyword">c</span>:       e<span class="number">8</span> <span class="number">4</span>f <span class="number">26</span> e<span class="number">8</span> fc          callq  ffffffff<span class="number">8185</span>d<span class="number">880</span> &lt;__sanitizer_cov_trace_pc&gt;</span><br><span class="line">ffffffff<span class="number">849</span>db<span class="number">231</span>:       <span class="number">49</span> <span class="number">8</span>d <span class="number">7</span>e <span class="number">04</span>             lea    <span class="number">0x4</span>(<span class="variable">%r14</span>)<span class="punctuation">,</span><span class="variable">%rdi</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-Clang-编译内核"><a href="#3-Clang-编译内核" class="headerlink" title="3. Clang 编译内核"></a>3. Clang 编译内核</h4><ol>
+<li><p>编译环境和内核版本</p>
+<p>Clang-12</p>
+<p>Linux 5.15</p>
+</li>
+<li><p>生成<code>.config</code>fig</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">➜  linux-5.15 git:(64570fbc14f8) ✗ make LLVM=1 V=1 CC=clang defconfig   </span><br><span class="line">make -f ./scripts/Makefile.build obj=scripts/basic</span><br><span class="line">  clang -Wp,-MMD,scripts/basic/.fixdep.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89         -o scripts/basic/fixdep scripts/basic/fixdep.c   </span><br><span class="line">make -f ./scripts/Makefile.build obj=scripts/kconfig defconfig</span><br><span class="line">  clang -Wp,-MMD,scripts/kconfig/.conf.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89       -c -o scripts/kconfig/conf.o scripts/kconfig/conf.c</span><br><span class="line">  clang -Wp,-MMD,scripts/kconfig/.confdata.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89       -c -o scripts/kconfig/confdata.o scripts/kconfig/confdata.c</span><br><span class="line">  clang -Wp,-MMD,scripts/kconfig/.expr.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89       -c -o scripts/kconfig/expr.o scripts/kconfig/expr.c</span><br><span class="line">  flex -oscripts/kconfig/lexer.lex.c -L scripts/kconfig/lexer.l</span><br><span class="line">  bison -o scripts/kconfig/parser.tab.c --defines=scripts/kconfig/parser.tab.h -t -l scripts/kconfig/parser.y</span><br><span class="line">  clang -Wp,-MMD,scripts/kconfig/.lexer.lex.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89      -I ./scripts/kconfig -c -o scripts/kconfig/lexer.lex.o scripts/kconfig/lexer.lex.c</span><br><span class="line">  clang -Wp,-MMD,scripts/kconfig/.menu.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89       -c -o scripts/kconfig/menu.o scripts/kconfig/menu.c</span><br><span class="line">  clang -Wp,-MMD,scripts/kconfig/.parser.tab.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89      -I ./scripts/kconfig -c -o scripts/kconfig/parser.tab.o scripts/kconfig/parser.tab.c</span><br><span class="line">  clang -Wp,-MMD,scripts/kconfig/.preprocess.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89       -c -o scripts/kconfig/preprocess.o scripts/kconfig/preprocess.c</span><br><span class="line">  clang -Wp,-MMD,scripts/kconfig/.symbol.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89       -c -o scripts/kconfig/symbol.o scripts/kconfig/symbol.c</span><br><span class="line">  clang -Wp,-MMD,scripts/kconfig/.util.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89       -c -o scripts/kconfig/util.o scripts/kconfig/util.c</span><br><span class="line">  clang   -o scripts/kconfig/conf scripts/kconfig/conf.o scripts/kconfig/confdata.o scripts/kconfig/expr.o scripts/kconfig/lexer.lex.o scripts/kconfig/menu.o scripts/kconfig/parser.tab.o scripts/kconfig/preprocess.o scripts/kconfig/symbol.o scripts/kconfig/util.o   </span><br><span class="line">scripts/kconfig/conf  --defconfig=<span class="built_in">arch</span>/x86/configs/x86_64_defconfig Kconfig</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># configuration written to .config</span></span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根据Fuzzing的需要，修改<code>.config</code>，这里使用Syzkaller准备好的<code>.config</code></p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp ~/syzkaller/dashboard/config/linux/upstream-apparmor-kasan.config .config</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上述<code>.config</code>是针对gcc的，所以要再运行如下命令，转换为clang的相应编译选项</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➜  linux-5.15 git:(64570fbc14f8) ✗ make <span class="attribute">LLVM</span>=1 <span class="attribute">V</span>=1 <span class="attribute">CC</span>=clang olddefconfig</span><br><span class="line">make -f ./scripts/Makefile.build <span class="attribute">obj</span>=scripts/basic</span><br><span class="line">make -f ./scripts/Makefile.build <span class="attribute">obj</span>=scripts/kconfig olddefconfig</span><br><span class="line">scripts/kconfig/conf  --olddefconfig Kconfig</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># configuration written to .config</span></span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>需要取消选项<code>CONFIG_UBSAN_OBJECT_SIZE</code>，否则Fuzzing的时候会一直报错。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">CONFIG_UBSAN_OBJECT_SIZE</span>=n</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再去运行<code>olddefconfig</code>进行调整</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># CONFIG_UBSAN_OBJECT_SIZE <span class="keyword">is</span> not <span class="keyword">set</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编译内核，生成<code>arch/x86/boot/bzImage</code>用于Fuzzing，切记保留<code>vmlinux</code>，便于查看汇编程序。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make <span class="attribute">LLVM</span>=1 <span class="attribute">V</span>=1 <span class="attribute">CC</span>=clang -j64</span><br></pre></td></tr></table></figure>
+
+<p>运行如下命令，反汇编<code>vmlinux</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">objdump</span> -d vmlinux &gt; vmlinux.objdump</span><br></pre></td></tr></table></figure>
+
+<p>由于clang编译内核时默认是以边代码覆盖率为插入目标，因此可以通过如下方式粗略的查看一些内核整体有265w个边。</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">linux-<span class="number">5.15</span> git:(<span class="number">64570</span>fbc14f8) ✗ grep &#x27;callq  ffffffff<span class="number">8185</span>d880 &lt;__sanitizer_cov_trace_pc&gt;&#x27; vmlinux.objdump  <span class="string">| wc -l</span></span><br><span class="line"><span class="number">2653206</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>内核编译举例</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">clang </span><br><span class="line">-Wp,-MMD,arch/x86/kvm/<span class="built_in">..</span>/<span class="built_in">..</span>/<span class="built_in">..</span>/virt/kvm/.kvm_main.o.d  </span><br><span class="line">-nostdinc -isystem /usr/local/lib/clang/12.0.0/include </span><br><span class="line">-I./arch/x86/include -I./arch/x86/include/generated  </span><br><span class="line">-I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi </span><br><span class="line">-I./include/uapi -I./include/generated/uapi </span><br><span class="line">-include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h </span><br><span class="line">-include ./include/linux/compiler_types.h </span><br><span class="line">-D__KERNEL__ -Qunused-arguments </span><br><span class="line"><span class="attribute">-fmacro-prefix-map</span>=./= -Wall -Wundef <span class="attribute">-Werror</span>=strict-prototypes -Wno-trigraphs </span><br><span class="line">-fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE </span><br><span class="line"><span class="attribute">-Werror</span>=implicit-function-declaration <span class="attribute">-Werror</span>=implicit-int <span class="attribute">-Werror</span>=return-type -Wno-format-security </span><br><span class="line"><span class="attribute">-std</span>=gnu89 <span class="attribute">--target</span>=x86_64-linux-gnu -fintegrated-as </span><br><span class="line"><span class="attribute">-Werror</span>=unknown-warning-option <span class="attribute">-Werror</span>=ignored-optimization-argument </span><br><span class="line">-mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx </span><br><span class="line"><span class="attribute">-fcf-protection</span>=none -m64 -mno-80387 <span class="attribute">-mstack-alignment</span>=8 </span><br><span class="line"><span class="attribute">-march</span>=core2 -mno-red-zone <span class="attribute">-mcmodel</span>=kernel </span><br><span class="line">-DCONFIG_X86_X32_ABI -Wno-sign-compare </span><br><span class="line">-fno-asynchronous-unwind-tables -fno-delete-null-pointer-checks </span><br><span class="line">-Wno-frame-address -Wno-address-of-packed-member -O2 </span><br><span class="line"><span class="attribute">-Wframe-larger-than</span>=2048 -fstack-protector-strong </span><br><span class="line">-Wno-gnu -mno-global-merge -Wno-unused-const-variable </span><br><span class="line">-fomit-frame-pointer -fno-stack-clash-protection -g </span><br><span class="line">-Wdeclaration-after-statement -Wvla -Wno-pointer-sign </span><br><span class="line">-Wno-array-bounds -fno-strict-overflow -fno-stack-check </span><br><span class="line"><span class="attribute">-Werror</span>=date-time <span class="attribute">-Werror</span>=incompatible-pointer-types </span><br><span class="line">-Wno-initializer-overrides -Wno-format -Wno-sign-compare </span><br><span class="line">-Wno-format-zero-length -Wno-pointer-to-enum-cast </span><br><span class="line">-Wno-tautological-constant-out-of-range-compare </span><br><span class="line">-I ./arch/x86/kvm    </span><br><span class="line"><span class="attribute">-fsanitize</span>=kernel-address -mllvm <span class="attribute">-asan-mapping-offset</span>=0xdffffc0000000000  </span><br><span class="line">-mllvm <span class="attribute">-asan-globals</span>=1  -mllvm <span class="attribute">-asan-instrumentation-with-call-threshold</span>=10000   </span><br><span class="line">--param <span class="attribute">asan-instrument-allocas</span>=1  -mllvm <span class="attribute">-asan-stack</span>=1  </span><br><span class="line"><span class="attribute">-fsanitize</span>=array-bounds <span class="attribute">-fsanitize</span>=shift  </span><br><span class="line"><span class="attribute">-fsanitize-coverage</span>=trace-pc <span class="attribute">-fsanitize-coverage</span>=<span class="literal">no</span>-prune </span><br><span class="line"><span class="attribute">-fsanitize-coverage</span>=trace-cmp    </span><br><span class="line"><span class="attribute">-DKBUILD_MODFILE</span>=<span class="string">&#x27;&quot;arch/x86/kvm/kvm&quot;&#x27;</span> </span><br><span class="line"><span class="attribute">-DKBUILD_BASENAME</span>=<span class="string">&#x27;&quot;kvm_main&quot;&#x27;</span> </span><br><span class="line"><span class="attribute">-DKBUILD_MODNAME</span>=<span class="string">&#x27;&quot;kvm&quot;&#x27;</span> </span><br><span class="line"><span class="attribute">-D__KBUILD_MODNAME</span>=kmod_kvm </span><br><span class="line">-c -o arch/x86/kvm/<span class="built_in">..</span>/<span class="built_in">..</span>/<span class="built_in">..</span>/virt/kvm/kvm_main.o </span><br><span class="line">arch/x86/kvm/<span class="built_in">..</span>/<span class="built_in">..</span>/<span class="built_in">..</span>/virt/kvm/kvm_main.c</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="4-生成内核Bitcode"><a href="#4-生成内核Bitcode" class="headerlink" title="4. 生成内核Bitcode"></a>4. 生成内核Bitcode</h4><ol>
+<li><p>环境配置</p>
+</li>
+<li><p>运行如下命令，进行命令替换，生成针对整个内核的bitcode编译脚本</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go <span class="keyword">run</span><span class="language-bash"> /home/weichen/Build_Linux_Kernel_Into_LLVM_Bitcode/02-replace_cmd_log/buildLLVMBitcode.go</span></span><br></pre></td></tr></table></figure>
+
+<p>仍以<code>kvm_main.c</code>为例，修改后的编译命令如下</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">clang </span><br><span class="line"> -Wp,-MMD,arch/x86/kvm/<span class="built_in">..</span>/<span class="built_in">..</span>/<span class="built_in">..</span>/virt/kvm/.kvm_main.o.d  </span><br><span class="line"> -nostdinc -isystem /usr/local/lib/clang/12.0.0/include </span><br><span class="line"> -I./arch/x86/include -I./arch/x86/include/generated  </span><br><span class="line"> -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi </span><br><span class="line"> -I./include/uapi -I./include/generated/uapi </span><br><span class="line"> -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h </span><br><span class="line"> -include ./include/linux/compiler_types.h </span><br><span class="line"> -D__KERNEL__ -Qunused-arguments </span><br><span class="line"> <span class="attribute">-fmacro-prefix-map</span>=./= -Wall -Wundef <span class="attribute">-Werror</span>=strict-prototypes -Wno-trigraphs </span><br><span class="line"> -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE </span><br><span class="line"> <span class="attribute">-Werror</span>=implicit-function-declaration <span class="attribute">-Werror</span>=implicit-int <span class="attribute">-Werror</span>=return-type -Wno-format-security </span><br><span class="line"> <span class="attribute">-std</span>=gnu89 <span class="attribute">--target</span>=x86_64-linux-gnu -fintegrated-as </span><br><span class="line"> <span class="attribute">-Werror</span>=unknown-warning-option <span class="attribute">-Werror</span>=ignored-optimization-argument </span><br><span class="line"> -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx </span><br><span class="line"> <span class="attribute">-fcf-protection</span>=none -m64 -mno-80387 <span class="attribute">-mstack-alignment</span>=8 </span><br><span class="line"> <span class="attribute">-march</span>=core2 -mno-red-zone <span class="attribute">-mcmodel</span>=kernel </span><br><span class="line"> -DCONFIG_X86_X32_ABI -Wno-sign-compare </span><br><span class="line"> -fno-asynchronous-unwind-tables -fno-delete-null-pointer-checks </span><br><span class="line"> -Wno-frame-address -Wno-address-of-packed-member -O2 </span><br><span class="line"> <span class="attribute">-Wframe-larger-than</span>=2048 -fstack-protector-strong </span><br><span class="line"> -Wno-gnu -mno-global-merge -Wno-unused-const-variable </span><br><span class="line"> -fomit-frame-pointer -fno-stack-clash-protection -g </span><br><span class="line"> -Wdeclaration-after-statement -Wvla -Wno-pointer-sign </span><br><span class="line"> -Wno-array-bounds -fno-strict-overflow -fno-stack-check </span><br><span class="line"> <span class="attribute">-Werror</span>=date-time <span class="attribute">-Werror</span>=incompatible-pointer-types </span><br><span class="line"> -Wno-initializer-overrides -Wno-format -Wno-sign-compare </span><br><span class="line"> -Wno-format-zero-length -Wno-pointer-to-enum-cast </span><br><span class="line"> -Wno-tautological-constant-out-of-range-compare </span><br><span class="line"> -I ./arch/x86/kvm    </span><br><span class="line"> <span class="attribute">-fsanitize</span>=kernel-address -mllvm <span class="attribute">-asan-mapping-offset</span>=0xdffffc0000000000  </span><br><span class="line"> -mllvm <span class="attribute">-asan-globals</span>=1  -mllvm <span class="attribute">-asan-instrumentation-with-call-threshold</span>=10000   </span><br><span class="line"> --param <span class="attribute">asan-instrument-allocas</span>=1  -mllvm <span class="attribute">-asan-stack</span>=1  </span><br><span class="line"> <span class="attribute">-fsanitize</span>=array-bounds <span class="attribute">-fsanitize</span>=shift  </span><br><span class="line"> <span class="attribute">-fsanitize-coverage</span>=trace-pc <span class="attribute">-fsanitize-coverage</span>=<span class="literal">no</span>-prune </span><br><span class="line"> <span class="attribute">-fsanitize-coverage</span>=trace-cmp    </span><br><span class="line"> <span class="attribute">-DKBUILD_MODFILE</span>=<span class="string">&#x27;&quot;arch/x86/kvm/kvm&quot;&#x27;</span> </span><br><span class="line"> <span class="attribute">-DKBUILD_BASENAME</span>=<span class="string">&#x27;&quot;kvm_main&quot;&#x27;</span> </span><br><span class="line"> <span class="attribute">-DKBUILD_MODNAME</span>=<span class="string">&#x27;&quot;kvm&quot;&#x27;</span> </span><br><span class="line"> <span class="attribute">-D__KBUILD_MODNAME</span>=kmod_kvm </span><br><span class="line"> -w -g -fno-discard-value-names -emit-llvm </span><br><span class="line"> -c -o arch/x86/kvm/<span class="built_in">..</span>/<span class="built_in">..</span>/<span class="built_in">..</span>/virt/kvm/kvm_main.bc </span><br><span class="line"> arch/x86/kvm/<span class="built_in">..</span>/<span class="built_in">..</span>/<span class="built_in">..</span>/virt/kvm/kvm_main.c</span><br></pre></td></tr></table></figure>
+
+<p>主要是加上了如下这行命令</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-w -g -fno-<span class="keyword">discard-value-names </span>-emit-<span class="keyword">llvm </span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行生成的脚本，会对每一个<code>.c</code>文件生成相应的<code>.bc</code>文件，并按照内核结构按模块链接为<code>built-in.bc</code>，其中需要注意如下两个<code>.bc</code>文件不能被链接进根目录的<code>built-in.bc</code>，否则会报错。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kernel/built-in.bc</span><br><span class="line">mm/kasan/built-in.bc </span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>Github link: <a target="_blank" rel="noopener" href="https://github.com/harperchen/Build_Linux_Kernel_Into_LLVM_Bitcode.git">https://github.com/harperchen/Build_Linux_Kernel_Into_LLVM_Bitcode.git</a></p>
+<h4 id="5-内核结构分析"><a href="#5-内核结构分析" class="headerlink" title="5. 内核结构分析"></a>5. 内核结构分析</h4><h5 id="5-1-内核模块分析"><a href="#5-1-内核模块分析" class="headerlink" title="5.1 内核模块分析"></a>5.1 内核模块分析</h5><ol>
+<li><p>编译时有个字段为<code>-DKBUILD_MODNAME=&#39;&quot;kvm&quot;&#39;</code>，可以先简单的看一下有多少个<code>MODNAME</code>。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  linux-<span class="number">5.15</span> git:(<span class="number">64570</span>fbc14f8) ✗ <span class="keyword">grep</span> -oE  <span class="string">&#x27;\-DKBUILD_MODNAME=.*\&quot;&#x27;</span> build.<span class="keyword">sh</span> | <span class="keyword">sort</span> -<span class="keyword">u</span> | wc -<span class="keyword">l</span></span><br><span class="line"><span class="number">3163</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根据链接的顺序寻找模块</p>
+<p><img src="c:%5CUsers%5Charpe%5CAppData%5CRoaming%5Cmarktext%5Cimages%5C2022-05-08-19-24-42-image.png" alt="img"></p>
+<ul>
+<li>Core<ul>
+<li>ipc <code>ipc/built-in.bc</code></li>
+<li>mm<ul>
+<li>mm&#x2F;built-in.bc</li>
+<li>arch&#x2F;x86&#x2F;mm&#x2F;built-in.bc</li>
+</ul>
+</li>
+<li>certs <code>certs/built-in.bc</code></li>
+<li>security <code>security/built-in.bc</code><ul>
+<li>security&#x2F;keys</li>
+<li>security&#x2F;tomoyo</li>
+<li>security&#x2F;apparmor</li>
+<li>security&#x2F;landlock</li>
+<li>security&#x2F;integrity</li>
+</ul>
+</li>
+<li>lib<ul>
+<li>arch&#x2F;x86&#x2F;lib&#x2F;built-in.bc</li>
+<li>arch&#x2F;x86&#x2F;lib&#x2F;lib.bc</li>
+<li>lib&#x2F;built-in.bc</li>
+<li>lib&#x2F;lib.bc</li>
+<li>virt&#x2F;lib&#x2F;irqbypass.bc</li>
+</ul>
+</li>
+<li>crypto <code>arch/x86/crypto/built-in.bc</code></li>
+</ul>
+</li>
+<li><h2 id="Driver-kvm-arch-x86-kvm-built-in-bc"><a href="#Driver-kvm-arch-x86-kvm-built-in-bc" class="headerlink" title="Driver- kvm: arch&#x2F;x86&#x2F;kvm&#x2F;built-in.bc"></a>Driver<br>- kvm: arch&#x2F;x86&#x2F;kvm&#x2F;built-in.bc</h2></li>
+<li>Network</li>
+<li>FileSystem</li>
+</ul>
+</li>
+<li><p>但不是所有的module都有对应的syzkaller写的模板，所以还要找一下有哪些系统调用对应。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/Kernel/" rel="tag"># Kernel</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2021/06/04/S-P-16-State-of-The-Art-of-War-Offensive-Techniques-in-Binary-Analysis/" rel="prev" title="[S&P'16] (State of) The Art of War: Offensive Techniques in Binary Analysis">
+                  <i class="fa fa-angle-left"></i> [S&P'16] (State of) The Art of War: Offensive Techniques in Binary Analysis
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2022/05/10/FSE-19-Cerebro-Context-Aware-Adaptive-Fuzzing-for-Effective-Vulnerability-Detection/" rel="next" title="[FSE'19] Cerebro: Context-Aware Adaptive Fuzzing for Effective Vulnerability Detection">
+                  [FSE'19] Cerebro: Context-Aware Adaptive Fuzzing for Effective Vulnerability Detection <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

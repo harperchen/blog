@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"harperchen.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="TSANhttps:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Tech] Thread Safety">
+<meta property="og:url" content="https://harperchen.github.io/blog/2020/12/30/Tech-Thread-Safety/index.html">
+<meta property="og:site_name" content="Wei&#39;s Blog">
+<meta property="og:description" content="TSANhttps:&#x2F;&#x2F;github.com&#x2F;google&#x2F;sanitizers https:&#x2F;&#x2F;clang.llvm.org&#x2F;docs&#x2F;ThreadSafetyAnalysis.html">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png">
+<meta property="article:published_time" content="2020-12-30T10:31:01.000Z">
+<meta property="article:modified_time" content="2024-03-27T05:21:36.061Z">
+<meta property="article:author" content="Wei CHEN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png">
+
+
+<link rel="canonical" href="https://harperchen.github.io/blog/2020/12/30/Tech-Thread-Safety/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://harperchen.github.io/blog/2020/12/30/Tech-Thread-Safety/","path":"2020/12/30/Tech-Thread-Safety/","title":"[Tech] Thread Safety"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>[Tech] Thread Safety | Wei's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wei's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TSAN"><span class="nav-number">1.</span> <span class="nav-text">TSAN</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Paper-Skelton"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. Paper Skelton</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%88%9D%E6%AD%A5%E6%8E%A2%E7%B4%A2"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. 初步探索</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-SPEC-CPU-2006"><span class="nav-number">1.0.3.</span> <span class="nav-text">2. SPEC CPU 2006</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KTSAN"><span class="nav-number">1.1.</span> <span class="nav-text">KTSAN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KCSAN-Kernel-Concurrent-Sanitizer"><span class="nav-number">1.2.</span> <span class="nav-text">KCSAN (Kernel Concurrent Sanitizer)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SANRAZOR"><span class="nav-number">1.3.</span> <span class="nav-text">SANRAZOR</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wei CHEN"
+      src="/blog/images/8.jpg">
+  <p class="site-author-name" itemprop="name">Wei CHEN</p>
+  <div class="site-description" itemprop="description">Be Brave; Be Confident; <br> Be Happy; Be Optimistic; </div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/harperchen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;harperchen" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:harperchen1110@gmail.com" title="E-Mail → mailto:harperchen1110@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harperchen.github.io/blog/2020/12/30/Tech-Thread-Safety/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/8.jpg">
+      <meta itemprop="name" content="Wei CHEN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wei's Blog">
+      <meta itemprop="description" content="Be Brave; Be Confident; <br> Be Happy; Be Optimistic; ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="[Tech] Thread Safety | Wei's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Tech] Thread Safety
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-12-30 18:31:01" itemprop="dateCreated datePublished" datetime="2020-12-30T18:31:01+08:00">2020-12-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-27 13:21:36" itemprop="dateModified" datetime="2024-03-27T13:21:36+08:00">2024-03-27</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="TSAN"><a href="#TSAN" class="headerlink" title="TSAN"></a>TSAN</h3><p><a target="_blank" rel="noopener" href="https://github.com/google/sanitizers">https://github.com/google/sanitizers</a></p>
+<p><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/ThreadSafetyAnalysis.html">https://clang.llvm.org/docs/ThreadSafetyAnalysis.html</a></p>
+<span id="more"></span>
+
+<h5 id="1-Paper-Skelton"><a href="#1-Paper-Skelton" class="headerlink" title="1. Paper Skelton"></a>1. Paper Skelton</h5><ul>
+<li><p>Data Race</p>
+<ul>
+<li>Concurrently access a shared memory location</li>
+<li>At least one of the access is write</li>
+</ul>
+</li>
+<li><p>Difficulties to detect</p>
+<ul>
+<li>Happens only under very specific circumstances &#x3D;&gt; Hard to reproduce</li>
+<li>Pass of all tests doesn’t guarantee the absence of data races in code</li>
+</ul>
+</li>
+<li><p>Existing work</p>
+<ul>
+<li>Static: unlikely for complex and large code; too expensive to add annotation for static detector</li>
+<li>Dynamic: Happens-before, lockset or hybrid type<ul>
+<li>On-the-fly: process program execution in parallel with execution</li>
+<li>Postmortem: analyze the program execution offline</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>How it work</p>
+<ul>
+<li>Tsan Global state </li>
+<li>Per-ID state (Per-memory location state): dynamically updated during execution<ul>
+<li>Writer segment set: writes to ID</li>
+<li>Reader segment set: read from ID</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Implementation</p>
+<ul>
+<li>Valgind: provide execution trace at the same time<ul>
+<li>memory access events:<ul>
+<li>Read </li>
+<li>Write</li>
+</ul>
+</li>
+<li>synchronization events:<ul>
+<li>Locking: WRLock; RDLock; WRUnlock; RDUnlock </li>
+<li>Happens-before: Signal and Wait</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Performance: Google unit test</p>
+<ul>
+<li>CPU consumption: on average 20-50 times slow down <ul>
+<li>intercepting and analyzing memory access</li>
+</ul>
+</li>
+<li>Memory consumption: 3-4 times</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-初步探索"><a href="#2-初步探索" class="headerlink" title="2. 初步探索"></a>2. 初步探索</h5><p><code>ThreadSanitizer</code> (aka TSan) is a data race detector for C&#x2F;C++. Data races are one of the most common and hardest to debug types of bugs in concurrent systems. A data race occurs when two threads access the same variable concurrently and at least one of the accesses is write. <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/C%2B%2B11">C++11</a> standard officially bans data races as <em>undefined behavior</em>.</p>
+<p><img src="https://i.loli.net/2020/12/30/YmrQityp2JcaGzN.png" alt="image-20201230183132892"></p>
+<p>The cost of race detection varies by program, but for a typical program, memory usage may increase by 5-10x and execution time by 2-20x</p>
+<h5 id="2-SPEC-CPU-2006"><a href="#2-SPEC-CPU-2006" class="headerlink" title="2. SPEC CPU 2006"></a>2. SPEC CPU 2006</h5><p>our study on SPEC CPU2006 benchmarks [25] shows that the geometric mean overheads in- duced by AddressSanitizer (ASan) [23] and UndefinedBehaviorSanitizer (UBSan) [6] are, respectively, 73.8% and 160.1% (see Sec. 6)</p>
+<p>19 C&#x2F;C++ programs, in which 11 benchmarks can be compiled with clang and with ASan and UBSan enabled</p>
+<p>Each SPEC benchmark is shipped with a training workload, a testing workload, and a reference workload.  Following the convention, we use the training workload to profile these programs and obtain the dynamic patterns of sanitizer checks.</p>
+<p>Memory Overhead; CPU overhead;</p>
+<h4 id="KTSAN"><a href="#KTSAN" class="headerlink" title="KTSAN"></a>KTSAN</h4><p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan">https://github.com/google/ktsan</a></p>
+<p><a target="_blank" rel="noopener" href="https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf">https://events.static.linuxfound.org/images/stories/slides/lfcs2013_vyukov.pdf</a></p>
+<h4 id="KCSAN-Kernel-Concurrent-Sanitizer"><a href="#KCSAN-Kernel-Concurrent-Sanitizer" class="headerlink" title="KCSAN (Kernel Concurrent Sanitizer)"></a>KCSAN (Kernel Concurrent Sanitizer)</h4><p>• KCSAN, developed by Google 2019, found more than 300 race bugs.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/google/ktsan/wiki/KCSAN">https://github.com/google/ktsan/wiki/KCSAN</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html">https://www.kernel.org/doc/html/latest//dev-tools/kcsan.html</a></p>
+<h4 id="SANRAZOR"><a href="#SANRAZOR" class="headerlink" title="SANRAZOR"></a>SANRAZOR</h4><p><img src="https://i.loli.net/2021/01/02/niSJpdFLECZlNQ1.png" alt="image-20210102211000993"></p>
+<ul>
+<li>Target problem: reduce redundant sanitizer check, specially, ASAN and UBSAN</li>
+<li>What is sanitizer<ul>
+<li>Detect software bugs and vulnerabilities at runtime</li>
+<li>Insert additional checks into program during compilation</li>
+<li>Terminate program if it detects unsafe actions or states</li>
+<li>c checks whether property P holds with regard to v<ul>
+<li>v can be critical program information such as code pointer</li>
+<li>P can be null pointer deference</li>
+<li>c can be either abort program execution or alert the user</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Problems of sanitizer<ul>
+<li>High runtime overhead: Asan 73.8% UBSAN 160.1%</li>
+</ul>
+</li>
+<li>Drawbacks of previous work<ul>
+<li>Some approaches remove array bounds checks by checking whether the value range of an array index falls within the array size<ul>
+<li>Heavyweight static analysis</li>
+<li>Aims to flag useless checks with dedicated program analysis (not scalable)</li>
+</ul>
+</li>
+<li>ASAP elides sanitizer checks deemed the most costly based on a user-provided overhead budget<ul>
+<li>Irrespective of importance of sanitizer</li>
+<li>Over-optimistically remove sanitizer</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Why this paper is accepted<ul>
+<li>Propose a general sanitizer reduction approach</li>
+<li>Usefulness<ul>
+<li>Maybe unsound but evaluation shows it maintains the sanitizer’s effectiveness in discovering defects</li>
+<li>Reduce runtime overhead </li>
+<li>Not depends on particular sanitizer implementation, thus can be used to reduce checks of different sanitizer</li>
+</ul>
+</li>
+<li>Novelty<ul>
+<li>Sanitizer check redundancies: same program property could be repeatedly validated by multiple checks</li>
+<li>Introduce new approach to reduce the performance overhead incurred by sanitizer</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ASAN: Address Sanitizer<ul>
+<li>Instrumentation module<ul>
+<li>Allocates shadow memory regions for each memory address</li>
+<li>Instrument each memory load and store operation</li>
+<li>When memory address a is used to access memory, a will be mapped to shadow memory address sa</li>
+<li>The value stored in sa is used to check if the access via a is safe</li>
+<li>Directly using shadow memory address will be redirected to bad region, further leads to page protection violation</li>
+</ul>
+</li>
+<li>Runtime library<ul>
+<li>Hook malloc function to create poisoned readzones next to allocated memories to detect memory access error</li>
+<li>Hook free function to put the entire deallocated memory region into redzone</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>UBSAN: Undefined behaviors<ul>
+<li>detect a large set of common undefined behaviors<ul>
+<li>Out-of-bounds access</li>
+<li>Integer overflow</li>
+<li>divided by zero</li>
+<li>Invalid shift</li>
+</ul>
+</li>
+<li>For out-of-bounds array access<ul>
+<li>Put extra if condition to compare array index with array size before loop</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Input: LLVM IR with sanitizer checks</li>
+<li>Output: LLVM IR with reduced sanitizer checks</li>
+<li>Motivation: Identify likely redundant sanitizer checks<ul>
+<li>For example, repeatedly validate same array index</li>
+<li>If check c that detect bug B in program p is removed, B still can be detected</li>
+<li>Identify redundant sanitizer checks is difficult, approximation version “likely ~” is proposed</li>
+</ul>
+</li>
+<li>How it works<ul>
+<li>Identify sanitizer checks from user checks</li>
+<li>Dynamic: code coverage patterns<ul>
+<li>How many times each check is executed</li>
+<li>How many times the true and false branches are taken</li>
+</ul>
+</li>
+<li>Static: static input dependency patterns<ul>
+<li>Data-flow information from operands of each icmp statement</li>
+<li>Backward-dependency analysis to construct data dependency graph</li>
+</ul>
+</li>
+<li>Correlation analysis regarding dynamic and static patterns<ul>
+<li>Decide if one check is redundant to the other</li>
+<li>Dynamic: sanitizer check &#x3D;?&#x3D; user check<ul>
+<li>sb &#x3D; ub and (stb &#x3D; utb or stb &#x3D; ufb)</li>
+<li>sb &#x3D; utb and (sb &#x3D; stb or sb &#x3D; sfb)</li>
+<li>sb &#x3D; ufb and (sb &#x3D; stb or sb &#x3D; sfb)</li>
+</ul>
+</li>
+<li>Dynamic: sanitizer check &#x3D;?&#x3D; sanitizer check <ul>
+<li>sb_i &#x3D; sb_j and (stb_i &#x3D; stb_j or stb_i &#x3D; sfb_j)</li>
+</ul>
+</li>
+<li>Static: convert constructed value dependency tree to sets and compare if they are identical<ul>
+<li>L0: all leaf nodes</li>
+<li>L1: all leaf nodes without constant except for constant operands used by icmp</li>
+<li>L2: all leaf nodes without all constants</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Evaluation<ul>
+<li>Benchmark: SPEC CPU2006 benchmarks</li>
+<li>Cost evaluation: Geometric mean runtime overhead reduction<ul>
+<li>ASan: 73.8% -&gt; 28.0%-62.0%</li>
+<li>UBSAN: 160.1% -&gt; 36.6%-124.4%</li>
+</ul>
+</li>
+<li>Reduction accuracy<ul>
+<li>33 out of 38 known CVEs can be still discovered after removing redundant sanitizer</li>
+<li>more CVEs discovered than ASAP</li>
+</ul>
+</li>
+<li>Combine SANRAZOR with ASAP<ul>
+<li>runtime cost is reduced to 7.0%</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Reflection<ul>
+<li>Only appliable to single threaded program</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2020/12/30/Thread-Safety/" rel="prev" title="Thread Safety">
+                  <i class="fa fa-angle-left"></i> Thread Safety
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2021/01/08/Tech-OpenArk-Compiler/" rel="next" title="[Tech] OpenArk Compiler">
+                  [Tech] OpenArk Compiler <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Wei CHEN</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
